@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id             Int      @id @default(autoincrement())
+  telegramId     BigInt   @unique // Telegram user IDs can be large
+  username       String?  // Optional, as not all users have a username
+  firstName      String?
+  lastName       String?
+  balance        Float    @default(0.0)
+  dailyEarnings  Float    @default(0.0) // We'll track daily earnings here
+  lastEarnedDate DateTime? // To reset dailyEarnings
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations to other models will be added later
+  // taskSubmissions UserTaskSubmission[]
+  // withdrawalRequests WithdrawalRequest[]
+}

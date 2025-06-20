@@ -24,6 +24,10 @@
 .DS_Store
 *.pem
 
+# Firebase Admin SDK key
+taskplay-bot-firebase-adminsdk.json
+# Or whatever you named your service account key file
+
 # debug
 npm-debug.log*
 yarn-debug.log*
@@ -39,3 +43,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/app/generated/prisma
