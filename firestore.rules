@@ -1,0 +1,75 @@
+rules_version = '2'; 
+ service cloud.firestore { 
+   match /databases/{database}/documents { 
+ 
+     // Helper: Is the user logged in? 
+     function isSignedIn() { 
+       return request.auth != null; 
+     } 
+ 
+     // Helper: Is this the user's own document? 
+     function isOwner(userId) { 
+       return request.auth.uid == userId; 
+     } 
+ 
+     // Helper: Is the user an admin? 
+     function isAdmin() { 
+       return isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true; 
+     } 
+ 
+     // ── USERS COLLECTION ────────────────────────────────────────── 
+     match /users/{userId} { 
+       // Users can read their own profile, Admins can read all 
+       allow read: if isSignedIn() && (isOwner(userId) || isAdmin()); 
+       
+       // Users can create their profile on signup 
+       allow create: if isSignedIn() && isOwner(userId); 
+       
+       // Users can update their balance (for withdrawals/upgrades) 
+       // but only if they are the owner. Admin has full update rights. 
+       allow update: if isSignedIn() && (isOwner(userId) || isAdmin()); 
+     } 
+ 
+     // ── TASKS COLLECTION (Campaigns) ────────────────────────────── 
+     match /tasks/{taskId} { 
+       // Anyone logged in can see tasks 
+       allow read: if isSignedIn(); 
+       
+       // Advertisers can create tasks 
+       allow create: if isSignedIn(); 
+       
+       // Only Admin can approve/edit/delete tasks 
+       allow update, delete: if isAdmin(); 
+     } 
+ 
+     // ── SUBMISSIONS COLLECTION (Proof of Work) ──────────────────── 
+     match /submissions/{subId} { 
+       // Users can see their own proof, Admins see all 
+       allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin()); 
+       
+       // Users can submit proof 
+       allow create: if isSignedIn(); 
+       
+       // Only Admin can verify/approve proof 
+       allow update, delete: if isAdmin(); 
+     } 
+ 
+     // ── WITHDRAWALS COLLECTION ──────────────────────────────────── 
+     match /withdrawals/{withdrawId} { 
+       // Users see their own requests, Admins see all 
+       allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin()); 
+       
+       // Users can request a withdrawal 
+       allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid; 
+       
+       // Only Admin can mark as paid/process 
+       allow update, delete: if isAdmin(); 
+     } 
+     
+     // ── SETTINGS/GLOBAL COLLECTION ──────────────────────────────── 
+     match /settings/{docId} { 
+       allow read: if isSignedIn(); 
+       allow write: if isAdmin(); 
+     } 
+   } 
+ }

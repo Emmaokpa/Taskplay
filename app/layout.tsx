@@ -1,17 +1,40 @@
 import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";   // Changed to named import
-import { GeistMono } from "geist/font/mono";   // Named import for mono
+import { GeistSans } from "geist/font/sans";   
+import { GeistMono } from "geist/font/mono";   
 import "./globals.css";
-import Link from "next/link"; // Import Link
-import Script from "next/script"; // Import the Next.js Script component
-import Sidebar from "./components/Sidebar"; // Assuming Sidebar.tsx is in app/components/
-import BottomNavBar from "./components/BottomNavBar"; // Assuming BottomNavBar.tsx is in app/components/
-import Header from '@/components/Header'
-    import { ThemeProvider } from "@/components/ThemeProvider"; // Import ThemeProvider
+import { ThemeProvider } from "@/components/ThemeProvider";
+import AppShell from "@/app/components/AppShell";
 
 export const metadata: Metadata = {
-  title: "TaskPlay App",
-  description: "Your TaskPlay application",
+  title: "People Are Getting Paid Daily… Why Aren’t You? | TaskPlay Nigeria",
+  description: "Join thousands earning real money by completing simple tasks online. No experience. No stress. Just results. The most trusted rewards platform for Nigerians.",
+  keywords: ["earn money online nigeria", "paid tasks nigeria", "make money with phone", "taskplay", "social mining nigeria", "cpa offers nigeria"],
+  themeColor: '#8b5cf6',
+  authors: [{ name: "TaskPlay Team" }],
+  publisher: "TaskPlay Nigeria",
+  openGraph: {
+    title: "Start Earning Daily with TaskPlay Nigeria",
+    description: "Your phone is now your office. Complete simple gigs and get paid instantly to your bank account.",
+    url: "https://taskplay.ng",
+    siteName: "TaskPlay",
+    locale: "en_NG",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TaskPlay - Legit Earning for Nigerians",
+    description: "Stop searching, start earning. Join the elite earners community today.",
+  },
+  icons: {
+    icon: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'TaskPlay',
+  },
 };
 
 export default function RootLayout({
@@ -21,41 +44,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/* Standard meta tags and links are handled by Next.js metadata API */}
-        <Script
-          src='//libtl.com/sdk.js'
-          data-zone='9431679'
-          data-sdk='show_9431679'
-          strategy="beforeInteractive" // This strategy injects into the <head>
-          // async // Add async if the script supports it and doesn't need to block
-        />
-      </head>
       <body
         className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark" // Force dark theme
-          enableSystem={false} // No need to check system if always dark
-          disableTransitionOnChange // Good to keep
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
         >
-          <div className="flex flex-col min-h-screen">
-            <Header /> {/* The global header at the top */}
-            <div className="flex flex-1"> {/* This container allows sidebar and main content to be side-by-side */}
-              <Sidebar /> {/* Desktop sidebar, hidden on mobile via its own CSS */}
-              {/* Main content area */}
-              {/*
-                The md:ml-64 on main content pushes it to the right of the sidebar on medium screens and up.
-                The Sidebar component itself should handle its visibility (e.g., hidden on mobile, visible on md+).
-                The Header component handles its own mobile menu for navigation on small screens.
-              */}
-              <main className="flex-1 md:ml-64 bg-background text-foreground p-0"> {/* Use shadcn's bg-background and text-foreground */}
-                {children}
-              </main>
-            </div>
-            <BottomNavBar /> {/* Mobile bottom navigation, hidden on desktop via its own CSS */}
-          </div>
+          <AppShell>
+            {children}
+          </AppShell>
         </ThemeProvider>
       </body>
     </html>

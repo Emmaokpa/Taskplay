@@ -1,9 +1,5 @@
-// types.ts
-// This file will hold custom TypeScript types for our application.
 
-// Assuming Firebase Admin SDK's Timestamp, or a generic one if not specific to admin
-// If you are using firebase-admin/firestore
-import { Timestamp as FirebaseAdminTimestamp } from 'firebase-admin/firestore';
+// Types and Interfaces for TaskPlay
 // If you are using the client-side Firebase SDK (firebase/firestore)
 // import { Timestamp as FirebaseClientTimestamp } from 'firebase/firestore';
 
@@ -86,38 +82,46 @@ export interface UserTaskSubmission {
   proofUrl?: string; // Optional URL for the submitted proof (e.g., screenshot)
 }
 
-export interface Game {
-  id: string; // Firestore document ID
+export type TaskCategory = 'signup' | 'install' | 'review' | 'sale' | 'subscription' | 'social';
+
+export interface FirestoreTask {
+  id?: string;
+  advertiserId: string;
+  type: 'flat' | 'percentage';
+  category: TaskCategory;
   title: string;
   description: string;
-  embedCode: string; // Full iframe HTML string or script tag
-  gamePlatform?: string; // e.g., "Spritted", "GameMonetize", "HTML5"
-  category?: string; // e.g., "Action", "Puzzle"
-  type: 'free' | 'paid';
-  rewardAmount?: number; // For free games (e.g., ₦3)
-  minBet?: number; // For paid games (e.g., ₦50)
-  maxBet?: number; // For paid games (e.g., ₦5000)
-  winMultiplier?: number; // e.g., 1.5 for 1.5x payout on bet
-  status: 'active' | 'inactive';
-  createdAt: Date | FirebaseAdminTimestamp; // Allow both for client/server flexibility
-  imageUrl?: string; // Optional URL for a game thumbnail/image
-  isFeatured?: boolean; // To mark games as featured
+  instructions: string;
+  actionUrl: string;
+  totalBudget?: number; // For flat tasks: ₦100 * count
+  userReward: number; // For flat: ₦50, For percentage: e.g. 0.10 (10%)
+  platformComission: number; // For flat: ₦50, For percentage: e.g. 0.10 (10%)
+  maxParticipations: number;
+  currentParticipations: number;
+  proofType: 'screenshot' | 'text' | 'both';
+  status: 'active' | 'paused' | 'completed' | 'pending_payment';
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface Task {
-  id: string; // Document ID from Firestore
-  title: string;
-  description?: string;
-  type: 'social_follow' | 'cpa_offer' | 'game_task' | string; // Add more specific types
-  platform?: string; // e.g., instagram, tiktok, website
-  link: string; // URL for the task (e.g., profile to follow, offer page)
-  targetCount: number; // Desired number of actions/completions
-  currentCount: number; // Current number of completions
-  rewardPerAction: number; // Reward for one completion
-  totalBudget?: number; // Optional: targetCount * rewardPerAction
-  status: 'pending_payment' | 'active' | 'paused' | 'completed' | 'cancelled' | string;
-  submittedBy_supabaseAuthUserId: string;
-  submittedBy_telegramId?: number; // Optional
-  createdAt: Date | FirebaseAdminTimestamp; // Store as Timestamp, convert to Date on fetch
-  updatedAt: Date | FirebaseAdminTimestamp;
+export interface TaskSubmission {
+  id?: string;
+  taskId: string;
+  userId: string;
+  advertiserId: string;
+  proofUrl: string; // ImageKit URL
+  proofText?: string;
+  status: 'pending' | 'approved' | 'rejected';
+  rewardAmount: number; // Actual ₦ credited
+  createdAt: Date;
+  verifiedAt?: Date;
+}
+
+export interface UserWallet {
+  uid: string;
+  balance: number;
+  totalEarned: number;
+  totalWithdrawn: number;
+  isMember: boolean;
+  role: 'user' | 'admin' | 'advertiser';
 }

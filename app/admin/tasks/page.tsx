@@ -1,185 +1,270 @@
-// File: c:\Users\Emmanuel Okpa\Desktop\TaskPlay\client\app\admin\tasks\page.tsx
-"use client"; // This makes it a Client Component
-import React, { useState, useEffect, useCallback } from 'react';
-import type { UserTaskSubmission } from '@/lib/types'; // PlatformTask might not be needed directly here
+"use client";
 
-interface EnrichedUserTaskSubmission extends UserTaskSubmission {
-  taskTitle?: string;
-  taskType?: string;
-}
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  CheckCircle2, 
+  XCircle, 
+  Loader, 
+  ExternalLink, 
+  Image as ImageIcon,
+  Zap,
+  ArrowLeft,
+  Trash2,
+  Edit3,
+  Save,
+  X
+} from 'lucide-react';
+import { db } from '@/lib/firebase';
+import { collection, query, where, getDocs, doc, updateDoc, deleteDoc, serverTimestamp, increment } from 'firebase/firestore';
+import Link from 'next/link';
+import AdminGuard from '@/app/components/AdminGuard';
 
-interface ReferralStat {
-  userId: number;
-  username?: string | null;
-  referralCount: number;
-}
-const AdminTasksPage = () => {
-  const [submissions, setSubmissions] = useState<EnrichedUserTaskSubmission[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [actionMessage, setActionMessage] = useState<string | null>(null);
-  const [totalUsers, setTotalUsers] = useState<number | null>(null);
-  const [totalEarnings, setTotalEarnings] = useState<number | null>(null);
-  const [referralStats, setReferralStats] = useState<ReferralStat[]>([]);
-  const [processingId, setProcessingId] = useState<string | null>(null); // To disable buttons for a specific row
+export default function AdminTasks() {
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [verifying, setVerifying] = useState<string | null>(null);
+  const [filter, setFilter] = useState<'pending_admin' | 'active' | 'rejected'>('pending_admin');
 
-  const fetchSubmissions = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    // setActionMessage(null); // Keep action message until next action or manual clear
+  // Edit State
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<any>({});
+
+  const fetchTasks = async () => {
+    setLoading(true);
     try {
-      const response = await fetch('/api/admin/tasks/submissions');
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error || 'Failed to fetch submissions');
-      }
-      const data = await response.json();
-      setSubmissions(data.submissions || []);
-      setTotalEarnings(data.totalEarnings !== undefined ? data.totalEarnings : null);
-      setReferralStats(data.referralStats || []);
-      setTotalUsers(data.totalUsers !== undefined ? data.totalUsers : null);
-    } catch (err: any) {
-      setError(err.message);
-      setSubmissions([]); // Clear submissions on error
+      const q = query(collection(db, 'tasks'), where('status', '==', filter));
+      const querySnapshot = await getDocs(q);
+      const items = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      setTasks(items);
+    } catch (err) {
+      console.error(err);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
-    fetchSubmissions();
-  }, [fetchSubmissions]);
+    fetchTasks();
+  }, [filter]);
 
-  const handleApprove = async (submissionId: string) => {
-    if (!submissionId) return;
-    setProcessingId(submissionId);
-    setActionMessage(`Approving ${submissionId}...`);
+  const handleApprove = async (taskId: string, action: 'active' | 'rejected') => {
+    setVerifying(taskId);
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+
     try {
-      const response = await fetch('/api/admin/tasks/approve', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ submissionId }),
+      const taskRef = doc(db, 'tasks', taskId);
+      await updateDoc(taskRef, { 
+        status: action,
+        updatedAt: serverTimestamp()
       });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Failed to approve');
-      setActionMessage(result.message);
-      fetchSubmissions(); // Refresh the list
-    } catch (err: any) {
-      setActionMessage(`Error approving ${submissionId}: ${err.message}`);
+
+      if (action === 'rejected' && task.totalBudget > 0) {
+        const advertiserRef = doc(db, 'users', task.advertiserId);
+        await updateDoc(advertiserRef, { balance: increment(task.totalBudget) });
+      }
+
+      setTasks(prev => prev.filter(t => t.id !== taskId));
+    } catch (err) {
+      alert("Action failed");
     } finally {
-      setProcessingId(null);
+      setVerifying(null);
     }
   };
 
-  const handleReject = async (submissionId: string) => {
-    if (!submissionId) return;
-    setProcessingId(submissionId);
-    setActionMessage(`Rejecting ${submissionId}...`);
+  const handleDelete = async (taskId: string) => {
+    if (!confirm("Are you sure you want to permanently delete this campaign?")) return;
+    setVerifying(taskId);
     try {
-      const response = await fetch('/api/admin/tasks/reject', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ submissionId }),
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Failed to reject');
-      setActionMessage(result.message);
-      fetchSubmissions(); // Refresh the list
-    } catch (err: any) {
-      setActionMessage(`Error rejecting ${submissionId}: ${err.message}`);
+      await deleteDoc(doc(db, 'tasks', taskId));
+      setTasks(prev => prev.filter(t => t.id !== taskId));
+    } catch (err) {
+      alert("Delete failed");
     } finally {
-      setProcessingId(null);
+      setVerifying(null);
     }
   };
 
-  if (isLoading) return <p className="text-center p-4">Loading submissions...</p>;
-  if (error) return <p className="text-center text-red-500 p-4">Error loading submissions: {error}</p>;
+  const startEdit = (task: any) => {
+    setEditingId(task.id);
+    setEditForm({ ...task });
+  };
 
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Task Submissions</h1>
-      
-      {totalUsers !== null && (
-        <div className="mb-6 p-4 bg-blue-50 rounded-lg shadow">
-          <h2 className="text-xl font-semibold text-blue-700">Total Registered Users: {totalUsers}</h2>
-        </div>
-      )}
-      {totalEarnings !== null && (
-        <div className="mb-6 p-4 bg-green-50 rounded-lg shadow">
-          <h2 className="text-xl font-semibold text-green-700">Total Earnings Paid Out: ₦{totalEarnings}</h2>
-        </div>
-      )}
+  const saveEdit = async () => {
+    if (!editingId) return;
+    setVerifying(editingId);
+    try {
+      const taskRef = doc(db, 'tasks', editingId);
+      await updateDoc(taskRef, {
+        title: editForm.title,
+        description: editForm.description,
+        userReward: Number(editForm.userReward) || 0,
+        updatedAt: serverTimestamp()
+      });
+      setTasks(prev => prev.map(t => t.id === editingId ? { ...t, ...editForm } : t));
+      setEditingId(null);
+    } catch (err) {
+      alert("Save failed");
+    } finally {
+      setVerifying(null);
+    }
+  };
 
-      {referralStats.length > 0 && (
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-3">Referral Leaders</h2>
-          <div className="bg-white p-4 rounded-lg shadow overflow-x-auto">
-            <table className="min-w-full">
-              <thead>
-                <tr>
-                  <th className="py-2 px-3 border-b text-left text-sm font-medium text-gray-600">User ID</th>
-                  <th className="py-2 px-3 border-b text-left text-sm font-medium text-gray-600">Username</th>
-                  <th className="py-2 px-3 border-b text-left text-sm font-medium text-gray-600">Referrals</th>
-                </tr>
-              </thead>
-              <tbody>
-                {referralStats.map((stat) => (
-                  <tr key={stat.userId}>
-                    <td className="py-2 px-3 border-b text-sm text-gray-700">{stat.userId}</td>
-                    <td className="py-2 px-3 border-b text-sm text-gray-700">{stat.username || 'N/A'}</td>
-                    <td className="py-2 px-3 border-b text-sm text-gray-700">{stat.referralCount}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {actionMessage && (
-        <div className={`mb-4 p-3 rounded ${actionMessage.toLowerCase().includes('error') ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`}>
-          {actionMessage}
-        </div>
-      )}
-      {submissions.length === 0 ? (
-        <p>No task submissions found.</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border">
-            <thead>
-              <tr>
-                {['User ID', 'Task Title', 'Task Type', 'Submitted At', 'Status', 'Proof', 'Actions'].map(header => (
-                  <th key={header} className="py-2 px-4 border-b text-left">{header}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {submissions.map((sub) => (
-                <tr key={sub.id}>
-                  <td className="py-2 px-4 border-b">{sub.userId}</td>
-                  <td className="py-2 px-4 border-b">{sub.taskTitle}</td>
-                  <td className="py-2 px-4 border-b">{sub.taskType}</td>
-                  <td className="py-2 px-4 border-b">{sub.submittedAt ? new Date(sub.submittedAt).toLocaleString() : 'N/A'}</td>
-                  <td className="py-2 px-4 border-b">{sub.status}</td>
-                  <td className="py-2 px-4 border-b">
-                    {sub.proofUrl ? <a href={sub.proofUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">View Proof</a> : 'No proof'}
-                  </td>
-                  <td className="py-2 px-4 border-b">
-                    {sub.status === 'pending_approval' && (
-                      <>
-                        <button onClick={() => sub.id && handleApprove(sub.id)} className="text-xs bg-green-500 hover:bg-green-600 text-white py-1 px-2 rounded mr-1 disabled:opacity-50" disabled={processingId === sub.id}>Approve</button>
-                        <button onClick={() => sub.id && handleReject(sub.id)} className="text-xs bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded disabled:opacity-50" disabled={processingId === sub.id}>Reject</button>
-                      </>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+  if (loading && tasks.length === 0) return (
+    <div className="p-20 text-center text-white/50 space-y-4">
+      <Loader className="w-10 h-10 animate-spin mx-auto text-primary" />
+      <p className="text-[10px] font-black uppercase tracking-[3px]">Synchronizing Vault...</p>
     </div>
   );
-};
 
-export default AdminTasksPage;
+  return (
+    <AdminGuard>
+      <div className="p-10 max-w-7xl mx-auto pb-32">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+           <div>
+             <h1 className="text-4xl font-black text-white mb-2 tracking-tight">Campaign Infrastructure</h1>
+             <p className="text-white/40 text-sm font-bold tracking-[2px] uppercase">Full CRUD Control • Advertiser Management</p>
+           </div>
+           
+           <div className="flex bg-white/5 p-1 rounded-2xl border border-white/5">
+              {(['pending_admin', 'active', 'rejected'] as const).map((f) => (
+                <button 
+                  key={f}
+                  onClick={() => setFilter(f)}
+                  className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${filter === f ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-white/40 hover:text-white'}`}
+                >
+                  {f.replace('_admin', '')}
+                </button>
+              ))}
+           </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-8">
+          <AnimatePresence mode="popLayout">
+            {tasks.map((task, i) => (
+              <motion.div 
+                layout
+                key={task.id}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ delay: i * 0.03 }}
+                className="clay-card p-0 overflow-hidden flex flex-col md:flex-row border-white/5 relative group"
+              >
+                {/* Thumbnail Section */}
+                <div className="w-full md:w-64 aspect-video md:aspect-square relative bg-white/5 flex-shrink-0">
+                  {task.thumbnailUrl ? (
+                    <img src={task.thumbnailUrl} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center text-white/10 gap-2">
+                       <ImageIcon className="w-10 h-10" />
+                       <span className="text-[10px] uppercase font-black">No Image</span>
+                    </div>
+                  )}
+                  <div className="absolute top-4 left-4 z-10">
+                     <span className="px-3 py-1 rounded-lg glass text-[10px] font-black uppercase tracking-widest text-primary border border-primary/20">
+                        {task.category}
+                     </span>
+                  </div>
+                </div>
+
+                <div className="p-8 flex-1 flex flex-col">
+                  {editingId === task.id ? (
+                    <div className="space-y-4">
+                       <input 
+                         className="w-full bg-white/5 border border-primary/30 p-4 rounded-xl text-white font-bold outline-none"
+                         value={editForm.title}
+                         onChange={(e) => setEditForm({...editForm, title: e.target.value})}
+                       />
+                       <textarea 
+                         className="w-full bg-white/5 border border-primary/30 p-4 rounded-xl text-white/60 text-sm outline-none h-24"
+                         value={editForm.description}
+                         onChange={(e) => setEditForm({...editForm, description: e.target.value})}
+                       />
+                       <div className="flex gap-4">
+                         <div className="flex-1">
+                            <label className="text-[8px] font-black text-white/20 uppercase tracking-widest ml-1">Reward (₦)</label>
+                            <input 
+                              type="number"
+                              className="w-full bg-white/5 border border-primary/30 p-3 rounded-xl text-primary font-black"
+                              value={editForm.userReward}
+                              onChange={(e) => setEditForm({...editForm, userReward: e.target.value})}
+                            />
+                         </div>
+                         <div className="flex items-end gap-2">
+                            <button onClick={saveEdit} className="p-4 rounded-xl bg-green-500 text-white shadow-lg shadow-green-500/20"><Save className="w-5 h-5"/></button>
+                            <button onClick={() => setEditingId(null)} className="p-4 rounded-xl glass border-white/10 text-white"><X className="w-5 h-5"/></button>
+                         </div>
+                       </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                         <div className="flex items-center gap-3">
+                            <span className="text-sm font-black text-green-400">₦{task.totalBudget?.toLocaleString()}</span>
+                            <span className="text-[10px] text-white/20 font-black tracking-widest uppercase bg-white/5 px-2 py-1 rounded">REF: {task.id.slice(0,8)}</span>
+                         </div>
+                         <div className="flex items-center gap-2">
+                            <button onClick={() => startEdit(task)} className="p-2 rounded-lg glass border-white/5 text-white/20 hover:text-primary transition-all"><Edit3 className="w-4 h-4" /></button>
+                            <button onClick={() => handleDelete(task.id)} className="p-2 rounded-lg glass border-white/5 text-white/20 hover:text-red-500 transition-all"><Trash2 className="w-4 h-4" /></button>
+                         </div>
+                      </div>
+                      
+                      <h3 className="text-2xl font-black text-white mb-3 tracking-tight">{task.title}</h3>
+                      <p className="text-white/40 text-sm leading-relaxed mb-6 line-clamp-3">{task.description}</p>
+                      
+                      <div className="mt-auto flex flex-wrap items-center gap-4">
+                         <a href={task.actionUrl} target="_blank" rel="noopener noreferrer" className="p-4 rounded-xl glass hover:bg-white/10 text-white/40 hover:text-white transition-all">
+                            <ExternalLink className="w-5 h-5" />
+                         </a>
+                         <div className="flex-1" />
+                         
+                         {filter === 'pending_admin' && (
+                           <>
+                             <button 
+                               onClick={() => handleApprove(task.id, 'rejected')}
+                               className="p-4 px-6 rounded-xl glass border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all font-bold text-xs uppercase"
+                             >
+                               Reject
+                             </button>
+                             <button 
+                               onClick={() => handleApprove(task.id, 'active')}
+                               className="clay-button px-8 py-4 rounded-xl font-black text-white text-xs uppercase tracking-widest active:scale-95 shadow-xl shadow-primary/20"
+                             >
+                               {verifying === task.id ? <Loader className="w-5 h-5 animate-spin" /> : "Activate"}
+                             </button>
+                           </>
+                         )}
+
+                         {filter === 'active' && (
+                            <span className="px-6 py-3 rounded-xl bg-green-500/10 text-green-400 text-[10px] font-black uppercase tracking-[3px] border border-green-500/20">
+                               Live & Active
+                            </span>
+                         )}
+
+                         {filter === 'rejected' && (
+                            <span className="px-6 py-3 rounded-xl bg-red-500/10 text-red-400 text-[10px] font-black uppercase tracking-[3px] border border-red-500/20">
+                               Archived / Rejected
+                            </span>
+                         )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {tasks.length === 0 && !loading && (
+             <div className="clay-card p-20 text-center border-white/5 bg-white/[0.01]">
+                <Zap className="w-16 h-16 text-primary/20 mx-auto mb-6" />
+                <h3 className="text-xl font-bold text-white mb-2 uppercase tracking-tighter">Queue Exhausted</h3>
+                <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">No matching campaigns in the {filter} segment.</p>
+             </div>
+          )}
+        </div>
+      </div>
+    </AdminGuard>
+  );
+}
