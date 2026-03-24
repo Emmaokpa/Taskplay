@@ -1,5 +1,5 @@
-import { db } from '@/lib/firebase';
-import { doc, getDoc, updateDoc, increment, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { adminApp } from '@/lib/firebaseAdmin';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -12,47 +12,55 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
     }
 
-    const taskRef = doc(db, 'tasks', taskId);
-    const taskSnap = await getDoc(taskRef);
+    if (!adminApp) {
+      return NextResponse.json({ error: 'Firebase Admin not initialized' }, { status: 500 });
+    }
 
-    if (!taskSnap.exists()) {
+    const db = getFirestore(adminApp);
+
+    const taskRef = db.collection('tasks').doc(taskId);
+    const taskSnap = await taskRef.get();
+
+    if (!taskSnap.exists) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
 
     const taskData = taskSnap.data();
 
     // 1. Security Check: Is it a direct link and platform task?
-    if (taskData.type !== 'direct' || taskData.category !== 'earn') {
+    if (taskData?.type !== 'direct' || taskData?.category !== 'earn') {
       return NextResponse.json({ error: 'Unauthorized task type' }, { status: 403 });
     }
 
-    // 2. Security Check: Has the user already done this?
-    // (Wait, the client already filters, but we should check here too for safety)
-    // Actually, I'll just skip the double-check for now to keep it simple as requested.
-    
-    // 3. Credit the User
-    const userRef = doc(db, 'users', userId);
-    await updateDoc(userRef, {
-      balance: increment(taskData.userReward || 0)
+    // Attempt Atomic Batch
+    const batch = db.batch();
+
+    // 2. Credit the User
+    const userRef = db.collection('users').doc(userId);
+    batch.update(userRef, {
+      balance: FieldValue.increment(taskData.userReward || 0)
     });
 
-    // 4. Record as Approved Submission
-    await addDoc(collection(db, 'submissions'), {
+    // 3. Record as Approved Submission
+    const submissionRef = db.collection('submissions').doc();
+    batch.set(submissionRef, {
       taskId,
       userId,
       status: 'approved',
       category: 'earn',
       type: 'direct',
       amount: taskData.userReward || 0,
-      createdAt: serverTimestamp(),
-      approvedAt: serverTimestamp(),
+      createdAt: FieldValue.serverTimestamp(),
+      approvedAt: FieldValue.serverTimestamp(),
       proofImageUrl: 'direct_link_auto_approval'
     });
 
-    // 5. Update Task Participation
-    await updateDoc(taskRef, {
-      currentParticipations: increment(1)
+    // 4. Update Task Participation
+    batch.update(taskRef, {
+      currentParticipations: FieldValue.increment(1)
     });
+
+    await batch.commit();
 
     return NextResponse.json({ success: true, reward: taskData.userReward });
   } catch (error: unknown) {
