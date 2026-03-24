@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Info, Target, Users, ShieldCheck } from 'lucide-react';
+import { Info, Target, Users } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AboutPage() {
@@ -33,7 +33,7 @@ export default function AboutPage() {
           transition={{ delay: 0.2 }}
           className="text-xl text-white/50 mb-20 leading-relaxed font-medium"
         >
-          TaskPlay was born out of a simple idea: everyone's time has value. In a world of increasing digital activity, we created a platform that bridge the gap between global brands and daily digital users in Nigeria.
+          TaskPlay was born out of a simple idea: everyone&apos;s time has value. In a world of increasing digital activity, we created a platform that bridge the gap between global brands and daily digital users in Nigeria.
         </motion.p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-32">

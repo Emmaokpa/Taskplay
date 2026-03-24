@@ -7,20 +7,16 @@ import {
   ShieldCheck, 
   Search, 
   Loader, 
-  Mail, 
-  TrendingUp, 
   ArrowLeft,
-  Calendar,
-  Wallet,
-  UserCheck,
-  UserX
+  XCircle
 } from 'lucide-react';
 import { db } from '@/lib/firebase';
-import { collection, query, orderBy, limit, getDocs, where, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, orderBy, limit, getDocs, where, doc, updateDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import AdminGuard from '@/app/components/AdminGuard';
 
 export default function ManageUsers() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -46,6 +42,7 @@ export default function ManageUsers() {
 
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
   const toggleAdmin = async (userId: string, currentStatus: boolean) => {
@@ -53,7 +50,7 @@ export default function ManageUsers() {
     try {
       await updateDoc(doc(db, 'users', userId), { isAdmin: !currentStatus });
       setUsers(prev => prev.map(u => u.id === userId ? { ...u, isAdmin: !currentStatus } : u));
-    } catch (err) {
+    } catch {
        alert("Action failed");
     } finally {
        setProcessingId(null);

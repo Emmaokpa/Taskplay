@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+
 import { 
   Copy, 
-  Share2, 
   Users, 
   TrendingUp, 
   Gift,
@@ -19,6 +18,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function RefferalPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [userData, setUserData] = useState<any>(null);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -36,6 +36,7 @@ export default function RefferalPage() {
         router.push('/login');
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const referralLink = typeof window !== 'undefined' 

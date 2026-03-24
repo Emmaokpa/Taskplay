@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 
 // MUI Icon imports
-import HomeIcon from '@mui/icons-material/HomeOutlined'; 
 import BarChartIcon from '@mui/icons-material/BarChartOutlined';
 import RocketIcon from '@mui/icons-material/RocketOutlined';
 import ShareIcon from '@mui/icons-material/ShareOutlined';

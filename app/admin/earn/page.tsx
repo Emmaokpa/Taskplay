@@ -8,21 +8,10 @@ import {
   Zap, 
   Loader, 
   CheckCircle2, 
-  Globe, 
-  Smartphone, 
-  ExternalLink,
-  MessageCircle,
-  Play,
-  Instagram,
-  Youtube,
-  Twitter,
-  Facebook,
-  Trophy,
   Trash,
   List
 } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import AdminGuard from '@/app/components/AdminGuard';
@@ -32,8 +21,8 @@ export default function AdminEarnManagement() {
   const [fetching, setFetching] = useState(true);
   const [success, setSuccess] = useState(false);
   const [view, setView] = useState<'list' | 'create'>('list');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [missions, setMissions] = useState<any[]>([]);
-  const router = useRouter();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -67,7 +56,7 @@ export default function AdminEarnManagement() {
      try {
         await deleteDoc(doc(db, 'tasks', id));
         setMissions(missions.filter(m => m.id !== id));
-     } catch (err) {
+     } catch {
         alert("Delete failed");
      }
   };
@@ -91,7 +80,7 @@ export default function AdminEarnManagement() {
          setView('list');
          fetchMissions();
       }, 2000);
-    } catch (err) {
+    } catch {
       alert("Failed to create mission");
     } finally {
       setLoading(false);

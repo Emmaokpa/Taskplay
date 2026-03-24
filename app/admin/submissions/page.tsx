@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   CheckCircle2, 
@@ -8,18 +9,27 @@ import {
   Loader, 
   Eye, 
   ExternalLink, 
-  ShieldCheck, 
-  AlertCircle,
   X
 } from 'lucide-react';
-import { auth, db } from '@/lib/firebase';
+import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, doc, updateDoc, getDoc, increment, serverTimestamp } from 'firebase/firestore';
 
 import { ListSkeleton } from '@/app/components/Skeleton';
 import AdminGuard from '@/app/components/AdminGuard';
 
+interface Submission {
+  id: string;
+  proofUrl: string;
+  userId: string;
+  taskId: string;
+  rewardAmount: number;
+  status: string;
+  createdAt: { seconds: number; nanoseconds: number };
+  [key: string]: unknown;
+}
+
 export default function AdminSubmissions() {
-  const [submissions, setSubmissions] = useState<any[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
   const [verifying, setVerifying] = useState<string | null>(null);
   const [selectedProof, setSelectedProof] = useState<string | null>(null);
@@ -30,7 +40,7 @@ export default function AdminSubmissions() {
       try {
         const q = query(collection(db, 'submissions'), where('status', '==', 'pending'));
         const querySnapshot = await getDocs(q);
-        const subs = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        const subs = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() } as Submission));
         if (isMounted) setSubmissions(subs);
       } catch (err) {
         console.error("Fetch error", err);
@@ -42,7 +52,7 @@ export default function AdminSubmissions() {
     return () => { isMounted = false; };
   }, []);
 
-  const handleVerify = async (sub: any, action: 'approve' | 'reject') => {
+  const handleVerify = async (sub: Submission, action: 'approve' | 'reject') => {
     setVerifying(sub.id);
     try {
       const subRef = doc(db, 'submissions', sub.id);
@@ -63,14 +73,9 @@ export default function AdminSubmissions() {
           const newCount = (taskData.currentParticipations || 0) + 1;
           const max = taskData.maxParticipations || 0;
           
-          const updateData: any = {
-            currentParticipations: increment(1),
-          };
-
-          // Auto-terminate if limit reached
-          if (newCount >= max) {
-            updateData.status = 'completed';
-          }
+          const updateData = (newCount >= max) 
+            ? { currentParticipations: increment(1), status: 'completed' }
+            : { currentParticipations: increment(1) };
           
           await updateDoc(taskRef, updateData);
         }
@@ -88,7 +93,7 @@ export default function AdminSubmissions() {
       }
 
       setSubmissions(prev => prev.filter(s => s.id !== sub.id));
-    } catch (err) {
+    } catch {
       alert("Verification failed");
     } finally {
       setVerifying(null);
@@ -136,7 +141,7 @@ export default function AdminSubmissions() {
                     onClick={() => setSelectedProof(sub.proofUrl)}
                     className="w-24 h-24 rounded-2xl glass border-white/10 flex-shrink-0 cursor-pointer hover:scale-105 transition-all overflow-hidden relative group"
                   >
-                     <img src={sub.proofUrl} className="w-full h-full object-cover rounded-[inherit] opacity-80" />
+                     <Image src={sub.proofUrl} alt="Submission proof" fill className="object-cover rounded-[inherit] opacity-80" unoptimized />
                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <Eye className="w-6 h-6 text-white" />
                      </div>
@@ -187,7 +192,7 @@ export default function AdminSubmissions() {
                 <button onClick={() => setSelectedProof(null)} className="absolute top-4 right-4 p-3 rounded-full glass bg-black/40 text-white z-10 hover:bg-white/10 transition-all">
                    <X className="w-6 h-6" />
                 </button>
-                <img src={selectedProof} className="w-full h-auto max-h-[85vh] object-contain rounded-2xl" />
+                <Image src={selectedProof} alt="Submission proof enlarged" width={800} height={600} className="w-full h-auto max-h-[85vh] object-contain rounded-2xl" unoptimized />
                 <div className="p-6 text-center">
                    <a href={selectedProof} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-primary font-black uppercase tracking-widest text-xs hover:underline">
                       Open Full Size <ExternalLink className="w-4 h-4" />

@@ -8,11 +8,8 @@ import {
   Rocket, 
   Share2, 
   Wallet,
-  ArrowRight,
-  ShieldCheck,
   AlertCircle,
-  X,
-  Loader
+  X
 } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -22,9 +19,13 @@ import Link from 'next/link';
 
 import { CardSkeleton, StatSkeleton } from '@/app/components/Skeleton';
 
+interface UserData {
+  balance?: number;
+  isMember?: boolean;
+}
+
 export default function DashboardPage() {
-  const [user, setUser] = useState<any>(null);
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showMembershipModal, setShowMembershipModal] = useState(false);
   const router = useRouter();
@@ -33,7 +34,6 @@ export default function DashboardPage() {
     let isMounted = true;
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        if (isMounted) setUser(user);
         try {
           const userDoc = await getDoc(doc(db, 'users', user.uid));
           if (userDoc.exists() && isMounted) {

@@ -4,13 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   CheckCircle2, 
-  XCircle, 
   Loader, 
-  Eye, 
-  CreditCard,
   Building2,
   User,
-  ExternalLink,
   Wallet
 } from 'lucide-react';
 import { db } from '@/lib/firebase';
@@ -18,8 +14,18 @@ import { collection, query, where, getDocs, doc, updateDoc, serverTimestamp, inc
 import Link from 'next/link';
 import AdminGuard from '@/app/components/AdminGuard';
 
+interface PayoutRequest {
+  id: string;
+  userId: string;
+  amount: number;
+  accountName: string;
+  bankName: string;
+  accountNumber: string;
+  status: string;
+}
+
 export default function AdminPayouts() {
-  const [payouts, setPayouts] = useState<any[]>([]);
+  const [payouts, setPayouts] = useState<PayoutRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [verifying, setVerifying] = useState<string | null>(null);
 
@@ -27,7 +33,7 @@ export default function AdminPayouts() {
     const fetchPayouts = async () => {
       const q = query(collection(db, 'withdrawals'), where('status', '==', 'pending'));
       const querySnapshot = await getDocs(q);
-      const items = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      const items = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() } as PayoutRequest));
       setPayouts(items);
       setLoading(false);
     };

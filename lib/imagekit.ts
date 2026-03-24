@@ -1,4 +1,4 @@
-// @ts-expect-error
+// @ts-expect-error - imagekit-javascript has missing types
 import ImageKit from "imagekit-javascript";
 
 const imagekit = new ImageKit({

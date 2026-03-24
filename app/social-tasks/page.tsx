@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, 
   Share2, 
   Zap, 
   ArrowRight,
-  Loader,
-  Search,
   Instagram,
   Youtube,
   Twitter,
@@ -20,12 +19,25 @@ import {
   Send
 } from 'lucide-react';
 import { db, auth } from '@/lib/firebase';
-import { collection, query, where, getDocs, limit } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { ListSkeleton } from '@/app/components/Skeleton';
+
+interface Task {
+  id: string;
+  category: string;
+  status: string;
+  platform: string;
+  title: string;
+  userReward: number;
+  thumbnailUrl?: string;
+  currentParticipations: number;
+  maxParticipations: number;
+  [key: string]: unknown;
+}
 
 const getPlatformIcon = (platform: string) => {
   switch (platform?.toLowerCase()) {
@@ -42,16 +54,14 @@ const getPlatformIcon = (platform: string) => {
 };
 
 export default function SocialTasksPage() {
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
     let isMounted = true;
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        if (isMounted) setUser(user);
         try {
           // 1. Fetch user's submissions to hide tasks they've already done
           const subsQ = query(collection(db, 'submissions'), where('userId', '==', user.uid));
@@ -66,7 +76,7 @@ export default function SocialTasksPage() {
           );
           const querySnapshot = await getDocs(q);
           const items = querySnapshot.docs
-            .map(d => ({ id: d.id, ...d.data() } as any))
+            .map(d => ({ id: d.id, ...d.data() } as Task))
             .filter(t => !submittedIds.has(t.id)); // Hide if already submitted
           
           if (isMounted) setTasks(items);
@@ -129,7 +139,7 @@ export default function SocialTasksPage() {
                 >
                    <div className="w-20 h-20 rounded-2xl bg-white/5 flex-shrink-0 overflow-hidden relative border border-white/5">
                       {task.thumbnailUrl ? (
-                        <img src={task.thumbnailUrl} className="w-full h-full object-cover" />
+                        <Image src={task.thumbnailUrl} alt={task.title} fill className="object-cover" unoptimized />
                       ) : (
                         <div className={`w-full h-full flex items-center justify-center ${platformInfo.color} bg-black/20`}>
                            {platformInfo.icon}

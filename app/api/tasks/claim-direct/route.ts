@@ -53,8 +53,9 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true, reward: taskData.userReward });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'An unknown error occurred';
     console.error('Claim Direct Error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

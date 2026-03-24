@@ -1,32 +1,50 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, 
   Zap, 
   ArrowRight,
   Loader,
-  Search,
   Instagram,
   Youtube,
   Twitter,
   Facebook,
   Play,
   MessageCircle,
-  Globe,
-  Smartphone,
   Diamond,
   Send,
   ExternalLink
 } from 'lucide-react';
 import { db, auth } from '@/lib/firebase';
-import { collection, query, where, getDocs, limit, getDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { ListSkeleton } from '@/app/components/Skeleton';
+
+interface Task {
+  id: string;
+  type: string;
+  category: string;
+  platform: string;
+  title: string;
+  userReward: number;
+  thumbnailUrl?: string;
+  actionUrl?: string;
+  maxParticipations: number;
+  currentParticipations: number;
+  status: string;
+  [key: string]: unknown; // For other potential fields
+}
+
+interface UserData {
+  isMember?: boolean;
+  [key: string]: unknown; // For other potential user data fields
+}
 
 const getPlatformIcon = (platform: string) => {
   switch (platform?.toLowerCase()) {
@@ -42,12 +60,12 @@ const getPlatformIcon = (platform: string) => {
 };
 
 export default function EarnPage() {
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const [claimingId, setClaimingId] = useState<string | null>(null);
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -70,7 +88,7 @@ export default function EarnPage() {
           );
           const querySnapshot = await getDocs(q);
           const items = querySnapshot.docs
-            .map(d => ({ id: d.id, ...d.data() } as any))
+            .map(d => ({ id: d.id, ...d.data() } as Task))
             .filter(t => !submittedIds.has(t.id)); 
           
           if (isMounted) setTasks(items);
@@ -90,7 +108,7 @@ export default function EarnPage() {
     };
   }, [router]);
 
-  const handleTaskClick = async (task: any) => {
+  const handleTaskClick = async (task: Task) => {
     if (userData && !userData.isMember) {
       router.push('/upgrade');
       return;
@@ -183,9 +201,9 @@ export default function EarnPage() {
                    </div>
 
                    <div className="w-20 h-20 rounded-2xl glass flex-shrink-0 flex items-center justify-center relative border border-white/5 shadow-2xl">
-                      {task.thumbnailUrl ? (
-                         <img src={task.thumbnailUrl} className="w-full h-full object-cover rounded-[inherit]" />
-                      ) : (
+                       {task.thumbnailUrl ? (
+                          <Image src={task.thumbnailUrl} alt="Task thumbnail" fill className="object-cover rounded-[inherit]" unoptimized />
+                       ) : (
                          <div className={`${platformInfo.color} opacity-40 group-hover:opacity-100 transition-opacity`}>
                             {platformInfo.icon}
                          </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, use } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -9,7 +10,6 @@ import {
   CheckCircle2,
   AlertCircle,
   Loader,
-  X,
   ShieldCheck,
   Plus
 } from 'lucide-react';
@@ -17,12 +17,32 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, addDoc, collection, serverTimestamp, query, where, getDocs, limit } from 'firebase/firestore';
-import { StatSkeleton, Skeleton } from '@/app/components/Skeleton';
+import { Skeleton } from '@/app/components/Skeleton';
 import { onAuthStateChanged } from 'firebase/auth';
+
+interface TaskData {
+  id: string;
+  advertiserId: string;
+  userReward: number;
+  category: string;
+  title: string;
+  description: string;
+  actionUrl: string;
+  instructions: string;
+  status: string;
+  maxParticipations: number;
+  currentParticipations: number;
+  [key: string]: unknown;
+}
+
+interface UserData {
+  isMember?: boolean;
+  [key: string]: unknown;
+}
 
 export default function TaskSubmissionPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const [task, setTask] = useState<any>(null);
+  const [task, setTask] = useState<TaskData | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [file, setFile] = useState<File | null>(null);
@@ -32,7 +52,7 @@ export default function TaskSubmissionPage({ params }: { params: Promise<{ id: s
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
   const router = useRouter();
 
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -44,28 +64,28 @@ export default function TaskSubmissionPage({ params }: { params: Promise<{ id: s
           // 1. Fetch User Data (for membership check)
           const userDoc = await getDoc(doc(db, 'users', user.uid));
           if (userDoc.exists()) {
-             const docData = userDoc.data();
-             setUserData(docData);
-             
-             // Immediate Redirect if not a member
-             if (!docData.isMember) {
-                router.push('/upgrade');
-                return;
-             }
+            const docData = userDoc.data();
+            setUserData(docData);
+
+            // Immediate Redirect if not a member
+            if (!docData.isMember) {
+              router.push('/upgrade');
+              return;
+            }
           } else {
-             // If user doc doesn't exist, they definitely aren't a member
-             router.push('/upgrade');
-             return;
+            // If user doc doesn't exist, they definitely aren't a member
+            router.push('/upgrade');
+            return;
           }
 
           // 2. Fetch Task
           const docRef = doc(db, 'tasks', id);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists() && isMounted) {
-            const taskData = docSnap.id ? { id: docSnap.id, ...docSnap.data() } as any : null;
-            
+            const taskData = { id: docSnap.id, ...docSnap.data() } as TaskData;
+
             // Check if task is still active and has slots
-            if (taskData.status !== 'active' || (taskData.currentParticipations >= taskData.maxParticipations)) {
+            if (taskData && (taskData.status !== 'active' || (taskData.currentParticipations >= taskData.maxParticipations))) {
               setTask(null);
               setLoading(false);
               return;
@@ -135,9 +155,10 @@ export default function TaskSubmissionPage({ params }: { params: Promise<{ id: s
   };
 
   const handleSubmit = async () => {
+    if (!task) return;
     if (!userData?.isMember) {
-       router.push('/upgrade');
-       return;
+      router.push('/upgrade');
+      return;
     }
     if (!file) return setError('Please upload a screenshot as proof.');
     setSubmitting(true);
@@ -162,8 +183,8 @@ export default function TaskSubmissionPage({ params }: { params: Promise<{ id: s
       });
 
       setSuccess(true);
-    } catch (err: any) {
-      setError(err.message || 'Failed to submit task');
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Failed to submit task');
     } finally {
       setSubmitting(false);
     }
@@ -276,7 +297,7 @@ export default function TaskSubmissionPage({ params }: { params: Promise<{ id: s
               >
                 {preview ? (
                   <>
-                    <img src={preview} alt="Proof Preview" className="w-full h-full object-cover" />
+                    <Image src={preview} alt="Task proof preview" fill className="object-cover" unoptimized />
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <Plus className="w-10 h-10 text-white" />
                     </div>

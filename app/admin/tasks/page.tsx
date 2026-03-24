@@ -1,15 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  CheckCircle2, 
-  XCircle, 
   Loader, 
   ExternalLink, 
   Image as ImageIcon,
   Zap,
-  ArrowLeft,
   Trash2,
   Edit3,
   Save,
@@ -17,25 +15,38 @@ import {
 } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, doc, updateDoc, deleteDoc, serverTimestamp, increment } from 'firebase/firestore';
-import Link from 'next/link';
 import AdminGuard from '@/app/components/AdminGuard';
 
+interface AdminTask {
+  id: string;
+  title: string;
+  description: string;
+  userReward: number;
+  totalBudget: number;
+  advertiserId: string;
+  status: string;
+  category: string;
+  thumbnailUrl?: string;
+  actionUrl?: string;
+  [key: string]: unknown;
+}
+
 export default function AdminTasks() {
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<AdminTask[]>([]);
   const [loading, setLoading] = useState(true);
   const [verifying, setVerifying] = useState<string | null>(null);
   const [filter, setFilter] = useState<'pending_admin' | 'active' | 'rejected'>('pending_admin');
 
   // Edit State
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState<any>({});
+  const [editForm, setEditForm] = useState<Partial<AdminTask>>({});
 
   const fetchTasks = async () => {
     setLoading(true);
     try {
       const q = query(collection(db, 'tasks'), where('status', '==', filter));
       const querySnapshot = await getDocs(q);
-      const items = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      const items = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() } as AdminTask));
       setTasks(items);
     } catch (err) {
       console.error(err);
@@ -46,6 +57,7 @@ export default function AdminTasks() {
 
   useEffect(() => {
     fetchTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
   const handleApprove = async (taskId: string, action: 'active' | 'rejected') => {
@@ -66,7 +78,7 @@ export default function AdminTasks() {
       }
 
       setTasks(prev => prev.filter(t => t.id !== taskId));
-    } catch (err) {
+    } catch {
       alert("Action failed");
     } finally {
       setVerifying(null);
@@ -79,14 +91,14 @@ export default function AdminTasks() {
     try {
       await deleteDoc(doc(db, 'tasks', taskId));
       setTasks(prev => prev.filter(t => t.id !== taskId));
-    } catch (err) {
+    } catch {
       alert("Delete failed");
     } finally {
       setVerifying(null);
     }
   };
 
-  const startEdit = (task: any) => {
+  const startEdit = (task: AdminTask) => {
     setEditingId(task.id);
     setEditForm({ ...task });
   };
@@ -104,7 +116,7 @@ export default function AdminTasks() {
       });
       setTasks(prev => prev.map(t => t.id === editingId ? { ...t, ...editForm } : t));
       setEditingId(null);
-    } catch (err) {
+    } catch {
       alert("Save failed");
     } finally {
       setVerifying(null);
@@ -155,7 +167,7 @@ export default function AdminTasks() {
                 {/* Thumbnail Section */}
                 <div className="w-full md:w-64 aspect-video md:aspect-square relative bg-white/5 flex-shrink-0">
                   {task.thumbnailUrl ? (
-                    <img src={task.thumbnailUrl} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                    <Image src={task.thumbnailUrl} alt="Task thumbnail" fill className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" unoptimized />
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center text-white/10 gap-2">
                        <ImageIcon className="w-10 h-10" />
@@ -188,8 +200,8 @@ export default function AdminTasks() {
                             <input 
                               type="number"
                               className="w-full bg-white/5 border border-primary/30 p-3 rounded-xl text-primary font-black"
-                              value={editForm.userReward}
-                              onChange={(e) => setEditForm({...editForm, userReward: e.target.value})}
+                              value={editForm.userReward ?? ""}
+                              onChange={(e) => setEditForm({...editForm, userReward: Number(e.target.value) || 0})}
                             />
                          </div>
                          <div className="flex items-end gap-2">

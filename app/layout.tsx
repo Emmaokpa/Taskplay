@@ -9,7 +9,6 @@ export const metadata: Metadata = {
   title: "People Are Getting Paid Daily… Why Aren’t You? | TaskPlay Nigeria",
   description: "Join thousands earning real money by completing simple tasks online. No experience. No stress. Just results. The most trusted rewards platform for Nigerians.",
   keywords: ["earn money online nigeria", "paid tasks nigeria", "make money with phone", "taskplay", "social mining nigeria", "cpa offers nigeria"],
-  themeColor: '#8b5cf6',
   authors: [{ name: "TaskPlay Team" }],
   publisher: "TaskPlay Nigeria",
   openGraph: {
@@ -35,6 +34,10 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
     title: 'TaskPlay',
   },
+};
+
+export const viewport = {
+  themeColor: '#8b5cf6',
 };
 
 export default function RootLayout({

@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import Image from 'next/image';
+
 import { 
-  User, 
-  Mail, 
   ShieldCheck, 
   Wallet, 
   Copy, 
@@ -12,7 +11,6 @@ import {
   LogOut,
   Settings,
   Shield,
-  Loader,
   Gift,
   CheckCircle2
 } from 'lucide-react';
@@ -23,8 +21,20 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { StatSkeleton, Skeleton } from '@/app/components/Skeleton';
 
+interface ProfileData {
+  fullName?: string;
+  email?: string;
+  photoUrl?: string;
+  isMember?: boolean;
+  balance?: number;
+  referralCode?: string;
+  totalReferrals?: number;
+  earnedFromReferrals?: number;
+  [key: string]: unknown;
+}
+
 export default function ProfilePage() {
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const router = useRouter();
@@ -36,7 +46,7 @@ export default function ProfilePage() {
         try {
           const userDoc = await getDoc(doc(db, 'users', user.uid));
           if (userDoc.exists() && isMounted) {
-            setUserData(userDoc.data());
+            setUserData(userDoc.data() as ProfileData);
           }
         } catch (err) {
           console.error("Fetch error", err);
@@ -86,7 +96,7 @@ export default function ProfilePage() {
         <div className="w-24 h-24 rounded-3xl bg-gradient-to-tr from-primary to-accent p-[2px] mb-6 shadow-2xl overflow-hidden">
            <div className="w-full h-full bg-black/40 backdrop-blur-3xl rounded-[inherit] flex items-center justify-center p-[2px]">
               {userData?.photoUrl ? (
-                 <img src={userData.photoUrl} className="w-full h-full rounded-[inherit] object-cover" />
+                 <Image src={userData.photoUrl} alt="User photo" fill className="rounded-[inherit] object-cover" unoptimized />
               ) : (
                  <div className="w-full h-full rounded-[inherit] bg-white/5 flex items-center justify-center text-3xl font-black text-primary">
                     {userData?.fullName?.charAt(0) || userData?.email?.charAt(0) || 'U'}

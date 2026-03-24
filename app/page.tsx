@@ -1,28 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
-  Rocket, 
-  Share2, 
   ArrowRight,
   Zap,
   ShieldCheck,
-  Coins,
-  ChevronDown,
-  Info,
-  LifeBuoy,
-  CheckCircle2,
-  Wallet,
-  ChevronRight,
-  Plus,
   Star,
   Sparkles,
-  LayoutDashboard,
   Smartphone,
-  Heart,
   Globe,
-  TrendingUp,
   Banknote,
   Users,
   Timer,
@@ -31,6 +18,7 @@ import {
 import Link from 'next/link';
 import Logo from '@/app/components/Logo';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const FloatingParticle = ({ children, delay = 0, x = 0, y = 0 }: any) => {
   const [randomX] = useState(() => Math.random() * 100);
   const [randomY] = useState(() => Math.random() * 100);
@@ -167,14 +155,14 @@ export default function LandingPage() {
 
            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               {[
-                { step: "01", title: "Sign Up", desc: "Create your account in less than 2 minutes. Quick and easy.", icon: <Smartphone className="text-pink-400" /> },
-                { step: "02", title: "Perform Tasks", desc: "Follow, like, share, or register for high-paying offers.", icon: <Zap className="text-yellow-400" /> },
-                { step: "03", title: "Get Paid", desc: "Withdraw earnings directly to your bank account instantly.", icon: <Banknote className="text-green-400" /> },
+                { step: "01", title: "Sign Up", desc: "Create your account in less than 2 minutes. Quick and easy.", Icon: Smartphone, color: "text-pink-400" },
+                { step: "02", title: "Perform Tasks", desc: "Follow, like, share, or register for high-paying offers.", Icon: Zap, color: "text-yellow-400" },
+                { step: "03", title: "Get Paid", desc: "Withdraw earnings directly to your bank account instantly.", Icon: Banknote, color: "text-green-400" },
               ].map((s, i) => (
                 <div key={i} className="clay-card p-12 group hover:bg-primary/5 transition-all relative overflow-hidden">
                    <div className="absolute -top-10 -right-10 text-[10rem] font-black text-white/[0.02] -z-10 group-hover:text-primary/5 transition-colors">{s.step}</div>
                    <div className="w-16 h-16 rounded-2xl glass mb-10 flex items-center justify-center border border-white/5 shadow-xl group-hover:bg-primary/10 transition-all">
-                      {React.cloneElement(s.icon as any, { className: "w-8 h-8" })}
+                      <s.Icon className={`w-8 h-8 ${s.color}`} />
                    </div>
                    <h3 className="text-3xl font-black text-white mb-6 tracking-tight">{s.title}</h3>
                    <p className="text-white/40 text-base font-bold leading-relaxed italic">{s.desc}</p>
@@ -187,7 +175,7 @@ export default function LandingPage() {
         <section className="py-40 border-t border-white/[0.05]">
            <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
               <div>
-                 <h3 className="text-white/20 font-black uppercase text-xs tracking-[8px] mb-8">Nigeria's #1 Rewards Pipeline</h3>
+                 <h3 className="text-white/20 font-black uppercase text-xs tracking-[8px] mb-8">Nigeria&apos;s #1 Rewards Pipeline</h3>
                  <h4 className="text-4xl md:text-6xl font-black text-white mb-10 tracking-tight leading-none italic">Built for the <span className="text-accent underline">Hustler</span> in you.</h4>
                  <p className="text-white/40 text-lg font-bold leading-relaxed italic mb-12">TaskPlay is optimized for mobile performance, meaning you can earn while in traffic, while in class, or from the comfort of your home. Real money, real time.</p>
                  
@@ -242,7 +230,7 @@ export default function LandingPage() {
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-24 text-left">
               <div className="lg:col-span-1">
                  <Logo size="lg" className="mb-10" />
-                 <p className="text-white/20 text-sm font-bold italic leading-relaxed max-w-xs">Nigeria's premier task monetization engine. We empower your time, one gig at a time.</p>
+                 <p className="text-white/20 text-sm font-bold italic leading-relaxed max-w-xs">Nigeria&apos;s premier task monetization engine. We empower your time, one gig at a time.</p>
               </div>
 
               <div>

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { 
   ShieldCheck, 
   ArrowLeft, 
@@ -11,16 +10,15 @@ import {
   Loader
 } from 'lucide-react';
 import { db, auth } from '@/lib/firebase';
-import { doc, getDoc, updateDoc, increment, serverTimestamp } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { StatSkeleton, Skeleton } from '@/app/components/Skeleton';
 import Modal from '@/app/components/Modal';
 
 export default function UpgradePage() {
-  const [user, setUser] = useState<any>(null);
-  const [userData, setUserData] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const router = useRouter();
@@ -49,7 +47,6 @@ export default function UpgradePage() {
           const userDoc = await getDoc(doc(db, 'users', u.uid));
           if (userDoc.exists() && isMounted) {
             const data = userDoc.data();
-            setUserData(data);
             if (data.isMember) {
               router.push('/dashboard');
               return;
@@ -72,7 +69,7 @@ export default function UpgradePage() {
   }, [router]);
 
   const handleUpgrade = async () => {
-    if (processing) return;
+    if (processing || !user) return;
     setProcessing(true);
 
     const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
@@ -92,7 +89,7 @@ export default function UpgradePage() {
         email: user.email,
         amount: 1500 * 100, // ₦1,500 in kobo
         currency: "NGN",
-        onSuccess: async (response: any) => {
+        onSuccess: async (response: { reference: string }) => {
           setModal({ isOpen: true, type: 'loading', title: 'Verifying Payment', message: 'Checking with Paystack. Please wait...' });
           try {
             const apiRes = await fetch('/api/upgrade/verify', {
@@ -107,8 +104,8 @@ export default function UpgradePage() {
             } else {
                throw new Error(data.error || 'Verification failed');
             }
-          } catch (err: any) {
-            setModal({ isOpen: true, type: 'error', title: 'Critical Error', message: err.message || "Payment verified but account update failed. Please contact support."});
+          } catch (err: unknown) {
+            setModal({ isOpen: true, type: 'error', title: 'Critical Error', message: (err as Error).message || "Payment verified but account update failed. Please contact support."});
           } finally {
             setProcessing(false);
           }

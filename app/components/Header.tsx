@@ -1,15 +1,22 @@
 "use client";
 
-import { usePathname } from 'next/navigation';
-import { Bell, Menu, X, Wallet } from 'lucide-react';
+import { Bell, Menu, Wallet } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 
+interface UserData {
+  balance?: number;
+  photoUrl?: string;
+  fullName?: string;
+  email?: string;
+  [key: string]: unknown;
+}
+
 const Header = ({ onMenuClick }: { onMenuClick?: () => void }) => {
-  const [userData, setUserData] = useState<any>(null);
-  const pathname = usePathname();
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
     let unsubscribeSnap: () => void;
@@ -18,7 +25,7 @@ const Header = ({ onMenuClick }: { onMenuClick?: () => void }) => {
         // Real-time listener for user data (balance, membership, etc.)
         unsubscribeSnap = onSnapshot(doc(db, 'users', u.uid), (snap) => {
           if (snap.exists()) {
-            setUserData(snap.data());
+            setUserData(snap.data() as UserData);
           }
         }, (err) => {
           console.error("Header snapshot error:", err);
@@ -63,7 +70,7 @@ const Header = ({ onMenuClick }: { onMenuClick?: () => void }) => {
 
            <div className="w-10 h-10 rounded-2xl glass p-0.5 border border-white/5 flex items-center justify-center overflow-hidden">
               {userData?.photoUrl ? (
-                <img src={userData.photoUrl} alt="Avatar" className="w-full h-full rounded-[inherit] object-cover" />
+                <Image src={userData.photoUrl} alt="Avatar" fill className="rounded-[inherit] object-cover" unoptimized />
               ) : (
                 <span className="text-xl font-black text-primary uppercase">
                   {userData?.fullName?.charAt(0) || userData?.email?.charAt(0) || 'U'}

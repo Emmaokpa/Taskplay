@@ -12,15 +12,23 @@ import {
 } from 'lucide-react';
 import { db, auth } from '@/lib/firebase';
 import { doc, onSnapshot, updateDoc, increment, collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Skeleton, StatSkeleton } from '@/app/components/Skeleton';
 import Modal from '@/app/components/Modal';
 
+interface UserData {
+  balance?: number;
+  isMember?: boolean;
+  totalEarned?: number;
+  fullName?: string;
+  [key: string]: unknown;
+}
+
 export default function WithdrawalPage() {
-  const [user, setUser] = useState<unknown>(null);
-  const [userData, setUserData] = useState<Record<string, unknown> | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const router = useRouter();
@@ -68,7 +76,7 @@ export default function WithdrawalPage() {
       if (u) {
         setUser(u);
         unsubscribeSnap = onSnapshot(doc(db, 'users', u.uid), (snap) => {
-          if (snap.exists()) setUserData(snap.data());
+          if (snap.exists()) setUserData(snap.data() as UserData);
           setLoading(false);
         });
       } else {
@@ -102,7 +110,7 @@ export default function WithdrawalPage() {
       } else {
         setResolveError(data.error || 'Could not verify account');
       }
-    } catch (_err) {
+    } catch {
       setResolveError('Verification failed');
     } finally {
       setIsResolving(false);
@@ -112,7 +120,7 @@ export default function WithdrawalPage() {
   const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!userData?.isMember) {
+    if (!user || !userData?.isMember) {
       setModal({ isOpen: true, type: 'error', title: 'Membership Required', message: 'You must upgrade to a Standard Plan before withdrawing.'});
       return;
     }
@@ -165,7 +173,7 @@ export default function WithdrawalPage() {
       setSelectedBank(null);
       setAccountName('');
 
-    } catch (_err) {
+    } catch {
       setModal({ isOpen: true, type: 'error', title: 'Error', message: 'Failed to process withdrawal.'});
     } finally {
       setProcessing(false);

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, 
@@ -15,7 +16,7 @@ import {
   Tag
 } from 'lucide-react';
 import { db, auth } from '@/lib/firebase';
-import { collection, query, where, getDocs, limit } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -34,7 +35,8 @@ const getCpaIcon = (platform: string) => {
 };
 
 export default function CPAOffersPage() {
-  const [tasks, setTasks] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [tasks, setTasks] = useState<any[]>([]); // Using any[] here as it's a generic task list from firestore
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -56,6 +58,7 @@ export default function CPAOffersPage() {
           );
           const querySnapshot = await getDocs(q);
           const items = querySnapshot.docs
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .map(d => ({ id: d.id, ...d.data() } as any))
             .filter(t => !submittedIds.has(t.id)); // Hide if already submitted
           
@@ -118,13 +121,15 @@ export default function CPAOffersPage() {
                    onClick={() => router.push(`/tasks/${task.id}`)}
                 >
                    <div className="w-20 h-20 rounded-2xl bg-white/5 flex-shrink-0 overflow-hidden relative border border-white/5">
-                      {task.thumbnailUrl ? (
-                        <img src={task.thumbnailUrl} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className={`w-full h-full flex items-center justify-center ${platformInfo.color} bg-black/40`}>
-                           {platformInfo.icon}
-                        </div>
-                      )}
+                      <div className="w-full h-full relative">
+                        {task.thumbnailUrl ? (
+                          <Image src={task.thumbnailUrl} alt={task.title} fill className="object-cover" unoptimized />
+                        ) : (
+                          <div className={`w-full h-full flex items-center justify-center ${platformInfo.color} bg-black/40`}>
+                             {platformInfo.icon}
+                          </div>
+                        )}
+                      </div>
                    </div>
                    
                    <div className="flex-1 overflow-hidden">

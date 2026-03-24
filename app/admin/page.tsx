@@ -10,7 +10,6 @@ import {
   Settings, 
   BarChart3, 
   ArrowRight,
-  TrendingUp,
   CreditCard,
   Zap
 } from 'lucide-react';

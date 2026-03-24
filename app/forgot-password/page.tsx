@@ -4,8 +4,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail as MailIcon, ArrowLeft as ArrowLeftIcon, Loader as LoaderIcon, Send as SendIcon } from 'lucide-react';
 import Link from 'next/link';
-import { auth } from '@/lib/firebase';
-import { sendPasswordResetEmail } from 'firebase/auth';
 
 export default function ForgotPasswordPage() {
    const [email, setEmail] = useState('');
@@ -27,6 +25,7 @@ export default function ForgotPasswordPage() {
          const data = await response.json();
          if (!response.ok) throw new Error(data.error);
          setSuccess(true);
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
          setError(err.message || 'Failed to send reset email');
       } finally {
