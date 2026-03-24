@@ -3,10 +3,12 @@ import { adminApp } from '@/lib/firebaseAdmin';
 import { getAuth } from 'firebase-admin/auth';
 import { NextResponse } from 'next/server';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
     if (!adminApp) {
       throw new Error('Firebase Admin not initialized. Please check GOOGLE_APPLICATION_CREDENTIALS_JSON_STRING environment variable.');
     }
@@ -73,9 +75,8 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ success: true, data: result });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
+  } catch (error) {
     console.error('Email API Error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
   }
 }
