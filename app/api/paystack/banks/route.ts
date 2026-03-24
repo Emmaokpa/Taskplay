@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 const FALLBACK_BANKS = [
   { id: 1, name: "Access Bank", code: "044" },
   { id: 2, name: "Ecobank Nigeria", code: "050" },

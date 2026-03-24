@@ -2,6 +2,8 @@ import { db } from '@/lib/firebase';
 import { doc, getDoc, updateDoc, increment, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   try {
     const { taskId, userId } = await req.json();
