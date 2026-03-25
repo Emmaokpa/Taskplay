@@ -114,7 +114,11 @@ export default function EarnPage() {
           const items = querySnapshot.docs
             .map(d => ({ id: d.id, ...d.data() } as Task))
             .filter(t => !submittedIds.has(t.id))
-            .filter(t => (t.currentParticipations || 0) < (t.maxParticipations || 0)); // Only show available
+            .filter(t => {
+              const cur = Number(t.currentParticipations || 0);
+              const max = Number(t.maxParticipations || 0);
+              return max === 0 || cur < max;
+            });
           
           if (isMounted) setTasks(items);
         } catch (err) {
@@ -152,7 +156,10 @@ export default function EarnPage() {
         const data = await res.json();
         
         if (data.success) {
-          if (task.actionUrl) window.open(task.actionUrl, '_blank');
+          if (task.actionUrl) {
+            const finalUrl = task.actionUrl.startsWith('http') ? task.actionUrl : `https://${task.actionUrl}`;
+            window.open(finalUrl, '_blank');
+          }
           setTasks(prev => prev.filter(t => t.id !== task.id));
         } else {
           alert(data.error || "Claim failed");
@@ -168,55 +175,33 @@ export default function EarnPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 md:p-12 max-w-5xl mx-auto pb-44 relative">
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[120px] -mr-48 -mt-48 pointer-events-none" />
-      
-      <Link href="/dashboard" className="inline-flex items-center gap-3 text-white/20 hover:text-white mb-12 transition-all font-black text-[10px] uppercase tracking-[5px] group">
-         <div className="p-2 rounded-xl glass group-hover:bg-white/10 transition-colors">
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-         </div>
-         Back to Dashboard
+    <div className="p-6 md:p-10 max-w-5xl mx-auto pb-40 relative">
+      <Link href="/dashboard" className="inline-flex items-center gap-2 text-white/40 hover:text-white mb-10 transition-colors font-bold text-sm uppercase tracking-widest">
+        <ArrowLeft className="w-4 h-4" /> Home
       </Link>
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
         <div>
-           <div className="flex items-center gap-4 mb-3">
-              <div className="w-10 h-10 rounded-[1.5rem] bg-primary/10 flex items-center justify-center border border-primary/20 shadow-xl">
-                 <Zap className="w-5 h-5 text-primary shadow-[0_0_15px_rgba(139,92,246,0.5)]" />
-              </div>
-           </div>
-           <h1 className="text-4xl md:text-6xl font-black text-white mb-2 tracking-tighter">TaskPlay Earn</h1>
-           <p className="text-white/30 text-[10px] font-black tracking-[5px] uppercase italic">Deploy your influence • Get paid instant rewards</p>
+           <h1 className="text-4xl font-black text-white mb-1 tracking-tight">TaskPlay Earn</h1>
+           <p className="text-white/40 text-[10px] font-black tracking-[3px] uppercase">Deploy your influence & earn</p>
         </div>
-        <div className="clay-card py-4 px-5 sm:py-5 sm:px-8 flex items-center gap-4 sm:gap-5 bg-primary/5 border-primary/20 shadow-[0_20px_40px_rgba(139,92,246,0.1)] group hover:border-primary/40 transition-all cursor-default">
-           <div className="relative">
-              <Diamond className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
-              <div className="absolute inset-0 bg-primary/40 blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-           </div>
-           <span className="text-xs font-black text-white uppercase tracking-[4px]">Direct Rewards</span>
+        <div className="clay-card px-6 py-4 flex items-center gap-4 border-white/5 bg-white/[0.01]">
+           <Zap className="w-5 h-5 text-primary animate-pulse" />
+           <span className="text-xs font-black text-white/60 uppercase tracking-widest">{tasks.length} Direct Tasks</span>
         </div>
       </div>
 
       {loading ? (
         <ListSkeleton />
       ) : tasks.length === 0 ? (
-        <motion.div 
-           initial={{ scale: 0.95, opacity: 0 }}
-           animate={{ scale: 1, opacity: 1 }}
-           className="clay-card p-8 sm:p-10 md:p-20 text-center border-white/5 mx-auto max-w-xl bg-[#0A0F1E]/20 backdrop-blur-3xl relative overflow-hidden"
-        >
-           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/5 blur-[100px] pointer-events-none" />
-           <div className="w-24 h-24 rounded-[2.5rem] glass flex items-center justify-center mx-auto mb-10 border-white/10 shadow-2xl group transition-transform hover:scale-110">
-              <Zap className="w-12 h-12 text-white/10 group-hover:text-primary transition-colors" />
-           </div>
-           <h3 className="text-3xl font-black text-white mb-4 tracking-tighter uppercase italic">Mission Silence</h3>
-           <p className="text-white/30 text-sm mb-12 font-medium leading-relaxed uppercase tracking-widest max-w-xs mx-auto">No active challenges in the sector. Command is synchronizing new data. Check back soon.</p>
-           <Link href="/dashboard" className="text-primary font-black uppercase text-[10px] tracking-[5px] hover:text-white transition-colors flex items-center justify-center gap-3">
-              Return to Core <ArrowRight className="w-4 h-4" />
-           </Link>
-        </motion.div>
+        <div className="clay-card p-20 text-center border-white/5 mx-auto max-w-md">
+           <Zap className="w-16 h-16 text-white/10 mx-auto mb-6" />
+           <h3 className="text-xl font-bold text-white mb-3 tracking-tight uppercase">Mission Silence</h3>
+           <p className="text-white/40 text-sm mb-10 font-medium">No active tasks in this sector right now. Check back shortly.</p>
+           <Link href="/dashboard" className="text-primary font-black uppercase text-[10px] tracking-widest hover:underline">Return to core</Link>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-4">
           <AnimatePresence>
             {tasks.map((task, i) => {
               const platformInfo = getPlatformIcon(task.platform);
@@ -226,35 +211,26 @@ export default function EarnPage() {
               return (
                 <motion.div 
                    key={task.id}
-                   initial={{ y: 20, opacity: 0 }}
+                   initial={{ y: 10, opacity: 0 }}
                    animate={{ y: 0, opacity: 1 }}
                    transition={{ delay: i * 0.05 }}
-                   className={`glass p-5 rounded-[2rem] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 border-white/5 hover:bg-white/5 transition-all group cursor-pointer ${isClaiming ? 'opacity-50 pointer-events-none' : ''}`}
+                   className={`glass p-4 rounded-2xl flex items-center justify-between border-white/5 hover:bg-white/5 transition-all group cursor-pointer ${isClaiming ? 'opacity-50 pointer-events-none' : ''}`}
                    onClick={() => handleTaskClick(task)}
                 >
-                   <div className="flex items-center gap-3 sm:gap-5">
-                      <div className={`w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-2xl glass flex items-center justify-center ${platformInfo.color}`}>
+                   <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 rounded-xl glass flex items-center justify-center ${platformInfo.color}`}>
                          {platformInfo.icon}
                       </div>
                       <div>
-                         <h4 className="text-base md:text-lg font-bold text-white mb-1 tracking-tight">{cleanTitle}</h4>
-                         <div className="flex items-center gap-3">
-                             <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-widest ${platformInfo.color}`}>
-                               {platformInfo.label} Network
-                            </span>
-                            <span className="w-1 h-1 rounded-full bg-white/10" />
-                            <span className="text-[10px] font-black text-green-400 uppercase tracking-widest">₦{task.userReward} Earn</span>
-                         </div>
+                         <h4 className="text-sm font-bold text-white mb-0.5 tracking-tight">{cleanTitle}</h4>
+                         <p className="text-[10px] text-white/40 font-medium uppercase tracking-widest">{platformInfo.label} • ₦{task.userReward}</p>
                       </div>
                    </div>
-
-                   <div className="flex items-center gap-4 w-full sm:w-auto justify-end">
+                   <div className="w-8 h-8 rounded-full flex items-center justify-center text-white/20 group-hover:text-white transition-colors">
                       {isClaiming ? (
-                        <Loader className="w-5 h-5 text-primary animate-spin" />
+                        <Loader className="w-4 h-4 text-primary animate-spin" />
                       ) : (
-                        <div className="w-10 h-10 rounded-full glass flex items-center justify-center text-white/20 group-hover:text-white group-hover:bg-primary transition-all">
-                           <ArrowRight className="w-5 h-5" />
-                        </div>
+                        <ArrowRight className="w-4 h-4" />
                       )}
                    </div>
                 </motion.div>

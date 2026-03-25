@@ -76,7 +76,7 @@ export async function POST(req: Request) {
     `;
 
     const result = await resend.emails.send({
-      from: 'TaskPlay <onboarding@resend.dev>',
+      from: 'TaskPlay <noreply@taskplay.com.ng>',
       to: email,
       subject: type === 'verification' ? 'Your TaskPlay Verification Code' : 'TaskPlay Password Reset Code',
       html: templateHTML,

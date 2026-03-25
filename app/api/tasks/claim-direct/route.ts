@@ -33,9 +33,9 @@ export async function POST(req: Request) {
     }
 
     // 1.1 Participation Limit Check
-    const current = taskData.currentParticipations || 0;
-    const max = taskData.maxParticipations || 0;
-    if (current >= max) {
+    const current = Number(taskData.currentParticipations || 0);
+    const max = Number(taskData.maxParticipations || 0);
+    if (max > 0 && current >= max) {
       // Automatically mark as completed if it wasn't already
       if (taskSnap.data()?.status !== 'completed') {
         await taskRef.update({ status: 'completed' });

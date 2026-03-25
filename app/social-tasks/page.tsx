@@ -102,7 +102,11 @@ export default function SocialTasksPage() {
           const items = querySnapshot.docs
             .map(d => ({ id: d.id, ...d.data() } as Task))
             .filter(t => !submittedIds.has(t.id))
-            .filter(t => (t.currentParticipations || 0) < (t.maxParticipations || 0));
+            .filter(t => {
+              const cur = Number(t.currentParticipations || 0);
+              const max = Number(t.maxParticipations || 0);
+              return max === 0 || cur < max;
+            });
           
           if (isMounted) setTasks(items);
         } catch (err) {

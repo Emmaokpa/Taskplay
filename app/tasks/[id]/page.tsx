@@ -85,7 +85,10 @@ export default function TaskSubmissionPage({ params }: { params: Promise<{ id: s
             const taskData = { id: docSnap.id, ...docSnap.data() } as TaskData;
 
             // Check if task is still active and has slots
-            if (taskData && (taskData.status !== 'active' || (taskData.currentParticipations >= taskData.maxParticipations))) {
+            const current = Number(taskData.currentParticipations || 0);
+            const max = Number(taskData.maxParticipations || 0);
+            
+            if (taskData && (taskData.status !== 'active' || (max > 0 && current >= max))) {
               setTask(null);
               setLoading(false);
               return;
@@ -173,7 +176,9 @@ export default function TaskSubmissionPage({ params }: { params: Promise<{ id: s
       const taskSnap = await getDoc(taskRef);
       if (taskSnap.exists()) {
         const latestData = taskSnap.data();
-        if ((latestData.currentParticipations || 0) >= (latestData.maxParticipations || 0)) {
+        const cur = Number(latestData.currentParticipations || 0);
+        const maxLimit = Number(latestData.maxParticipations || 0);
+        if (maxLimit > 0 && cur >= maxLimit) {
           throw new Error('This task just reached its capacity. Please try another one.');
         }
       }
@@ -270,7 +275,7 @@ export default function TaskSubmissionPage({ params }: { params: Promise<{ id: s
             <p className="text-white/40 text-sm md:text-base leading-relaxed mb-8">{task.description}</p>
 
             <a
-              href={task.actionUrl} target="_blank" rel="noopener noreferrer"
+              href={(task.actionUrl || '').startsWith('http') ? task.actionUrl : `https://${task.actionUrl}`} target="_blank" rel="noopener noreferrer"
               className="bg-primary hover:bg-primary/80 w-full sm:w-auto px-10 py-4 rounded-xl font-black text-sm text-white inline-flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-primary/20"
             >
               Start Earning Now <ExternalLink className="w-4 h-4" />
