@@ -204,36 +204,36 @@ export default function WithdrawalPage() {
         <p className="text-white/40 text-sm font-bold tracking-[2px] uppercase">Cash out your earnings</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-        <div className="clay-card p-8 bg-gradient-to-br from-primary/10 to-transparent border-primary/20">
-           <span className="text-[10px] font-black text-primary uppercase tracking-[4px]">Available Balance</span>
-           <div className="text-5xl font-black text-white mt-4 mb-2">₦{(userData?.balance || 0).toLocaleString()}</div>
-           <p className="text-white/30 text-[10px] font-black uppercase tracking-[2px]">Min Withdrawal: ₦500</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
+        <div className="glass p-6 md:p-8 rounded-[2rem] bg-gradient-to-br from-primary/10 to-transparent border-white/5">
+           <span className="text-[9px] font-black text-primary uppercase tracking-[3px]">My Balance</span>
+           <div className="text-3xl md:text-5xl font-black text-white mt-1 mb-1">₦{(userData?.balance || 0).toLocaleString()}</div>
+           <p className="text-white/20 text-[8px] font-black uppercase tracking-widest leading-none">Min: ₦500</p>
         </div>
-        <div className="clay-card p-8 bg-white/[0.01] flex flex-col justify-between">
+        <div className="glass p-6 md:p-8 rounded-[2rem] bg-white/[0.01] flex flex-col justify-between">
            <div>
-              <span className="text-[10px] font-black text-white/40 uppercase tracking-[4px]">Verified Target</span>
-              <div className="text-3xl font-black text-white mt-4">₦{(userData?.totalEarned || 0).toLocaleString()}</div>
+              <span className="text-[9px] font-black text-white/30 uppercase tracking-[3px]">Total Earned</span>
+              <div className="text-2xl md:text-4xl font-black text-white mt-1">₦{(userData?.totalEarned || 0).toLocaleString()}</div>
            </div>
-           <div className="flex items-center gap-2 text-green-400 mt-4">
-              <TrendingUp className="w-4 h-4" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#00FF88]">Auto-Verifying Payouts</span>
+           <div className="flex items-center gap-2 text-green-400 mt-2">
+              <TrendingUp className="w-3 h-3" />
+              <span className="text-[8px] font-black uppercase tracking-widest">Auto-Payout Verified</span>
            </div>
         </div>
       </div>
 
-      <div className="clay-card p-10 border-white/5 relative transition-all">
-         <form className="space-y-6" onSubmit={handleWithdraw}>
+      <div className="glass p-8 md:p-12 rounded-[2.5rem] border-white/5 shadow-2xl">
+         <form className="space-y-5" onSubmit={handleWithdraw}>
             
             {/* Bank Selection */}
             <div className="relative">
-               <label className="text-[10px] font-black text-white/30 uppercase tracking-[2px] ml-1 mb-2 block">Select Bank</label>
+               <label className="text-[9px] font-black text-white/20 uppercase tracking-[3px] ml-1 mb-2 block">Choose Bank</label>
                <div 
                   onClick={() => setShowBankDropdown(!showBankDropdown)}
-                  className="glass w-full px-6 py-4 rounded-2xl text-white outline-none border border-white/5 cursor-pointer flex justify-between items-center bg-white/[0.02] hover:bg-white/[0.05]"
+                  className="glass w-full px-5 py-3.5 rounded-xl text-white outline-none border border-white/5 cursor-pointer flex justify-between items-center bg-white/[0.02] hover:bg-white/[0.05]"
                >
-                  <span className={selectedBank ? 'text-white' : 'text-white/20'}>
-                    {selectedBank ? selectedBank.name : 'Choose your bank...'}
+                  <span className={`text-sm ${selectedBank ? 'text-white' : 'text-white/20'}`}>
+                    {selectedBank ? selectedBank.name : 'Select your bank'}
                   </span>
                   <Search className="w-4 h-4 text-white/20" />
                </div>
@@ -242,61 +242,61 @@ export default function WithdrawalPage() {
                  <div className="absolute top-full left-0 right-0 mt-2 glass rounded-2xl border border-white/10 overflow-hidden z-[50] shadow-2xl backdrop-blur-2xl">
                     <input 
                       autoFocus
-                      placeholder="Search bank..."
-                      className="w-full p-4 bg-white/5 text-white outline-none border-b border-white/5 text-sm"
+                      placeholder="Search..."
+                      className="w-full p-4 bg-white/5 text-white outline-none border-b border-white/5 text-xs"
                       value={bankSearch}
                       onChange={(e) => setBankSearch(e.target.value)}
                     />
                     <div className="max-h-60 overflow-y-auto">
                        {filteredBanks.map((b, i) => (
-                         <div 
-                            key={i} 
-                            onClick={() => { setSelectedBank(b); setShowBankDropdown(false); }}
-                            className="p-4 hover:bg-white/5 text-white/60 hover:text-white cursor-pointer transition-colors text-sm font-bold"
-                         >
-                            {b.name}
-                         </div>
+                          <div 
+                             key={i} 
+                             onClick={() => { setSelectedBank(b); setShowBankDropdown(false); }}
+                             className="p-4 hover:bg-white/5 text-white/60 hover:text-white cursor-pointer transition-colors text-xs font-bold"
+                          >
+                             {b.name}
+                          </div>
                        ))}
                     </div>
                  </div>
                )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[2px] ml-1">Account Number</label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-black text-white/20 uppercase tracking-[3px] ml-1">Account Number</label>
                   <input 
                      required
                      type="number" placeholder="0123456789" 
-                     className={`glass w-full px-6 py-4 rounded-2xl text-white outline-none border transition-all font-mono focus:bg-white/[0.05] ${resolveError ? 'border-red-500/50' : accountName ? 'border-green-500/50' : 'border-white/5'}`} 
+                     className={`glass w-full px-5 py-3.5 rounded-xl text-white outline-none border transition-all font-mono text-sm focus:bg-white/[0.05] ${resolveError ? 'border-red-500/50' : accountName ? 'border-green-500/50' : 'border-white/5'}`} 
                      value={accountNumber}
                      maxLength={10}
                      onChange={(e) => setAccountNumber(e.target.value.slice(0, 10))}
                   />
-                  {resolveError && <p className="text-[9px] text-red-400 font-bold uppercase tracking-wider ml-2">{resolveError}</p>}
+                  {resolveError && <p className="text-[8px] text-red-400 font-bold uppercase tracking-wider ml-2">{resolveError}</p>}
                 </div>
                 
-                <div className="space-y-2 relative">
-                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[2px] ml-1">Account Name</label>
+                <div className="space-y-1.5 relative">
+                  <label className="text-[9px] font-black text-white/20 uppercase tracking-[3px] ml-1">Verified Name</label>
                   <div className="relative">
                     <input 
                       readOnly
-                      placeholder={isResolving ? 'Verifying...' : 'Account holder name...'}
-                      className="glass w-full px-6 py-4 rounded-2xl text-white/40 outline-none border border-white/5 bg-black/20" 
+                      placeholder={isResolving ? 'Resolving...' : 'Full account name'}
+                      className="glass w-full px-5 py-3.5 rounded-xl text-white/40 outline-none border border-white/5 bg-black/20 text-sm italic" 
                       value={accountName}
                     />
-                    {isResolving && <Loader className="absolute right-4 top-4 w-5 h-5 animate-spin text-primary" />}
-                    {accountName && !isResolving && <CheckCircle2 className="absolute right-4 top-4 w-5 h-5 text-green-400" />}
+                    {isResolving && <Loader className="absolute right-3 top-3 w-4 h-4 animate-spin text-primary" />}
+                    {accountName && !isResolving && <CheckCircle2 className="absolute right-3 top-3 w-4 h-4 text-green-400" />}
                   </div>
                 </div>
             </div>
 
-            <div className="space-y-2">
-               <label className="text-[10px] font-black text-white/30 uppercase tracking-[2px] ml-1">Amount to Withdraw (₦)</label>
+            <div className="space-y-1.5 pb-2">
+               <label className="text-[9px] font-black text-white/20 uppercase tracking-[3px] ml-1">Withdrawal Amount (₦)</label>
                <input 
                   required
                   type="number" placeholder="500" 
-                  className="glass w-full px-6 py-5 rounded-2xl text-white outline-none border-primary border bg-primary/5 text-2xl font-black text-center" 
+                  className="glass w-full px-5 py-4 rounded-xl text-white outline-none border-primary/40 border bg-primary/5 text-xl font-black text-center" 
                   value={amount}
                   onChange={(e) => setAmount(Number(e.target.value))}
                />
@@ -305,18 +305,15 @@ export default function WithdrawalPage() {
             <button 
                disabled={processing || isResolving || !accountName}
                type="submit"
-               className="clay-button w-full py-5 rounded-2xl font-black text-xl text-white flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-xl shadow-primary/10 disabled:opacity-40"
+               className="bg-primary hover:bg-primary/80 w-full py-4 rounded-xl font-black text-sm text-white flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 disabled:opacity-40 uppercase tracking-widest"
             >
-               {processing ? <Loader className="w-6 h-6 animate-spin" /> : <>Request Secure Payout <ArrowUpRight className="w-6 h-6" /></>}
+               {processing ? <Loader className="w-5 h-5 animate-spin" /> : <>Request Payout <ArrowUpRight className="w-5 h-5" /></>}
             </button>
          </form>
 
-         <div className="mt-10 p-6 rounded-2xl glass border-orange-500/20 bg-orange-500/5">
-            <div className="flex items-center gap-3 text-orange-400 mb-2 font-black uppercase text-[10px] tracking-widest">
-               <AlertCircle className="w-4 h-4" /> Withdrawal Terms
-            </div>
-            <p className="text-xs text-white/40 leading-relaxed font-bold">
-               Withdrawals are processed in 24–48 hours. Account name must match your profile name for instant approval.
+         <div className="mt-8 p-5 rounded-xl glass border-orange-500/10 bg-orange-500/5">
+            <p className="text-[8px] text-white/30 leading-relaxed font-black uppercase tracking-widest text-center">
+               Withdrawals are approved within 24 hours. Minimal limit is ₦500.
             </p>
          </div>
       </div>

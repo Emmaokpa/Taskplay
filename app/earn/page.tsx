@@ -16,7 +16,9 @@ import {
   MessageCircle,
   Diamond,
   Send,
-  ExternalLink
+  ExternalLink,
+  ShieldCheck,
+  CheckCircle2
 } from 'lucide-react';
 import { db, auth } from '@/lib/firebase';
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
@@ -48,15 +50,37 @@ interface UserData {
 
 const getPlatformIcon = (platform: string) => {
   switch (platform?.toLowerCase()) {
-    case 'instagram': return { icon: <Instagram className="w-5 h-5" />, label: 'IG', color: 'text-pink-500' };
-    case 'tiktok': return { icon: <Play className="w-5 h-5 shrink-0" />, label: 'TK', color: 'text-white' };
-    case 'youtube': return { icon: <Youtube className="w-5 h-5" />, label: 'YT', color: 'text-red-500' };
-    case 'twitter': return { icon: <Twitter className="w-5 h-5" />, label: 'X', color: 'text-blue-400' };
-    case 'facebook': return { icon: <Facebook className="w-5 h-5" />, label: 'FB', color: 'text-blue-600' };
-    case 'whatsapp': return { icon: <MessageCircle className="w-5 h-5" />, label: 'WA', color: 'text-green-500' };
-    case 'telegram': return { icon: <Send className="w-5 h-5 shrink-0" />, label: 'TG', color: 'text-[#0088CC]' };
-    default: return { icon: <Diamond className="w-5 h-5" />, label: 'EARN', color: 'text-primary' };
+    case 'instagram': return { icon: <Instagram className="w-5 h-5" />, label: 'IG', color: 'text-pink-500', bg: 'bg-pink-500/10' };
+    case 'tiktok': return { icon: <Play className="w-5 h-5 shrink-0" />, label: 'TK', color: 'text-white', bg: 'bg-white/10' };
+    case 'youtube': return { icon: <Youtube className="w-5 h-5" />, label: 'YT', color: 'text-red-500', bg: 'bg-red-500/10' };
+    case 'twitter': return { icon: <Twitter className="w-5 h-5" />, label: 'X', color: 'text-blue-400', bg: 'bg-blue-400/10' };
+    case 'facebook': return { icon: <Facebook className="w-5 h-5" />, label: 'FB', color: 'text-blue-600', bg: 'bg-blue-600/10' };
+    case 'whatsapp': return { icon: <MessageCircle className="w-5 h-5" />, label: 'WA', color: 'text-green-500', bg: 'bg-green-500/10' };
+    case 'telegram': return { icon: <Send className="w-5 h-5 shrink-0" />, label: 'TG', color: 'text-[#0088CC]', bg: 'bg-[#0088CC]/10' };
+    default: return { icon: <Diamond className="w-5 h-5" />, label: 'EARN', color: 'text-primary', bg: 'bg-primary/10' };
   }
+};
+
+const simplifyTitle = (title: string = '') => {
+  if (!title) return "Task";
+  let clean = title.trim();
+  
+  const replacements: Record<string, string> = {
+    'follow me': 'Follow Account',
+    'like my reel': 'Like Content',
+    'subscribe to my channel': 'Subscribe',
+    'join my group': 'Join Group',
+    'follow my instagram': 'Follow Instagram',
+    'like my post': 'Like Post',
+    'retweet': 'Retweet/Repost',
+  };
+
+  Object.entries(replacements).forEach(([key, val]) => {
+    const regex = new RegExp(key, 'gi');
+    clean = clean.replace(regex, val);
+  });
+
+  return clean.charAt(0).toUpperCase() + clean.slice(1);
 };
 
 export default function EarnPage() {
@@ -89,7 +113,8 @@ export default function EarnPage() {
           const querySnapshot = await getDocs(q);
           const items = querySnapshot.docs
             .map(d => ({ id: d.id, ...d.data() } as Task))
-            .filter(t => !submittedIds.has(t.id)); 
+            .filter(t => !submittedIds.has(t.id))
+            .filter(t => (t.currentParticipations || 0) < (t.maxParticipations || 0)); // Only show available
           
           if (isMounted) setTasks(items);
         } catch (err) {
@@ -143,97 +168,94 @@ export default function EarnPage() {
   };
 
   return (
-    <div className="p-6 md:p-10 max-w-5xl mx-auto pb-40">
-      <Link href="/dashboard" className="inline-flex items-center gap-2 text-white/40 hover:text-white mb-10 transition-colors font-bold text-xs uppercase tracking-widest">
-        <ArrowLeft className="w-4 h-4" /> Home
+    <div className="p-6 md:p-12 max-w-5xl mx-auto pb-44 relative">
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[120px] -mr-48 -mt-48 pointer-events-none" />
+      
+      <Link href="/dashboard" className="inline-flex items-center gap-3 text-white/20 hover:text-white mb-12 transition-all font-black text-[10px] uppercase tracking-[5px] group">
+         <div className="p-2 rounded-xl glass group-hover:bg-white/10 transition-colors">
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+         </div>
+         Back to Dashboard
       </Link>
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
         <div>
-           <div className="flex items-center gap-3 mb-2">
-             <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/20">
-                <Zap className="w-4 h-4 text-primary" />
-             </div>
-             <p className="text-primary text-[10px] font-black tracking-[4px] uppercase">Official Challenges</p>
+           <div className="flex items-center gap-4 mb-3">
+              <div className="w-10 h-10 rounded-[1.5rem] bg-primary/10 flex items-center justify-center border border-primary/20 shadow-xl">
+                 <Zap className="w-5 h-5 text-primary shadow-[0_0_15px_rgba(139,92,246,0.5)]" />
+              </div>
            </div>
-           <h1 className="text-4xl font-black text-white mb-1 tracking-tighter">TaskPlay Earn</h1>
-           <p className="text-white/40 text-[10px] font-bold tracking-widest uppercase">Promote us & Get Paid Directly</p>
+           <h1 className="text-4xl md:text-6xl font-black text-white mb-2 tracking-tighter">TaskPlay Earn</h1>
+           <p className="text-white/30 text-[10px] font-black tracking-[5px] uppercase italic">Deploy your influence • Get paid instant rewards</p>
         </div>
-        <div className="clay-card px-6 py-4 flex items-center gap-4 bg-primary/5 border-primary/20">
-           <Diamond className="w-5 h-5 text-primary animate-bounce" />
-           <span className="text-xs font-black text-white uppercase tracking-widest">Platform Rewards</span>
+        <div className="clay-card py-5 px-8 flex items-center gap-5 bg-primary/5 border-primary/20 shadow-[0_20px_40px_rgba(139,92,246,0.1)] group hover:border-primary/40 transition-all cursor-default">
+           <div className="relative">
+              <Diamond className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
+              <div className="absolute inset-0 bg-primary/40 blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
+           </div>
+           <span className="text-xs font-black text-white uppercase tracking-[4px]">Direct Rewards</span>
         </div>
       </div>
 
       {loading ? (
         <ListSkeleton />
       ) : tasks.length === 0 ? (
-        <div className="clay-card p-20 text-center border-white/5 mx-auto max-w-md">
-           <Zap className="w-16 h-16 text-white/10 mx-auto mb-6" />
-           <h3 className="text-xl font-bold text-white mb-3 uppercase tracking-tight">No New Missions</h3>
-           <p className="text-white/40 text-sm mb-10 font-medium leading-relaxed">The platform is currently optimized. Check back later for new promotional tasks.</p>
-           <Link href="/dashboard" className="text-primary font-black uppercase text-[11px] tracking-widest hover:underline">Return to Dash</Link>
-        </div>
+        <motion.div 
+           initial={{ scale: 0.95, opacity: 0 }}
+           animate={{ scale: 1, opacity: 1 }}
+           className="clay-card p-20 text-center border-white/5 mx-auto max-w-xl bg-[#0A0F1E]/20 backdrop-blur-3xl relative overflow-hidden"
+        >
+           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/5 blur-[100px] pointer-events-none" />
+           <div className="w-24 h-24 rounded-[2.5rem] glass flex items-center justify-center mx-auto mb-10 border-white/10 shadow-2xl group transition-transform hover:scale-110">
+              <Zap className="w-12 h-12 text-white/10 group-hover:text-primary transition-colors" />
+           </div>
+           <h3 className="text-3xl font-black text-white mb-4 tracking-tighter uppercase italic">Mission Silence</h3>
+           <p className="text-white/30 text-sm mb-12 font-medium leading-relaxed uppercase tracking-widest max-w-xs mx-auto">No active challenges in the sector. Command is synchronizing new data. Check back soon.</p>
+           <Link href="/dashboard" className="text-primary font-black uppercase text-[10px] tracking-[5px] hover:text-white transition-colors flex items-center justify-center gap-3">
+              Return to Core <ArrowRight className="w-4 h-4" />
+           </Link>
+        </motion.div>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-6">
           <AnimatePresence>
             {tasks.map((task, i) => {
               const platformInfo = getPlatformIcon(task.platform);
               const isClaiming = claimingId === task.id;
+              const cleanTitle = simplifyTitle(task.title);
 
               return (
                 <motion.div 
                    key={task.id}
-                   initial={{ x: -20, opacity: 0 }}
-                   animate={{ x: 0, opacity: 1 }}
+                   initial={{ y: 20, opacity: 0 }}
+                   animate={{ y: 0, opacity: 1 }}
                    transition={{ delay: i * 0.05 }}
-                   exit={{ opacity: 0, x: 20 }}
-                   className={`clay-card p-6 !bg-gradient-to-tr from-white/[0.03] to-transparent border-white/5 flex items-center gap-6 hover:border-primary/20 transition-all group cursor-pointer relative overflow-hidden ${isClaiming ? 'opacity-50 pointer-events-none' : ''}`}
+                   className={`glass p-5 rounded-[2rem] flex items-center justify-between border-white/5 hover:bg-white/5 transition-all group cursor-pointer ${isClaiming ? 'opacity-50 pointer-events-none' : ''}`}
                    onClick={() => handleTaskClick(task)}
                 >
-                   {isClaiming && (
-                      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-10">
-                         <Loader className="w-6 h-6 text-primary animate-spin" />
+                   <div className="flex items-center gap-5">
+                      <div className={`w-14 h-14 rounded-2xl glass flex items-center justify-center ${platformInfo.color}`}>
+                         {platformInfo.icon}
                       </div>
-                   )}
-                   <div className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <ExternalLink className="w-4 h-4 text-primary" />
+                      <div>
+                         <h4 className="text-lg font-bold text-white mb-1 tracking-tight">{cleanTitle}</h4>
+                         <div className="flex items-center gap-3">
+                            <span className={`text-[10px] font-black uppercase tracking-widest ${platformInfo.color}`}>
+                               {platformInfo.label} Network
+                            </span>
+                            <span className="w-1 h-1 rounded-full bg-white/10" />
+                            <span className="text-[10px] font-black text-green-400 uppercase tracking-widest">₦{task.userReward} Earn</span>
+                         </div>
+                      </div>
                    </div>
 
-                   <div className="w-20 h-20 rounded-2xl glass flex-shrink-0 flex items-center justify-center relative border border-white/5 shadow-2xl">
-                       {task.thumbnailUrl ? (
-                          <Image src={task.thumbnailUrl} alt="Task thumbnail" fill className="object-cover rounded-[inherit]" unoptimized />
-                       ) : (
-                         <div className={`${platformInfo.color} opacity-40 group-hover:opacity-100 transition-opacity`}>
-                            {platformInfo.icon}
-                         </div>
+                   <div className="flex items-center gap-4">
+                      {isClaiming ? (
+                        <Loader className="w-5 h-5 text-primary animate-spin" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full glass flex items-center justify-center text-white/20 group-hover:text-white group-hover:bg-primary transition-all">
+                           <ArrowRight className="w-5 h-5" />
+                        </div>
                       )}
-                      <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-lg bg-primary text-white flex items-center justify-center border border-black shadow-lg">
-                         <Zap className="w-3 h-3" />
-                      </div>
-                   </div>
-                   
-                   <div className="flex-1 overflow-hidden">
-                      <div className="flex items-center gap-2 mb-2">
-                         <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-white/5 ${platformInfo.color}`}>
-                            Platform
-                         </span>
-                         <span className="w-1 h-1 rounded-full bg-white/20" />
-                         <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Instant Approval</span>
-                      </div>
-                      <h4 className="text-lg font-black text-white truncate tracking-tight mb-2 group-hover:text-primary transition-colors">{task.title}</h4>
-                      <div className="flex items-center gap-4">
-                         <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/10">
-                            <span className="text-xs font-black text-green-400">₦{task.userReward?.toLocaleString()}</span>
-                         </div>
-                         <div className="text-[10px] text-white/20 font-black uppercase tracking-[2px]">
-                            {task.maxParticipations - task.currentParticipations} Slots Left
-                         </div>
-                      </div>
-                   </div>
-
-                   <div className="w-12 h-12 rounded-full glass border-white/5 flex items-center justify-center text-white/20 group-hover:text-primary group-hover:bg-primary/20 transition-all active:scale-95">
-                      <ArrowRight className="w-6 h-6" />
                    </div>
                 </motion.div>
               );

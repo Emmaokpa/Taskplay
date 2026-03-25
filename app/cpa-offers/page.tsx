@@ -13,7 +13,9 @@ import {
   Trophy,
   DollarSign,
   Building2,
-  Tag
+  Tag,
+  ShieldCheck,
+  Diamond
 } from 'lucide-react';
 import { db, auth } from '@/lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
@@ -25,13 +27,34 @@ import { ListSkeleton } from '@/app/components/Skeleton';
 
 const getCpaIcon = (platform: string) => {
   switch (platform?.toLowerCase()) {
-    case 'website': return { icon: <Globe className="w-5 h-5" />, label: 'WEB', color: 'text-blue-400' };
-    case 'app_install': return { icon: <Download className="w-5 h-5" />, label: 'APP', color: 'text-purple-400' };
-    case 'betting': return { icon: <Trophy className="w-5 h-5" />, label: 'BET', color: 'text-orange-400' };
-    case 'loan': return { icon: <DollarSign className="w-5 h-5" />, label: 'LOAN', color: 'text-green-400' };
-    case 'bank': return { icon: <Building2 className="w-5 h-5" />, label: 'BANK', color: 'text-blue-500' };
-    default: return { icon: <Rocket className="w-5 h-5" />, label: 'CPA', color: 'text-gray-400' };
+    case 'website': return { icon: <Globe className="w-5 h-5" />, label: 'WEB', color: 'text-blue-400', bg: 'bg-blue-400/10' };
+    case 'app_install': return { icon: <Download className="w-5 h-5" />, label: 'APP', color: 'text-purple-400', bg: 'bg-purple-500/10' };
+    case 'betting': return { icon: <Trophy className="w-5 h-5" />, label: 'BET', color: 'text-orange-400', bg: 'bg-orange-400/10' };
+    case 'loan': return { icon: <DollarSign className="w-5 h-5" />, label: 'LOAN', color: 'text-green-400', bg: 'bg-green-500/10' };
+    case 'bank': return { icon: <Building2 className="w-5 h-5" />, label: 'BANK', color: 'text-blue-500', bg: 'bg-blue-500/10' };
+    default: return { icon: <Rocket className="w-5 h-5" />, label: 'CPA', color: 'text-gray-400', bg: 'bg-gray-500/10' };
   }
+};
+
+const simplifyTitle = (title: string = '') => {
+  if (!title) return "Marketing Offer";
+  let clean = title.trim();
+  
+  const replacements: Record<string, string> = {
+    'follow me': 'Follow Account',
+    'like my reel': 'Like Content',
+    'subscribe to my channel': 'Subscribe',
+    'join my group': 'Join Group',
+    'visit website': 'Visit Site',
+    'app install': 'Install App',
+  };
+
+  Object.entries(replacements).forEach(([key, val]) => {
+    const regex = new RegExp(key, 'gi');
+    clean = clean.replace(regex, val);
+  });
+
+  return clean.charAt(0).toUpperCase() + clean.slice(1);
 };
 
 export default function CPAOffersPage() {
@@ -60,7 +83,8 @@ export default function CPAOffersPage() {
           const items = querySnapshot.docs
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .map(d => ({ id: d.id, ...d.data() } as any))
-            .filter(t => !submittedIds.has(t.id)); // Hide if already submitted
+            .filter(t => !submittedIds.has(t.id))
+            .filter(t => (t.currentParticipations || 0) < (t.maxParticipations || 0));
           
           if (isMounted) setTasks(items);
         } catch (err) {
@@ -80,7 +104,7 @@ export default function CPAOffersPage() {
   }, [router]);
 
   return (
-    <div className="p-6 md:p-10 max-w-5xl mx-auto pb-40">
+    <div className="p-6 md:p-10 max-w-5xl mx-auto pb-44 relative">
       <Link href="/dashboard" className="inline-flex items-center gap-2 text-white/40 hover:text-white mb-10 transition-colors font-bold text-xs uppercase tracking-widest">
         <ArrowLeft className="w-4 h-4" /> Home
       </Link>
@@ -106,56 +130,37 @@ export default function CPAOffersPage() {
            <Link href="/advertise" className="text-primary font-black uppercase text-[10px] tracking-widest hover:underline">List your app here</Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           <AnimatePresence>
             {tasks.map((task, i) => {
               const platformInfo = getCpaIcon(task.platform);
+              const cleanTitle = simplifyTitle(task.title);
+
               return (
                 <motion.div 
                    key={task.id}
-                   initial={{ x: -20, opacity: 0 }}
-                   animate={{ x: 0, opacity: 1 }}
+                   initial={{ y: 15, opacity: 0 }}
+                   animate={{ y: 0, opacity: 1 }}
                    transition={{ delay: i * 0.05 }}
-                   exit={{ opacity: 0, x: 20 }}
-                   className="clay-card p-5 !bg-white/[0.02] border-white/5 flex items-center gap-6 hover:!bg-white/5 transition-all group cursor-pointer relative"
+                   className="glass p-4 rounded-[2rem] flex flex-col justify-between border-white/5 hover:border-primary/20 transition-all group cursor-pointer aspect-[4/5] relative overflow-hidden"
                    onClick={() => router.push(`/tasks/${task.id}`)}
                 >
-                   <div className="w-20 h-20 rounded-2xl bg-white/5 flex-shrink-0 overflow-hidden relative border border-white/5">
-                      <div className="w-full h-full relative">
-                        {task.thumbnailUrl ? (
-                          <Image src={task.thumbnailUrl} alt={task.title} fill className="object-cover" unoptimized />
-                        ) : (
-                          <div className={`w-full h-full flex items-center justify-center ${platformInfo.color} bg-black/40`}>
-                             {platformInfo.icon}
-                          </div>
-                        )}
+                   <div>
+                      <div className={`w-10 h-10 rounded-xl glass flex items-center justify-center mb-4 ${platformInfo.color}`}>
+                         {platformInfo.icon}
                       </div>
-                   </div>
-                   
-                   <div className="flex-1 overflow-hidden">
-                      <div className="flex items-center gap-2 mb-2">
-                         <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-white/5 ${platformInfo.color}`}>
-                            {platformInfo.label}
-                         </span>
-                         <span className="w-1 h-1 rounded-full bg-white/10" />
-                         <span className="text-[10px] font-black text-white/20 uppercase tracking-widest">
-                            {task.category === 'sale' ? 'Escrow Sale' : 'Direct Offer'}
-                         </span>
-                      </div>
-                      <h4 className="text-lg font-black text-white truncate tracking-tight">{task.title}</h4>
-                      <div className="flex items-center gap-4 mt-2">
-                         <div className="flex items-center gap-1.5">
-                            <Tag className="w-3 h-3 text-green-400" />
-                            <span className="text-sm font-black text-green-400">₦{task.userReward?.toLocaleString()}</span>
-                         </div>
-                         <div className="text-[10px] text-white/30 font-black uppercase tracking-[2px]">
-                            {task.currentParticipations} / {task.maxParticipations} Entries
-                         </div>
-                      </div>
+                      <h4 className="text-sm font-bold text-white mb-1 line-clamp-2 leading-tight">{cleanTitle}</h4>
+                      <p className="text-[9px] font-black text-white/30 uppercase tracking-widest">{platformInfo.label}</p>
                    </div>
 
-                   <div className="w-12 h-12 rounded-full glass border-white/5 flex items-center justify-center text-white/20 group-hover:text-primary group-hover:bg-primary/20 transition-all active:scale-95 shadow-xl">
-                      <ArrowRight className="w-6 h-6" />
+                   <div className="mt-4 flex items-center justify-between">
+                      <div className="flex flex-col">
+                         <span className="text-[7px] font-black text-white/20 uppercase tracking-widest mb-1">Earn</span>
+                         <span className="text-sm font-black text-green-400">₦{task.userReward?.toLocaleString()}</span>
+                      </div>
+                      <div className="w-8 h-8 rounded-full glass border-white/10 flex items-center justify-center text-white/20 group-hover:text-white group-hover:bg-primary transition-all">
+                         <ArrowRight className="w-4 h-4" />
+                      </div>
                    </div>
                 </motion.div>
               );

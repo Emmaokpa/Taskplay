@@ -63,53 +63,47 @@ export default function RefferalPage() {
       </div>
 
       {/* Bonus Banner */}
-      <div className="clay-card p-10 bg-gradient-to-br from-primary/30 to-accent/10 border-primary/20 mb-10 text-center relative overflow-hidden">
+      <div className="glass p-8 md:p-12 rounded-[2.5rem] bg-gradient-to-br from-primary/20 to-transparent border-white/5 mb-8 text-center relative overflow-hidden shadow-2xl">
          <div className="relative z-10">
-            <Gift className="w-16 h-16 text-white mx-auto mb-6 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" />
-            <h2 className="text-4xl font-black text-white mb-2">₦500.00 Reward</h2>
-            <p className="text-white/80 font-bold max-w-sm mx-auto">Get credited instantly when your friend upgrades to a <span className="underline decoration-white/40">Standard Member</span>.</p>
+            <div className="w-16 h-16 rounded-3xl glass flex items-center justify-center mx-auto mb-6 text-primary shadow-xl">
+               <Gift className="w-8 h-8" />
+            </div>
+            <h2 className="text-3xl md:text-5xl font-black text-white mb-3 tracking-tighter">₦500.00 Bonus</h2>
+            <p className="text-white/40 text-xs md:text-sm font-bold max-w-xs mx-auto uppercase tracking-widest leading-relaxed">Instantly earned when your friends join & upgrade.</p>
          </div>
-         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-from)_0%,_transparent_70%)] from-white/10 opacity-50" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-         <div className="clay-card p-8 border-white/5 bg-white/[0.01]">
-            <div className="flex items-center gap-4 mb-4">
-               <div className="w-10 h-10 rounded-xl glass flex items-center justify-center text-primary">
-                  <Users className="w-5 h-5" />
-               </div>
-               <span className="text-[10px] uppercase font-black tracking-widest text-white/30">Network Size</span>
-            </div>
-            <div className="text-4xl font-black text-white">{userData?.totalReferrals || 0}</div>
-            <p className="text-xs font-bold text-white/20 mt-2 tracking-widest uppercase">Verified Referrals</p>
+      <div className="grid grid-cols-2 gap-4 md:gap-8 mb-10">
+         <div className="glass p-6 md:p-10 rounded-[2rem] border-white/5 bg-white/[0.01]">
+            <Users className="w-5 h-5 text-primary mb-4" />
+            <div className="text-3xl md:text-5xl font-black text-white mb-1 tracking-tighter">{userData?.totalReferrals || 0}</div>
+            <p className="text-[8px] md:text-[10px] uppercase font-black tracking-widest text-white/20">Referrals</p>
          </div>
-         <div className="clay-card p-8 border-white/5 bg-white/[0.01]">
-            <div className="flex items-center gap-4 mb-4">
-               <div className="w-10 h-10 rounded-xl glass flex items-center justify-center text-green-400">
-                  <TrendingUp className="w-5 h-5" />
-               </div>
-               <span className="text-[10px] uppercase font-black tracking-widest text-white/30">Total Bonus</span>
-            </div>
-            <div className="text-4xl font-black text-white">₦{(userData?.earnedFromReferrals || 0).toLocaleString()}</div>
-            <p className="text-xs font-bold text-white/20 mt-2 tracking-widest uppercase">Earned from invites</p>
+         <div className="glass p-6 md:p-10 rounded-[2rem] border-white/5 bg-white/[0.01]">
+            <TrendingUp className="w-5 h-5 text-green-400 mb-4" />
+            <div className="text-3xl md:text-5xl font-black text-white mb-1 tracking-tighter">₦{(userData?.earnedFromReferrals || 0).toLocaleString()}</div>
+            <p className="text-[8px] md:text-[10px] uppercase font-black tracking-widest text-white/20">Earned</p>
          </div>
       </div>
 
       {/* Referral Link Box */}
-      <div className="clay-card p-10 border-white/5">
-         <h3 className="text-lg font-black text-white mb-6 uppercase tracking-[3px]">Your Invite Link</h3>
-         <div className="glass p-2 rounded-2xl flex flex-col sm:flex-row items-center gap-4 border-white/10 group focus-within:border-primary/40 transition-all">
-            <div className="flex-1 px-4 py-2 text-white/60 font-mono text-sm break-all truncate w-full sm:w-auto">
-               {referralLink}
+      <div className="glass p-8 md:p-12 rounded-[2.5rem] border-white/5 shadow-2xl relative overflow-hidden">
+         <h3 className="text-sm font-black text-white mb-8 uppercase tracking-[4px] text-center italic">Your Invite Link</h3>
+         
+         <div className="flex flex-col gap-4">
+            <div className="glass p-5 rounded-2xl border-white/10 break-all text-center">
+               <span className="text-xs font-medium text-white/40 italic select-all">{referralLink}</span>
             </div>
+            
             <button 
                onClick={copyLink}
-               className="w-full sm:w-auto clay-button px-8 py-4 rounded-xl font-black text-white flex items-center justify-center gap-2"
+               className="w-full bg-primary hover:bg-primary/80 py-5 rounded-2xl font-black text-sm text-white flex items-center justify-center gap-3 shadow-xl active:scale-95 transition-all uppercase tracking-widest"
             >
-               {copied ? <><CheckCircle2 className="w-5 h-5" /> Copied</> : <><Copy className="w-5 h-5" /> Copy Link</>}
+               {copied ? <><CheckCircle2 className="w-5 h-5" /> Copied Reward Link</> : <><Copy className="w-5 h-5" /> Copy My Link</>}
             </button>
          </div>
-         <p className="mt-6 text-center text-[10px] font-black uppercase text-white/20 tracking-[2px]">Tap above to share with your network on WhatsApp, Twitter, or IG.</p>
+         
+         <p className="mt-8 text-center text-[8px] font-black uppercase text-white/10 tracking-[3px]">Share on WhatsApp or IG for fastest growth</p>
       </div>
     </div>
   );

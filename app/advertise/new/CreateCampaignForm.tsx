@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ArrowLeft, 
-  CheckCircle2, 
-  Loader, 
-  CreditCard, 
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Loader,
+  CreditCard,
   Instagram,
   Youtube,
   Twitter,
@@ -122,7 +122,7 @@ export default function CreateCampaignForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialType = (searchParams.get('type') as 'social' | 'cpa' | 'sale') || 'social';
-  
+
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [advertiserBalance, setAdvertiserBalance] = useState(0);
@@ -130,7 +130,7 @@ export default function CreateCampaignForm() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [userData, setUserData] = useState<any>(null);
-  
+
   const [formData, setFormData] = useState({
     category: initialType,
     platform: '',
@@ -156,9 +156,9 @@ export default function CreateCampaignForm() {
         setCurrentUser(user);
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         if (userDoc.exists()) {
-           const data = userDoc.data();
-           setAdvertiserBalance(data.balance || 0);
-           setUserData(data);
+          const data = userDoc.data();
+          setAdvertiserBalance(data.balance || 0);
+          setUserData(data);
         }
       } else {
         router.push('/login');
@@ -199,7 +199,7 @@ export default function CreateCampaignForm() {
   const saveCampaignToFirestore = async (paymentRef: string, thumbnailUrl: string) => {
     const user = auth.currentUser!;
     const pricing = getPricingForCategory(formData.platform);
-    
+
     const totalBudget = formData.count * pricing.advertiserPrice;
     const userReward = pricing.userEarn;
     const platformCommission = pricing.platformFee;
@@ -222,8 +222,8 @@ export default function CreateCampaignForm() {
 
   const handleFinalSubmit = async () => {
     if (!userData?.isMember) {
-       router.push('/upgrade');
-       return;
+      router.push('/upgrade');
+      return;
     }
     const user = currentUser || auth.currentUser;
     if (!user) return;
@@ -264,9 +264,9 @@ export default function CreateCampaignForm() {
         });
       }
     } catch (err) {
-       setModal({ isOpen: true, type: 'error', title: 'Error', message: (err as Error).message });
+      setModal({ isOpen: true, type: 'error', title: 'Error', message: (err as Error).message });
     } finally {
-       setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -274,201 +274,233 @@ export default function CreateCampaignForm() {
   const meta = getPlatformMetadata(formData.platform);
 
   return (
-    <div className="min-h-screen bg-[#0A0F1E] text-white py-12 px-4 selection:bg-primary selection:text-white">
-      <div className="max-w-xl mx-auto">
-        <Link href="/advertise" className="inline-flex items-center gap-2 text-white/30 hover:text-white mb-8 font-black text-[10px] uppercase tracking-[3px] transition-all group">
-           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1" /> Back to Hub
+    <div className="min-h-screen bg-[#05070A] text-white py-12 px-6 selection:bg-primary selection:text-white relative overflow-hidden pb-44">
+      {/* Dynamic Background Glows */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[120px] -mr-48 -mt-48 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/5 blur-[120px] -ml-48 -mb-48 pointer-events-none" />
+
+      <div className="max-w-2xl mx-auto">
+        <Link href="/advertise" className="inline-flex items-center gap-3 text-white/20 hover:text-white mb-10 font-black text-[10px] uppercase tracking-[4px] transition-all group">
+          <div className="p-2 rounded-xl glass group-hover:bg-white/10 transition-colors">
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          </div>
+          Back to Hub
         </Link>
 
         {/* Header */}
-        <div className="mb-10 text-center">
-           <h1 className="text-4xl font-black text-white mb-2 tracking-tight">New Campaign</h1>
-           <p className="text-white/40 text-[10px] font-black uppercase tracking-[4px]">Mission Control • {initialType} Category</p>
+        <div className="mb-12 text-center md:text-left">
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-3 tracking-tighter">Deploy Campaign</h1>
+          <p className="text-white/30 text-[10px] font-black uppercase tracking-[5px]">Sector: {initialType} • Mission Identity</p>
         </div>
 
-        {/* Steps */}
-        <div className="flex gap-2 mb-12">
-           {[1, 2, 3].map(s => (
-             <div key={s} className={`h-1 flex-1 rounded-full transition-all duration-700 ${step >= s ? 'bg-primary shadow-[0_0_10px_rgba(74,144,226,0.3)]' : 'bg-white/5'}`} />
-           ))}
+        {/* Steps - REFINED INDICATORS */}
+        <div className="flex gap-4 mb-14">
+          {[1, 2, 3].map(s => (
+            <div key={s} className="flex-1 flex flex-col gap-3">
+              <div className={`h-1 rounded-full transition-all duration-1000 ${step >= s ? 'bg-gradient-to-r from-primary to-accent shadow-[0_0_20px_rgba(139,92,246,0.3)]' : 'bg-white/5'}`} />
+              <span className={`text-[8px] font-black uppercase tracking-widest ${step >= s ? 'text-primary' : 'text-white/10'}`}>Phase 0{s}</span>
+            </div>
+          ))}
         </div>
 
-        <div className="bg-[#151B2B] rounded-[2.5rem] border border-white/5 p-8 md:p-12 shadow-2xl relative overflow-hidden">
-           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
-           
-           <AnimatePresence mode="wait">
-              {/* STEP 1: Selection */}
-              {step === 1 && (
-                <motion.div key="s1" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-                   <h2 className="text-xl font-black mb-8 flex items-center gap-3">
-                      <span className="w-8 h-8 rounded-xl bg-primary/20 text-primary flex items-center justify-center text-xs border border-primary/20">01</span>
-                      Select {initialType === 'social' ? 'Platform' : 'Task Type'}
-                   </h2>
-                   
-                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-10">
-                      {currentOptions.map(p => (
-                        <button 
-                          key={p.id}
-                          onClick={() => { setFormData({...formData, platform: p.id}); setStep(2); }}
-                          className={`flex flex-col items-center justify-center p-6 rounded-3xl border-2 transition-all group relative overflow-hidden ${formData.platform === p.id ? 'border-primary bg-primary/5' : 'border-white/5 hover:bg-white/[0.03]'}`}
-                        >
-                           <div className="mb-3 transition-transform group-hover:scale-110 z-10" style={{ color: p.color }}>
-                              {p.icon}
-                           </div>
-                           <span className="text-[10px] font-black uppercase tracking-widest text-white/40 z-10 group-hover:text-white transition-colors">{p.name}</span>
-                           {formData.platform === p.id && <motion.div layoutId="active-bg" className="absolute inset-0 bg-primary/5 pointer-events-none" />}
-                        </button>
-                      ))}
-                   </div>
-                   
-                   <p className="text-[9px] text-center text-white/20 font-black uppercase tracking-widest">Select an iron box above to continue</p>
-                </motion.div>
-              )}
+        <div className="clay-card bg-[#0A0F1E]/40 backdrop-blur-3xl rounded-[3rem] border border-white/10 p-10 md:p-14 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.5)] relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.02] via-transparent to-white/[0.02] pointer-events-none" />
 
-              {/* STEP 2: Logic Info */}
-              {step === 2 && (
-                <motion.div key="s2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-8">
-                   <h2 className="text-xl font-black mb-2 flex items-center gap-3 capitalize">
-                      <span className="w-8 h-8 rounded-xl bg-primary/20 text-primary flex items-center justify-center text-xs border border-primary/20">02</span>
-                      {formData.platform.replace('_', ' ')} Setup
-                   </h2>
-
-                   <div className="space-y-6">
-                      <div className="space-y-2">
-                         <label className="text-[9px] font-black text-white/30 uppercase tracking-[2px] ml-1">Title for your {formData.platform} ad</label>
-                         <input 
-                           placeholder={initialType === 'social' ? `e.g. Follow my ${formData.platform} account` : `e.g. Register on our ${formData.platform.replace('_', ' ')}`}
-                           className="w-full px-6 py-5 rounded-2xl bg-white/[0.02] border border-white/5 outline-none focus:border-primary transition-all font-black text-white placeholder:text-white/10"
-                           value={formData.title}
-                           onChange={(e) => setFormData({...formData, title: e.target.value})}
-                         />
-                      </div>
-
-                      <div className="space-y-2">
-                         <label className="text-[9px] font-black text-white/30 uppercase tracking-[2px] ml-1">{meta.urlLabel}</label>
-                         <input 
-                           type="url"
-                           placeholder={meta.urlPlaceholder}
-                           className="w-full px-6 py-5 rounded-2xl bg-white/[0.02] border border-white/5 outline-none focus:border-primary/50 transition-all font-mono text-sm text-primary"
-                           value={formData.actionUrl}
-                           onChange={(e) => setFormData({...formData, actionUrl: e.target.value})}
-                         />
-                      </div>
-
-                      <div className="space-y-2">
-                         <label className="text-[9px] font-black text-white/30 uppercase tracking-[2px] ml-1">{formData.platform.replace('_', ' ')} Task Steps</label>
-                         <textarea 
-                           placeholder={meta.instPlaceholder}
-                           className="w-full px-6 py-5 rounded-2xl bg-white/[0.02] border border-white/5 outline-none focus:border-primary transition-all text-sm h-32 text-white/60"
-                           value={formData.instructions}
-                           onChange={(e) => setFormData({...formData, instructions: e.target.value})}
-                         />
-                      </div>
-
-                      <div className="space-y-4">
-                         <label className="text-[9px] font-black text-white/30 uppercase tracking-[2px] ml-1">Visual Asset (Optional)</label>
-                         <div className="flex items-center gap-4">
-                            <input type="file" onChange={handleImageChange} className="hidden" id="file-upload" accept="image/*" />
-                            <label htmlFor="file-upload" className="flex-1 px-6 py-4 rounded-xl border border-dashed border-white/10 hover:border-primary text-center text-[10px] font-black uppercase tracking-widest cursor-pointer transition-all text-white/30 hover:text-white">
-                               {imageFile ? imageFile.name : 'Upload Content Thumbnail'}
-                            </label>
-                         </div>
-                      </div>
-                   </div>
-
-                   <div className="flex gap-4 pt-4">
-                      <button onClick={() => setStep(1)} className="px-8 py-5 rounded-2xl font-black text-white/20 hover:text-white transition-all text-xs uppercase tracking-widest">Back</button>
-                      <button 
-                        onClick={() => setStep(3)} 
-                        disabled={!formData.title || !formData.actionUrl || !formData.instructions}
-                        className="flex-1 bg-primary py-5 rounded-2xl font-black text-white shadow-xl shadow-primary/20 active:scale-[0.98] transition-all disabled:opacity-20 text-xs uppercase tracking-[2px]"
-                      >
-                         Advance to Budgeting
-                      </button>
-                   </div>
-                </motion.div>
-              )}
-
-              {/* STEP 3: Financing */}
-              {step === 3 && (
-                <motion.div key="s3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
-                   <h2 className="text-xl font-black mb-2 flex items-center gap-3">
-                      <span className="w-8 h-8 rounded-xl bg-primary/20 text-primary flex items-center justify-center text-xs border border-primary/20">03</span>
-                      Capital Allocation
-                   </h2>
-
-                   <div className="bg-[#1A202C] p-6 rounded-3xl border border-white/5 flex items-center justify-between">
-                      <div>
-                         <p className="text-[9px] font-black text-white/20 uppercase tracking-widest">Platform</p>
-                         <p className="text-lg font-black text-white capitalize">{formData.platform.replace('_', ' ')}</p>
-                      </div>
-                      <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-primary shadow-inner">
-                         {currentOptions.find(p => p.id === formData.platform)?.icon}
-                      </div>
-                   </div>
-
-                   <div className="space-y-6">
-                      <div className="space-y-2">
-                         <label className="text-[9px] font-black text-white/30 uppercase tracking-[2px] ml-1">Volume of {formData.platform} Tasks</label>
-                         <input 
-                           type="number"
-                           className="w-full px-6 py-8 rounded-3xl bg-black/20 border border-white/5 outline-none focus:border-primary transition-all font-black text-5xl text-center text-white"
-                           value={formData.count}
-                           onChange={(e) => setFormData({...formData, count: Number(e.target.value)})}
-                         />
-                      </div>
-
-                      <div className="p-8 rounded-[2rem] bg-primary/5 border border-primary/20 relative overflow-hidden">
-                         <div className="flex justify-between items-center mb-8 relative z-10">
-                            <span className="text-white/40 text-[10px] font-black uppercase tracking-[3px]">Mission Budget</span>
-                            <span className="text-4xl font-black text-white">
-                               ₦{(formData.count * getPricingForCategory(formData.platform).advertiserPrice).toLocaleString()}
-                            </span>
-                         </div>
-                         <div className="space-y-3 pt-6 border-t border-white/5 relative z-10">
-                            <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
-                               <span className="text-white/20">Advertiser Rate</span>
-                               <span className="text-white/60">₦{getPricingForCategory(formData.platform).advertiserPrice} per task</span>
-                            </div>
-                            <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
-                               <span className="text-white/20">User Earning</span>
-                               <span className="text-green-500">₦{getPricingForCategory(formData.platform).userEarn} per completion</span>
-                            </div>
-                         </div>
-                      </div>
-                   </div>
-
-                   <div className="flex gap-3">
-                      <button onClick={() => setStep(2)} className="px-8 py-5 rounded-2xl font-black text-white/20 hover:text-white transition-all text-xs uppercase tracking-widest">Back</button>
-                      <button 
-                        onClick={handleFinalSubmit}
-                        className="flex-1 bg-primary py-5 rounded-2xl font-black text-white shadow-2xl shadow-primary/40 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs uppercase tracking-[2px]"
-                      >
-                         {loading ? <Loader className="w-5 h-5 animate-spin" /> : <><CreditCard className="w-5 h-5" /> Execute Campaign</>}
-                      </button>
-                   </div>
-                </motion.div>
-              )}
-
-              {/* STEP 4: Deployment */}
-              {step === 4 && (
-                <div className="text-center py-10">
-                   <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-10 border border-green-500/20">
-                      <CheckCircle2 className="w-12 h-12 text-green-500" />
-                   </div>
-                   <h2 className="text-4xl font-black mb-4 tracking-tighter">Synchronized</h2>
-                   <p className="text-white/30 mb-12 text-sm font-medium leading-relaxed max-w-xs mx-auto uppercase tracking-wide">Payload received. Status pending internal verification. Check command center for updates.</p>
-                   <button onClick={() => router.push('/advertise')} className="w-full bg-white text-[#0A0F1E] py-5 rounded-3xl font-black hover:scale-[1.02] active:scale-[0.98] transition-all text-xs uppercase tracking-[3px]">Command Center</button>
+          <AnimatePresence mode="wait">
+            {/* STEP 1: Selection - SLEEK GRID */}
+            {step === 1 && (
+              <motion.div key="s1" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }}>
+                <div className="flex items-center gap-4 mb-10">
+                  <div className="w-12 h-12 rounded-2xl glass-dark border-primary/20 text-primary flex items-center justify-center text-xs font-black shadow-xl">01</div>
+                  <h2 className="text-2xl font-black tracking-tight">Select {initialType === 'social' ? 'Platform' : 'Task Type'}</h2>
                 </div>
-              )}
-           </AnimatePresence>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 mb-12">
+                  {currentOptions.map(p => (
+                    <button
+                      key={p.id}
+                      onClick={() => { setFormData({ ...formData, platform: p.id }); setStep(2); }}
+                      className={`flex flex-col items-center justify-center p-8 rounded-[2rem] border transition-all duration-500 group relative overflow-hidden ${formData.platform === p.id ? 'border-primary/50 bg-primary/10 shadow-[0_20px_40px_rgba(139,92,246,0.2)]' : 'border-white/5 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05]'}`}
+                    >
+                      <div className="mb-4 transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-1 z-10" style={{ color: p.color }}>
+                        {p.icon}
+                      </div>
+                      <span className="text-[10px] font-black uppercase tracking-[3px] text-white/30 z-10 group-hover:text-white transition-colors">{p.name}</span>
+                      {formData.platform === p.id && <motion.div layoutId="active-bg" className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />}
+                    </button>
+                  ))}
+                </div>
+
+                <p className="text-[9px] text-center text-white/20 font-black uppercase tracking-[5px] flex items-center justify-center gap-3">
+                  <span className="w-1 h-1 rounded-full bg-white/20" />
+                  Select an objective node to engage
+                  <span className="w-1 h-1 rounded-full bg-white/20" />
+                </p>
+              </motion.div>
+            )}
+
+            {/* STEP 2: Logic Info - REFINED INPUTS */}
+            {step === 2 && (
+              <motion.div key="s2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-10">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-2xl glass-dark border-primary/20 text-primary flex items-center justify-center text-xs font-black shadow-xl">02</div>
+                  <h2 className="text-2xl font-black tracking-tight capitalize">{formData.platform.replace('_', ' ')} Setup</h2>
+                </div>
+
+                <div className="space-y-8">
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-white/30 uppercase tracking-[3px] ml-1">Title for your {formData.platform} ad</label>
+                    <input
+                      placeholder={initialType === 'social' ? `e.g. Follow my ${formData.platform} account` : `e.g. Register on our ${formData.platform.replace('_', ' ')}`}
+                      className="w-full px-6 py-5 rounded-[1.5rem] bg-white/[0.03] border border-white/5 outline-none focus:border-primary/40 focus:bg-white/[0.05] transition-all duration-300 font-bold text-white placeholder:text-white/10"
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-white/30 uppercase tracking-[3px] ml-1">{meta.urlLabel}</label>
+                    <div className="relative">
+                      <input
+                        type="url"
+                        placeholder={meta.urlPlaceholder}
+                        className="w-full px-6 py-5 rounded-[1.5rem] bg-white/[0.03] border border-white/5 outline-none focus:border-primary/40 focus:bg-white/[0.05] transition-all duration-300 font-mono text-xs text-primary placeholder:text-primary/20"
+                        value={formData.actionUrl}
+                        onChange={(e) => setFormData({ ...formData, actionUrl: e.target.value })}
+                      />
+                      <div className="absolute right-5 top-1/2 -translate-y-1/2">
+                        <Globe className="w-4 h-4 text-primary opacity-30" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-white/30 uppercase tracking-[3px] ml-1">{formData.platform.replace('_', ' ')} Task Steps</label>
+                    <textarea
+                      placeholder={meta.instPlaceholder}
+                      className="w-full px-6 py-5 rounded-[1.5rem] bg-white/[0.03] border border-white/5 outline-none focus:border-primary/40 focus:bg-white/[0.05] transition-all duration-300 text-sm h-40 text-white/60 leading-relaxed font-medium"
+                      value={formData.instructions}
+                      onChange={(e) => setFormData({ ...formData, instructions: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-black text-white/30 uppercase tracking-[3px] ml-1">Visual Asset (Optional)</label>
+                    <div className="flex items-center gap-4">
+                      <input type="file" onChange={handleImageChange} className="hidden" id="file-upload" accept="image/*" />
+                      <label htmlFor="file-upload" className="flex-1 px-8 py-6 rounded-3xl border-2 border-dashed border-white/5 hover:border-primary/40 hover:bg-primary/5 text-center text-[10px] font-black uppercase tracking-[4px] cursor-pointer transition-all duration-500 text-white/20 hover:text-white group">
+                        {imageFile ? (
+                          <span className="text-primary truncate block max-w-[200px] mx-auto">{imageFile.name}</span>
+                        ) : (
+                          <span className="flex items-center justify-center gap-3">
+                            <Download className="w-4 h-4 opacity-50 group-hover:translate-y-1 transition-transform" />
+                            Upload Media Fragment
+                          </span>
+                        )}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-5 pt-4">
+                  <button onClick={() => setStep(1)} className="px-10 py-5 rounded-[1.5rem] glass hover:bg-white/10 active:scale-95 font-black text-white transition-all text-xs uppercase tracking-[3px]">Protocol Reset</button>
+                  <button
+                    onClick={() => setStep(3)}
+                    disabled={!formData.title || !formData.actionUrl || !formData.instructions}
+                    className="flex-1 clay-button py-5 rounded-[1.5rem] font-black text-white shadow-2xl shadow-primary/30 active:scale-[0.98] transition-all disabled:opacity-20 text-xs uppercase tracking-[3px] italic"
+                  >
+                    Advance to Budgeting
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* STEP 3: Financing - SLEEK SUMMARY */}
+            {step === 3 && (
+              <motion.div key="s3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-10">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-2xl glass-dark border-primary/20 text-primary flex items-center justify-center text-xs font-black shadow-xl">03</div>
+                  <h2 className="text-2xl font-black tracking-tight">Capital Allocation</h2>
+                </div>
+
+                <div className="bg-white/[0.02] p-8 rounded-[2.5rem] border border-white/5 flex items-center justify-between group hover:bg-white/[0.04] transition-colors">
+                  <div>
+                    <p className="text-[10px] font-black text-white/20 uppercase tracking-[4px] mb-2 uppercase">Protocol</p>
+                    <p className="text-2xl font-black text-white capitalize group-hover:text-primary transition-colors">{formData.platform.replace('_', ' ')}</p>
+                  </div>
+                  <div className="w-16 h-16 rounded-[1.5rem] glass flex items-center justify-center text-primary shadow-2xl group-hover:scale-110 transition-transform duration-500">
+                    {currentOptions.find(p => p.id === formData.platform)?.icon}
+                  </div>
+                </div>
+
+                <div className="space-y-10">
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-black text-white/30 uppercase tracking-[3px] ml-1">Task Volume</label>
+                    <div className="relative group">
+                      <input
+                        type="number"
+                        className="w-full px-8 py-10 rounded-[2.5rem] bg-black/40 border-2 border-white/5 outline-none focus:border-primary/40 focus:bg-black/60 transition-all font-black text-7xl text-center text-white tracking-tighter"
+                        value={formData.count}
+                        onChange={(e) => setFormData({ ...formData, count: Number(e.target.value) })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="p-10 rounded-[3rem] bg-gradient-to-br from-primary/[0.08] via-[#0A0F1E] to-accent/[0.08] border border-white/10 relative overflow-hidden shadow-2xl">
+                    <div className="flex flex-col items-center text-center mb-10 relative z-10">
+                      <span className="text-white/20 text-[10px] font-black uppercase tracking-[5px] mb-4">Mission Budget</span>
+                      <span className="text-6xl font-black text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                        ₦{(formData.count * getPricingForCategory(formData.platform).advertiserPrice).toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-8 pt-8 border-t border-white/5 relative z-10">
+                      <div className="text-center md:text-left">
+                        <p className="text-[8px] font-black text-white/20 uppercase tracking-widest mb-1">Base Rate</p>
+                        <p className="text-sm font-black text-white/60">₦{getPricingForCategory(formData.platform).advertiserPrice}/task</p>
+                      </div>
+                      <div className="text-center md:text-right">
+                        <p className="text-[8px] font-black text-white/20 uppercase tracking-widest mb-1">Payout</p>
+                        <p className="text-sm font-black text-green-400">₦{getPricingForCategory(formData.platform).userEarn}/user</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-5 pt-4">
+                  <button onClick={() => setStep(2)} className="px-10 py-5 rounded-[1.5rem] glass hover:bg-white/10 active:scale-95 font-black text-white transition-all text-xs uppercase tracking-[3px]">Recalibrate</button>
+                  <button
+                    onClick={handleFinalSubmit}
+                    className="flex-1 clay-button py-5 rounded-[1.5rem] font-black text-white shadow-2xl shadow-primary/30 active:scale-[0.98] transition-all flex items-center justify-center gap-4 text-xs uppercase tracking-[3px] italic"
+                  >
+                    {loading ? <Loader className="w-5 h-5 animate-spin" /> : <><CreditCard className="w-5 h-5" /> Execute Campaign</>}
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* STEP 4: Deployment - REFINED SUCCESS */}
+            {step === 4 && (
+              <div className="text-center py-12">
+                <motion.div
+                  initial={{ scale: 0.8, rotate: -20, opacity: 0 }}
+                  animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                  className="w-28 h-28 bg-green-500/10 rounded-[2.5rem] flex items-center justify-center mx-auto mb-10 border border-green-500/20 shadow-[0_0_50px_rgba(34,197,94,0.1)]"
+                >
+                  <CheckCircle2 className="w-14 h-14 text-green-500" />
+                </motion.div>
+                <h2 className="text-5xl font-black mb-4 tracking-tighter">Synchronized</h2>
+                <p className="text-white/30 mb-14 text-sm font-bold uppercase tracking-[4px] leading-relaxed max-w-sm mx-auto italic text-center">Payload received. Status pending internal verification. Check command center for updates.</p>
+                <button onClick={() => router.push('/advertise')} className="w-full clay-button py-6 rounded-[2rem] font-black hover:scale-[1.02] active:scale-[0.98] transition-all text-sm uppercase tracking-[4px] italic">Return to Command Center</button>
+              </div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
-      <Modal 
-        isOpen={modal.isOpen} 
-        onClose={() => setModal({...modal, isOpen: false})} 
-        type={modal.type} 
-        title={modal.title} 
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={() => setModal({ ...modal, isOpen: false })}
+        type={modal.type}
+        title={modal.title}
         message={modal.message}
       />
     </div>

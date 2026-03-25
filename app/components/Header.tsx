@@ -42,9 +42,9 @@ const Header = ({ onMenuClick }: { onMenuClick?: () => void }) => {
   }, []);
 
   return (
-    <header className="sticky top-0 z-[100] bg-black/40 backdrop-blur-3xl border-b border-white/5 px-6 py-4 flex items-center justify-between pointer-events-auto">
+    <header className="sticky top-0 z-[50] bg-black/40 backdrop-blur-3xl border-b border-white/5 px-6 py-4 flex items-center justify-between pointer-events-auto md:pl-72">
       {/* Brand area with Hamburger for mobile */}
-      <div className="flex items-center gap-3 md:ml-64 transition-all">
+      <div className="flex items-center gap-3 transition-all">
         <div 
            className="md:hidden glass p-2 rounded-xl text-white/60 active:scale-95 transition-all cursor-pointer"
            onClick={() => onMenuClick?.()}

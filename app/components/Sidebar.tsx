@@ -12,24 +12,23 @@ import {
   LogOut, 
   Gift,
   ShieldAlert,
-  Zap
+  Banknote,
+  LayoutDashboard,
+  Rocket,
+  Share2,
+  Megaphone,
+  User,
+  ArrowRight
 } from 'lucide-react';
 
-// MUI Icon imports
-import BarChartIcon from '@mui/icons-material/BarChartOutlined';
-import RocketIcon from '@mui/icons-material/RocketOutlined';
-import ShareIcon from '@mui/icons-material/ShareOutlined';
-import AccountCircleIcon from '@mui/icons-material/AccountCircleOutlined'; 
-import CampaignIcon from '@mui/icons-material/CampaignOutlined';
-
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: BarChartIcon },
-  { name: 'TaskPlay Earn', href: '/earn', icon: Zap },
-  { name: 'CPA Offers', href: '/cpa-offers', icon: RocketIcon },
-  { name: 'Social Tasks', href: '/social-tasks', icon: ShareIcon },
-  { name: 'Refer & Earn', href: '/referral', icon: Gift },
-  { name: 'Advertise', href: '/advertise', icon: CampaignIcon },
-  { name: 'Profile', href: '/profile', icon: AccountCircleIcon },
+  { name: 'Command Center', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Income Hub', href: '/earn', icon: Banknote },
+  { name: 'CPA Pipeline', href: '/cpa-offers', icon: Rocket },
+  { name: 'Social Viral', href: '/social-tasks', icon: Share2 },
+  { name: 'Growth Rewards', href: '/referral', icon: Gift },
+  { name: 'Launch Ads', href: '/advertise', icon: Megaphone },
+  { name: 'My Profile', href: '/profile', icon: User },
 ];
 
 const Sidebar = ({ mobile, onLinkClick }: { mobile?: boolean; onLinkClick?: () => void }) => {
@@ -60,86 +59,91 @@ const Sidebar = ({ mobile, onLinkClick }: { mobile?: boolean; onLinkClick?: () =
 
   return (
     <aside className={`
-      ${mobile ? 'w-full h-full' : 'fixed left-0 top-0 h-screen w-64 hidden md:flex border-r border-white/10 z-50 shadow-2xl'} 
-      bg-black/10 backdrop-blur-[120px] backdrop-saturate-[180%] text-gray-300 p-4 sm:p-6 flex-col
+      ${mobile ? 'w-full px-2' : 'fixed left-0 top-0 h-screen w-64 hidden md:flex border-r border-white/5 z-50'} 
+      flex flex-col bg-[#050505]/40 backdrop-blur-3xl
     `}>
-      <div className="mb-8">
-        <Link href="/" className="group flex items-center mb-10 gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-accent flex items-center justify-center p-2 shadow-lg group-hover:scale-110 transition-transform">
-             <span className="text-white font-black text-xl">T</span>
-          </div>
-          <span className="text-2xl font-black text-white tracking-tighter">TaskPlay</span>
-        </Link>
-        <nav className="space-y-1">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              onClick={() => onLinkClick?.()}
-              className={`flex items-center p-4 rounded-2xl transition-all duration-300 relative group
-                ${pathname === item.href
-                  ? 'text-white'
-                  : 'text-white/40 hover:text-white hover:bg-white/5'
-                }`}
-            >
-              {pathname === item.href && (
-                <motion.div 
-                  layoutId="sidebar-active"
-                  className="absolute inset-0 bg-white/5 rounded-2xl border border-white/10"
-                />
-              )}
-              <item.icon className={`mr-3 relative z-10 ${pathname === item.href ? 'text-primary' : ''}`} fontSize="medium" />
-              <span className="relative z-10 font-bold">{item.name}</span>
-            </Link>
-          ))}
+      <div className="flex flex-col flex-1 py-10">
+        <div className="px-6 mb-12">
+           <Link href="/" className="group flex items-center gap-3">
+              <div className="w-10 h-10 rounded-[1.2rem] bg-primary flex items-center justify-center p-2 shadow-[0_0_20px_rgba(139,92,246,0.5)] group-hover:scale-110 transition-transform">
+                 <span className="text-white font-black text-xl italic">T</span>
+              </div>
+              <span className="text-xl font-black text-white tracking-tighter uppercase italic">TaskPlay</span>
+           </Link>
+        </div>
 
-          {/* Admin link — only visible if isAdmin: true in Firestore */}
+        <nav className="space-y-1.5 px-4 overflow-y-auto flex-1 custom-scrollbar">
+          {navigation.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={() => onLinkClick?.()}
+                className={`flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 relative group overflow-hidden
+                  ${isActive
+                    ? 'text-white'
+                    : 'text-white/30 hover:text-white hover:bg-white/[0.03]'
+                  }`}
+              >
+                {isActive && (
+                  <motion.div 
+                    layoutId={`sidebar-active-${mobile ? 'mobile' : 'desktop'}`}
+                    className="absolute inset-0 bg-primary/10 border border-primary/20 rounded-2xl"
+                  />
+                )}
+                <item.icon className={`w-5 h-5 relative z-10 transition-colors ${isActive ? 'text-primary' : 'group-hover:text-primary/60'}`} />
+                <span className={`relative z-10 text-xs font-black uppercase tracking-widest ${isActive ? 'opacity-100' : 'opacity-80'}`}>{item.name}</span>
+              </Link>
+            );
+          })}
+
           {isAdmin && (
             <Link
               href="/admin"
               onClick={() => onLinkClick?.()}
-              className={`flex items-center p-4 rounded-2xl transition-all duration-300 relative group
+              className={`flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 relative group overflow-hidden mt-6
                 ${pathname.startsWith('/admin')
                   ? 'text-white'
-                  : 'text-orange-400/60 hover:text-orange-400 hover:bg-orange-400/5'
+                  : 'text-orange-400/50 hover:text-orange-400 hover:bg-orange-400/5'
                 }`}
             >
-              {pathname.startsWith('/admin') && (
-                <motion.div 
-                  layoutId="sidebar-active"
-                  className="absolute inset-0 bg-orange-400/10 rounded-2xl border border-orange-400/20"
-                />
-              )}
-              <ShieldAlert className="w-5 h-5 mr-3 relative z-10 text-orange-400" />
-              <span className="relative z-10 font-bold">Admin Panel</span>
-              <span className="ml-auto relative z-10 text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-orange-400/10 border border-orange-400/20 text-orange-400">
-                Admin
+              <ShieldAlert className="w-5 h-5 relative z-10 text-orange-400" />
+              <span className="relative z-10 text-xs font-black uppercase tracking-widest">Operator View</span>
+              <span className="ml-auto relative z-10 text-[7px] font-black uppercase tracking-widest px-2 py-1 rounded-lg bg-orange-400/20 text-orange-400 border border-orange-400/20">
+                Lvl 1
               </span>
             </Link>
           )}
         </nav>
       </div>
 
-      <div className="mt-auto pt-6 border-t border-white/5">
-        {/* Upgrade prompt — only for non-members */}
+      <div className="p-6 mt-auto">
         {!isMember && (
           <Link href="/upgrade" onClick={() => onLinkClick?.()}>
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-primary/10 to-transparent border border-primary/20 mb-6 cursor-pointer hover:border-primary/40 transition-all">
-              <p className="text-[10px] font-bold text-primary uppercase tracking-[2px] mb-1">STANDARD PLAN</p>
-              <p className="text-xs text-white/60 mb-3">Pay ₦1,500 to unlock full earning potential.</p>
-              <div className="w-full py-2 rounded-xl bg-primary text-white text-xs font-bold text-center">
-                Upgrade Now
+            <motion.div 
+               whileHover={{ scale: 1.02 }}
+               whileTap={{ scale: 0.98 }}
+               className="p-5 rounded-2xl bg-gradient-to-br from-primary to-accent mb-6 cursor-pointer relative overflow-hidden group shadow-2xl shadow-primary/20"
+            >
+              <p className="text-[8px] font-black text-white/50 uppercase tracking-[3px] mb-1">Status: Restricted</p>
+              <p className="text-[10px] text-white font-black uppercase tracking-wider mb-4 leading-tight italic">Upgrade to earn with ease</p>
+              <div className="flex items-center gap-2 text-white font-black text-[9px] uppercase tracking-widest group-hover:gap-4 transition-all">
+                Access Now <ArrowRight className="w-3.5 h-3.5" />
               </div>
-            </div>
+              <div className="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-125 transition-transform">
+                 <ShieldAlert className="w-20 h-20" />
+              </div>
+            </motion.div>
           </Link>
         )}
 
         <button
           onClick={handleLogout}
-          className="w-full flex items-center p-4 rounded-2xl text-white/40 hover:text-red-400 hover:bg-red-400/5 transition-all group"
+          className="w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-white/20 hover:text-red-500 hover:bg-red-500/5 transition-all group"
         >
-          <LogOut className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform" />
-          <span className="font-bold">Log Out</span>
+          <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+          <span className="text-xs font-black uppercase tracking-widest">Sign Out</span>
         </button>
       </div>
     </aside>

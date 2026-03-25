@@ -115,44 +115,40 @@ export default function AddFundsPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6">
-        <div className="clay-card p-10 border-primary/20 bg-primary/5 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="flex items-center gap-6">
-            <div className="w-20 h-20 rounded-3xl glass flex items-center justify-center text-primary shadow-xl border border-primary/20">
-              <CreditCard className="w-10 h-10" />
-            </div>
-            <div>
-              <h3 className="text-2xl font-black text-white tracking-tight">Paystack Gateway</h3>
-              <p className="text-white/40 text-sm font-bold tracking-widest uppercase">Safe & Secure Payment</p>
-            </div>
+        <div className="glass p-8 md:p-12 rounded-[2.5rem] border-white/5 bg-white/[0.01] flex flex-col items-center text-center gap-8 relative overflow-hidden shadow-2xl">
+          <div className="w-16 h-16 rounded-3xl glass flex items-center justify-center text-primary shadow-xl border border-primary/20">
+            <CreditCard className="w-8 h-8" />
           </div>
-
-          <form id="paymentForm" className="flex-1 max-w-xs w-full">
-            <input
-              type="number"
-              placeholder="Amount (₦)"
-              className="glass w-full px-6 py-4 rounded-2xl text-white outline-none mb-4 text-center font-black text-xl border border-white/5 focus:border-primary transition-all"
-              value={amount}
-              onChange={(e) => setAmount(Number(e.target.value))}
-            />
-            <button
-              type="button"
-              onClick={handlePayment}
-              disabled={processing}
-              className="clay-button w-full py-4 rounded-xl font-black text-lg text-white disabled:opacity-50"
-            >
-              {processing ? 'Launching...' : 'Pay with Paystack'}
-            </button>
-          </form>
+          <div className="max-w-xs w-full">
+            <h3 className="text-xl font-black text-white tracking-tight mb-2">Secure Deposit</h3>
+            <p className="text-white/20 text-[9px] font-black tracking-widest uppercase mb-8 leading-none">Powered by Paystack Network</p>
+            
+            <form id="paymentForm" className="space-y-4">
+              <input
+                type="number"
+                placeholder="Amount (₦)"
+                className="glass w-full px-6 py-4 rounded-xl text-white outline-none text-center font-black text-xl border border-white/10 focus:border-primary/40 transition-all bg-black/20"
+                value={amount}
+                onChange={(e) => setAmount(Number(e.target.value))}
+              />
+              <button
+                type="button"
+                onClick={handlePayment}
+                disabled={processing}
+                className="bg-primary hover:bg-primary/80 w-full py-4 rounded-xl font-black text-sm text-white disabled:opacity-50 transition-all active:scale-95 shadow-xl shadow-primary/20 uppercase tracking-widest"
+              >
+                {processing ? 'Processing...' : 'Complete Payment'}
+              </button>
+            </form>
+          </div>
         </div>
 
-        <div className="clay-card p-10 border-white/5 bg-white/[0.01] text-center">
-          <div className="flex items-center justify-center gap-3 text-white/40 text-[10px] font-black uppercase tracking-[3px] mb-6">
-            <Target className="w-4 h-4" /> Why add funds?
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-            {['Launch Ad Campaigns', 'Membership Upgrade', 'High-Ticket Participation', 'Internal Transfers'].map((item, i) => (
-              <div key={i} className="glass p-4 rounded-xl text-white/60 font-bold text-sm flex items-center gap-3 border border-white/5">
-                <div className="w-2 h-2 rounded-full bg-primary" /> {item}
+        <div className="glass p-8 rounded-[2.3rem] border-white/5 bg-white/[0.01]">
+          <h3 className="text-[10px] font-black text-white/20 uppercase tracking-[4px] mb-8 text-center italic font-bold">Wallet Benefits</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto">
+            {['Launch Campaigns', 'Daily Tasks', 'Instant Payouts', 'Bonus Rewards'].map((item, i) => (
+              <div key={i} className="glass px-5 py-4 rounded-2xl text-white/40 font-bold text-[10px] flex items-center gap-3 border border-white/5 uppercase tracking-widest">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary" /> {item}
               </div>
             ))}
           </div>

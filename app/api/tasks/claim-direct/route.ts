@@ -32,6 +32,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized task type' }, { status: 403 });
     }
 
+    // 1.1 Participation Limit Check
+    const current = taskData.currentParticipations || 0;
+    const max = taskData.maxParticipations || 0;
+    if (current >= max) {
+      // Automatically mark as completed if it wasn't already
+      if (taskSnap.data()?.status !== 'completed') {
+        await taskRef.update({ status: 'completed' });
+      }
+      return NextResponse.json({ error: 'Task capacity reached' }, { status: 400 });
+    }
+
     // Attempt Atomic Batch
     const batch = db.batch();
 
@@ -55,9 +66,13 @@ export async function POST(req: Request) {
       proofImageUrl: 'direct_link_auto_approval'
     });
 
-    // 4. Update Task Participation
+    // 4. Update Task Participation & Status
+    const nextCount = (taskData.currentParticipations || 0) + 1;
+    const isNowComplete = nextCount >= (taskData.maxParticipations || 0);
+    
     batch.update(taskRef, {
-      currentParticipations: FieldValue.increment(1)
+      currentParticipations: FieldValue.increment(1),
+      ...(isNowComplete ? { status: 'completed' } : {})
     });
 
     await batch.commit();

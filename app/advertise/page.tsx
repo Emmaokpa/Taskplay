@@ -92,76 +92,100 @@ export default function AdvertiseDashboard() {
   );
 
   return (
-    <div className="p-6 md:p-10 max-w-7xl mx-auto">
+    <div className="p-6 md:p-12 max-w-7xl mx-auto pb-44 relative">
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[120px] -mr-48 -mt-48 pointer-events-none" />
+      
       {isMember === false && (
-        <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="clay-card p-6 bg-red-500/10 border-red-500/20 mb-10 flex items-center justify-between">
-          <div className="flex items-center gap-4 text-red-400">
-            <ShieldAlert className="w-8 h-8" />
-            <div>
-              <h4 className="font-black text-sm uppercase tracking-widest">Advertiser Account Restricted</h4>
-              <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest">Membership Fee Required to Post Campaigns</p>
+        <motion.div 
+          initial={{ y: -20, opacity: 0 }} 
+          animate={{ y: 0, opacity: 1 }} 
+          className="clay-card p-8 md:p-10 bg-red-500/10 border-red-500/20 mb-12 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_20px_50px_rgba(239,68,68,0.1)]"
+        >
+          <div className="flex items-center gap-6 text-red-500">
+            <div className="w-16 h-16 rounded-[1.5rem] bg-red-500/10 flex items-center justify-center border border-red-500/20 shadow-xl">
+               <ShieldAlert className="w-8 h-8" />
+            </div>
+            <div className="text-center md:text-left">
+              <h4 className="font-black text-lg md:text-xl tracking-tighter uppercase mb-1">Advertiser Account Restricted</h4>
+              <p className="text-[10px] font-black opacity-50 uppercase tracking-[4px]">Membership synchronization required to deploy campaigns</p>
             </div>
           </div>
-          <Link href="/upgrade" className="clay-button px-6 py-3 rounded-xl bg-red-500 text-white font-black text-[10px] uppercase tracking-[3px]">Upgrade Now</Link>
+          <Link href="/upgrade" className="clay-button px-10 py-5 rounded-[1.5rem] bg-red-500 hover:bg-red-600 text-white font-black text-xs uppercase tracking-[3px] shadow-2xl shadow-red-500/40 italic">
+             Upgrade Protocol
+          </Link>
         </motion.div>
       )}
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-16">
         <div>
-          <h1 className="text-4xl font-black text-white mb-2 tracking-tight">Advertiser Hub</h1>
-          <p className="text-white/40 text-sm font-bold tracking-[2px] uppercase">Grow your business with TaskPlay</p>
+          <h1 className="text-4xl md:text-6xl font-black text-white mb-3 tracking-tighter">Advertiser Hub</h1>
+          <p className="text-white/30 text-[10px] font-black tracking-[5px] uppercase flex items-center gap-3">
+             <span className="w-2 h-2 rounded-full bg-primary shadow-lg shadow-primary/50" />
+             Engaging 100K+ Active Nodes
+          </p>
         </div>
-        <Link href="/advertise/new" className="clay-button px-8 py-4 rounded-2xl font-bold flex items-center gap-2  text-white transition-all active:scale-95">
+        <Link href="/advertise/new" className="clay-button px-12 py-5 rounded-[2rem] font-black flex items-center gap-3 text-white shadow-2xl shadow-primary/30 active:scale-95 transition-all text-sm uppercase tracking-tighter italic">
           <Plus className="w-6 h-6" /> Create Campaign
         </Link>
       </div>
 
-      {/* Stats Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      {/* Stats Summary - REFINED */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
         {stats.map((s, i) => (
-          <div key={i} className="clay-card p-8">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 rounded-xl glass">
+          <motion.div 
+            key={i} 
+            whileHover={{ y: -5 }}
+            className="clay-card p-10 bg-[#0A0F1E]/40 backdrop-blur-3xl border-white/5 hover:border-white/10 transition-all group"
+          >
+            <div className="flex items-center gap-5 mb-8">
+              <div className="p-4 rounded-2xl glass-dark group-hover:text-white transition-colors">
                 {s.icon}
               </div>
-              <span className="text-xs font-black text-white/40 uppercase tracking-[2px]">{s.label}</span>
+              <span className="text-[10px] font-black text-white/20 uppercase tracking-[4px]">{s.label}</span>
             </div>
-            <div className="text-4xl font-black text-white">{s.value}</div>
-          </div>
+            <div className="text-5xl font-black text-white tracking-tighter group-hover:scale-[1.02] transition-transform origin-left">{s.value}</div>
+          </motion.div>
         ))}
       </div>
 
-      <h2 className="text-2xl font-black text-white mb-8 tracking-tight flex items-center gap-3">
-        <Zap className="w-6 h-6 text-accent fill-accent" /> Start Advertising
-      </h2>
+      <div className="flex items-center gap-4 mb-10">
+         <div className="h-px flex-1 bg-white/5" />
+         <h2 className="text-[10px] font-black text-white/20 uppercase tracking-[10px] flex items-center gap-4">
+            Available Objectives
+         </h2>
+         <div className="h-px flex-1 bg-white/5" />
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
         {adOptions.map((opt, i) => {
           const isComingSoon = opt.comingSoon;
           const href = !isComingSoon ? (isMember === false ? '/upgrade' : opt.href) : undefined;
 
           const content = (
             <motion.div
-              whileHover={isComingSoon ? {} : { y: -10 }}
-              className={`clay-card p-10 group relative transition-all ${isComingSoon ? 'opacity-60 cursor-not-allowed' : ''} ${isMember === false ? 'grayscale-[0.3] opacity-80' : ''}`}
+              whileHover={isComingSoon ? {} : { y: -12, scale: 1.02 }}
+              className={`clay-card p-12 group relative transition-all duration-500 overflow-hidden ${isComingSoon ? 'opacity-40 cursor-not-allowed' : ''} ${isMember === false ? 'grayscale-[0.5] opacity-80' : ''}`}
             >
+              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              
               {isComingSoon && (
-                <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-white/40">
-                  Coming Soon
+                <div className="absolute top-6 right-6 px-4 py-2 rounded-xl glass-dark border-white/10 text-[8px] font-black uppercase tracking-[3px] text-white/30">
+                  Locked
                 </div>
               )}
-              <div className="p-4 rounded-2xl glass mb-8 w-fit transition-colors">
+              <div className="w-16 h-16 rounded-[1.5rem] glass-dark flex items-center justify-center mb-10 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-xl border-white/5 group-hover:border-white/20">
                 {opt.icon}
               </div>
-              <h3 className="text-2xl font-black text-white mb-3 tracking-tight">{opt.title}</h3>
-              <p className="text-white/40 leading-relaxed mb-8">{opt.desc}</p>
-              <div className="flex items-center justify-between">
-                <div className="px-3 py-1 rounded-lg bg-white/5 text-[10px] font-black tracking-widest text-primary border border-white/5">
+              <h3 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tighter group-hover:text-primary transition-colors">{opt.title}</h3>
+              <p className="text-white/30 text-sm leading-relaxed mb-10 font-medium">{opt.desc}</p>
+              
+              <div className="flex items-center justify-between pt-6 border-t border-white/5">
+                <div className="px-5 py-2.5 rounded-2xl glass-dark text-[10px] font-black tracking-[3px] text-primary border border-primary/20 shadow-inner group-hover:bg-primary/5 transition-colors">
                   {opt.tag}
                 </div>
                 {!isComingSoon && (
-                  <div className="w-10 h-10 rounded-full glass flex items-center justify-center text-white/60 group-hover:text-white transition-colors">
-                    <Plus className="w-5 h-5" />
+                  <div className="w-12 h-12 rounded-full glass flex items-center justify-center text-white/30 group-hover:text-white group-hover:bg-primary transition-all duration-500 shadow-2xl">
+                    <Plus className="w-6 h-6 group-hover:rotate-90 transition-transform" />
                   </div>
                 )}
               </div>
@@ -184,15 +208,23 @@ export default function AdvertiseDashboard() {
         })}
       </div>
 
-      {/* Campaign List Placeholder */}
-      <div className="clay-card p-12 text-center border-white/5 bg-white/[0.01]">
-        <div className="w-20 h-20 rounded-[2rem] glass flex items-center justify-center mx-auto mb-8 border-white/10">
-          <BarChart3 className="w-10 h-10 text-white/20" />
+      {/* Campaign List Placeholder - REFINED */}
+      <motion.div 
+        initial={{ y: 30, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        className="clay-card p-16 text-center border-white/5 bg-[#0A0F1E]/20 backdrop-blur-3xl relative overflow-hidden"
+      >
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/5 blur-[100px] pointer-events-none" />
+        <div className="w-24 h-24 rounded-[2.5rem] glass flex items-center justify-center mx-auto mb-10 border-white/10 shadow-2xl group transition-transform hover:scale-110">
+          <BarChart3 className="w-12 h-12 text-white/10 group-hover:text-primary transition-colors" />
         </div>
-        <h3 className="text-xl font-bold text-white mb-3">No active campaigns</h3>
-        <p className="text-white/40 mb-10 max-w-sm mx-auto">Create your first campaign to start reaching thousands of active users in Nigeria.</p>
-        <Link href="/advertise/new" className="text-primary font-black uppercase tracking-widest text-xs hover:underline">Get Started Now</Link>
-      </div>
+        <h3 className="text-3xl font-black text-white mb-4 tracking-tighter">Zero Deployments</h3>
+        <p className="text-white/30 mb-12 max-w-md mx-auto text-sm font-medium leading-relaxed uppercase tracking-wide">Initiate your first campaign cluster to start engaging Nigerian market sectors.</p>
+        <Link href="/advertise/new" className="text-primary font-black uppercase tracking-[5px] text-[10px] hover:text-white transition-colors flex items-center justify-center gap-3">
+           Engage Network <Plus className="w-4 h-4" />
+        </Link>
+      </motion.div>
     </div>
+
   );
 }

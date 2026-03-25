@@ -168,6 +168,16 @@ export default function TaskSubmissionPage({ params }: { params: Promise<{ id: s
       const user = auth.currentUser;
       if (!user) throw new Error('Please log in first');
 
+      // 0. Double check participation limit
+      const taskRef = doc(db, 'tasks', id);
+      const taskSnap = await getDoc(taskRef);
+      if (taskSnap.exists()) {
+        const latestData = taskSnap.data();
+        if ((latestData.currentParticipations || 0) >= (latestData.maxParticipations || 0)) {
+          throw new Error('This task just reached its capacity. Please try another one.');
+        }
+      }
+
       // 1. Upload screenshot
       const proofUrl = await uploadToImageKit(file);
 
@@ -243,36 +253,35 @@ export default function TaskSubmissionPage({ params }: { params: Promise<{ id: s
   );
 
   return (
-    <div className="p-6 md:p-10 max-w-4xl mx-auto pb-40">
-      <Link href="/dashboard" className="inline-flex items-center gap-2 text-white/40 hover:text-white mb-10 transition-colors font-bold text-sm">
-        <ArrowLeft className="w-4 h-4" /> Back to App
+    <div className="p-4 md:p-8 max-w-5xl mx-auto pb-40">
+      <Link href="/dashboard" className="inline-flex items-center gap-2 text-white/30 hover:text-white mb-8 transition-colors font-bold text-xs uppercase tracking-widest">
+        <ArrowLeft className="w-3.5 h-3.5" /> Dashboard
       </Link>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         {/* Left: Task Info */}
-        <div className="lg:col-span-2 space-y-8">
-          <div className="clay-card p-10 bg-white/[0.02]">
-            <div className="flex items-center gap-3 text-primary mb-6">
-              <span className="px-3 py-1 rounded-lg glass text-[10px] font-black uppercase tracking-widest">{task.category}</span>
-              <span className="text-[10px] uppercase font-black tracking-widest text-white/20">•</span>
-              <span className="text-xs font-black text-green-400">₦{task.userReward} Reward</span>
+        <div className="lg:col-span-2 space-y-6">
+          <div className="glass p-6 md:p-8 rounded-[2rem] border-white/5 relative overflow-hidden">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="px-3 py-1 rounded-lg bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest border border-primary/20">{task.category}</span>
+              <span className="text-[10px] font-black text-green-400">₦{task.userReward} Earn</span>
             </div>
-            <h1 className="text-4xl font-black text-white mb-6 tracking-tight leading-tight">{task.title}</h1>
-            <p className="text-white/40 text-lg leading-relaxed mb-8">{task.description}</p>
+            <h1 className="text-2xl md:text-3xl font-black text-white mb-4 tracking-tight leading-tight">{task.title}</h1>
+            <p className="text-white/40 text-sm md:text-base leading-relaxed mb-8">{task.description}</p>
 
             <a
               href={task.actionUrl} target="_blank" rel="noopener noreferrer"
-              className="clay-button w-full sm:w-auto px-8 py-5 rounded-2xl font-black text-xl text-white inline-flex items-center gap-3"
+              className="bg-primary hover:bg-primary/80 w-full sm:w-auto px-10 py-4 rounded-xl font-black text-sm text-white inline-flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-primary/20"
             >
-              Launch Task <ExternalLink className="w-6 h-6" />
+              Start Earning Now <ExternalLink className="w-4 h-4" />
             </a>
           </div>
 
-          <div className="clay-card p-10 border-primary/20 bg-primary/5">
-            <h3 className="text-xl font-black text-white mb-6 flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-primary" /> Instructions
+          <div className="glass p-6 md:p-8 border-white/5 rounded-[2rem] bg-white/[0.01]">
+            <h3 className="text-sm font-black text-white/60 mb-6 uppercase tracking-[3px] flex items-center gap-2">
+               Steps to follow
             </h3>
-            <div className="whitespace-pre-line text-white/60 leading-relaxed text-lg list-decimal pl-4">
+            <div className="whitespace-pre-line text-white/50 leading-loose text-sm pl-2">
               {task.instructions}
             </div>
           </div>
@@ -280,8 +289,8 @@ export default function TaskSubmissionPage({ params }: { params: Promise<{ id: s
 
         {/* Right: Submission */}
         <div className="space-y-6">
-          <div className="clay-card p-8 border-white/10 overflow-hidden">
-            <h3 className="text-lg font-black text-white mb-6 uppercase tracking-widest">Verify task</h3>
+          <div className="glass p-6 md:p-8 border-white/5 rounded-[2rem] shadow-2xl">
+            <h3 className="text-sm font-black text-white mb-6 uppercase tracking-[3px]">Submit Proof</h3>
 
             <div className="relative group">
               <input
@@ -293,41 +302,38 @@ export default function TaskSubmissionPage({ params }: { params: Promise<{ id: s
               />
               <label
                 htmlFor="screenshot-task"
-                className="block aspect-[4/3] glass rounded-2xl border-2 border-dashed border-white/10 group-hover:border-primary transition-all cursor-pointer relative overflow-hidden"
+                className="block aspect-square glass rounded-2xl border-2 border-dashed border-white/10 hover:border-primary/40 transition-all cursor-pointer relative overflow-hidden"
               >
                 {preview ? (
                   <>
-                    <Image src={preview} alt="Task proof preview" fill className="object-cover" unoptimized />
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <Plus className="w-10 h-10 text-white" />
+                    <Image src={preview} alt="Task proof" fill className="object-cover" unoptimized />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Plus className="w-8 h-8 text-white" />
                     </div>
                   </>
                 ) : (
                   <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                    <Upload className="w-10 h-10 text-white/20 mb-4 group-hover:scale-110 transition-transform" />
-                    <p className="text-xs font-bold text-white/40 uppercase tracking-[2px]">Upload Screenshot</p>
+                    <Upload className="w-8 h-8 text-white/10 mb-3" />
+                    <p className="text-[10px] font-black text-white/20 uppercase tracking-[2px]">Tap to upload screenshot</p>
                   </div>
                 )}
               </label>
             </div>
 
-            {error && <div className="mt-6 p-4 rounded-xl glass border-red-500/20 text-red-400 text-xs flex items-center gap-2"><AlertCircle className="w-4 h-4" /> {error}</div>}
+            {error && <div className="mt-4 p-3 rounded-lg glass border-red-500/10 text-red-400 text-[10px] flex items-center gap-2"><AlertCircle className="w-3 h-3" /> {error}</div>}
 
             <button
               disabled={submitting}
               onClick={handleSubmit}
-              className="w-full mt-8 clay-button py-4 rounded-xl font-black text-white flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full mt-6 bg-green-600 hover:bg-green-500 py-4 rounded-xl font-black text-xs text-white flex items-center justify-center gap-2 disabled:opacity-50 transition-all shadow-lg active:scale-95 uppercase tracking-widest"
             >
-              {submitting ? <Loader className="w-5 h-5 animate-spin" /> : 'Submit Proof'}
+              {submitting ? <Loader className="w-4 h-4 animate-spin" /> : 'Confirm Completed'}
             </button>
           </div>
 
-          <div className="glass p-6 rounded-2xl">
-            <div className="flex items-center gap-2 text-white/30 text-[10px] font-black uppercase tracking-widest mb-3">
-              <AlertCircle className="w-3 h-3" /> Note
-            </div>
-            <p className="text-xs text-white/40 leading-relaxed">
-              Fraudulent submissions (fake/borrowed screenshots) will lead to immediate permanent ban and forfeiture of all earnings.
+          <div className="glass p-5 rounded-2xl border-white/5">
+             <p className="text-[9px] text-white/20 leading-relaxed font-black uppercase tracking-widest text-center">
+               Fake proof leads to permanent account suspension
             </p>
           </div>
         </div>

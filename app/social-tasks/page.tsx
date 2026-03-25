@@ -16,7 +16,9 @@ import {
   MessageCircle,
   Globe,
   Smartphone,
-  Send
+  Send,
+  ShieldCheck,
+  Diamond
 } from 'lucide-react';
 import { db, auth } from '@/lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
@@ -48,9 +50,31 @@ const getPlatformIcon = (platform: string) => {
     case 'facebook': return { icon: <Facebook className="w-5 h-5" />, label: 'FB', color: 'text-blue-600' };
     case 'whatsapp': return { icon: <MessageCircle className="w-5 h-5" />, label: 'WA', color: 'text-green-500' };
     case 'telegram': return { icon: <Send className="w-5 h-5 shrink-0" />, label: 'TG', color: 'text-[#0088CC]' };
-    case 'app': return { icon: <Smartphone className="w-5 h-5" />, label: 'App', color: 'text-gray-400' };
+    case 'app': return { icon: <Smartphone className="w-5 h-5" />, label: 'App', color: 'text-purple-400' };
     default: return { icon: <Globe className="w-5 h-5" />, label: 'Web', color: 'text-gray-400' };
   }
+};
+
+const simplifyTitle = (title: string = '') => {
+  if (!title) return "Task";
+  let clean = title.trim();
+  
+  const replacements: Record<string, string> = {
+    'follow me': 'Follow Account',
+    'like my reel': 'Like Content',
+    'subscribe to my channel': 'Subscribe',
+    'join my group': 'Join Group',
+    'follow my instagram': 'Follow Instagram',
+    'like my post': 'Like Post',
+    'retweet': 'Retweet/Repost',
+  };
+
+  Object.entries(replacements).forEach(([key, val]) => {
+    const regex = new RegExp(key, 'gi');
+    clean = clean.replace(regex, val);
+  });
+
+  return clean.charAt(0).toUpperCase() + clean.slice(1);
 };
 
 export default function SocialTasksPage() {
@@ -77,7 +101,8 @@ export default function SocialTasksPage() {
           const querySnapshot = await getDocs(q);
           const items = querySnapshot.docs
             .map(d => ({ id: d.id, ...d.data() } as Task))
-            .filter(t => !submittedIds.has(t.id)); // Hide if already submitted
+            .filter(t => !submittedIds.has(t.id))
+            .filter(t => (t.currentParticipations || 0) < (t.maxParticipations || 0));
           
           if (isMounted) setTasks(items);
         } catch (err) {
@@ -127,49 +152,28 @@ export default function SocialTasksPage() {
           <AnimatePresence>
             {tasks.map((task, i) => {
               const platformInfo = getPlatformIcon(task.platform);
+              const cleanTitle = simplifyTitle(task.title);
+
               return (
                 <motion.div 
                    key={task.id}
-                   initial={{ x: -20, opacity: 0 }}
-                   animate={{ x: 0, opacity: 1 }}
+                   initial={{ y: 10, opacity: 0 }}
+                   animate={{ y: 0, opacity: 1 }}
                    transition={{ delay: i * 0.05 }}
-                   exit={{ opacity: 0, x: 20 }}
-                   className="clay-card p-5 !bg-white/[0.02] border-white/5 flex items-center gap-6 hover:!bg-white/5 transition-all group cursor-pointer relative"
+                   className="glass p-4 rounded-2xl flex items-center justify-between border-white/5 hover:bg-white/5 transition-all group cursor-pointer"
                    onClick={() => router.push(`/tasks/${task.id}`)}
                 >
-                   <div className="w-20 h-20 rounded-2xl bg-white/5 flex-shrink-0 overflow-hidden relative border border-white/5">
-                      {task.thumbnailUrl ? (
-                        <Image src={task.thumbnailUrl} alt={task.title} fill className="object-cover" unoptimized />
-                      ) : (
-                        <div className={`w-full h-full flex items-center justify-center ${platformInfo.color} bg-black/20`}>
-                           {platformInfo.icon}
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                   </div>
-                   
-                   <div className="flex-1 overflow-hidden">
-                      <div className="flex items-center gap-2 mb-1.5">
-                         <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-white/5 ${platformInfo.color}`}>
-                            {platformInfo.label}
-                         </span>
-                         <span className="w-1 h-1 rounded-full bg-white/10" />
-                         <span className="text-[10px] font-black text-white/20 uppercase tracking-widest">{task.category}</span>
+                   <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 rounded-xl glass flex items-center justify-center ${platformInfo.color}`}>
+                         {platformInfo.icon}
                       </div>
-                      <h4 className="text-lg font-black text-white truncate tracking-tight">{task.title}</h4>
-                      <div className="flex items-center gap-4 mt-2">
-                         <div className="flex items-center gap-1">
-                            <span className="text-xs font-black text-green-400">₦{task.userReward}</span>
-                            <span className="text-[8px] font-bold text-green-400/40 uppercase">Earning</span>
-                         </div>
-                         <div className="text-[10px] text-white/20 font-black uppercase tracking-[2px] truncate max-w-[150px]">
-                            {task.currentParticipations} / {task.maxParticipations}
-                         </div>
+                      <div>
+                         <h4 className="text-sm font-bold text-white mb-0.5 tracking-tight">{cleanTitle}</h4>
+                         <p className="text-[10px] text-white/40 font-medium uppercase tracking-widest">{platformInfo.label} • ₦{task.userReward}</p>
                       </div>
                    </div>
-
-                   <div className="w-12 h-12 rounded-full glass border-white/5 flex items-center justify-center text-white/20 group-hover:text-primary group-hover:bg-primary/20 transition-all active:scale-95 shadow-lg">
-                      <ArrowRight className="w-6 h-6" />
+                   <div className="w-8 h-8 rounded-full flex items-center justify-center text-white/20 group-hover:text-white transition-colors">
+                      <ArrowRight className="w-4 h-4" />
                    </div>
                 </motion.div>
               );
