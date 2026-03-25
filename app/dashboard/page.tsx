@@ -93,7 +93,7 @@ export default function DashboardPage() {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         whileHover={{ scale: 1.01 }}
-        className="clay-card p-8 sm:p-12 md:p-16 bg-[#0A0F1E]/40 backdrop-blur-3xl relative overflow-hidden mb-16 shadow-[0_40px_100px_-20px_rgba(139,92,246,0.15)] border-white/10 group transition-all duration-700"
+        className="clay-card p-8 sm:p-12 md:p-16 bg-[#0A0F1E]/40 backdrop-blur-3xl relative overflow-hidden mb-12 shadow-[0_40px_100px_-20px_rgba(139,92,246,0.15)] border-white/10 group transition-all duration-700"
       >
          <div className="relative z-10">
             <div className="flex items-center gap-3 mb-6 opacity-30 group-hover:opacity-60 transition-opacity">
@@ -125,6 +125,47 @@ export default function DashboardPage() {
          <div className="absolute bottom-0 left-0 w-[200px] h-[200px] bg-accent/10 blur-[80px] -ml-20 -mb-20 pointer-events-none" />
          <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-white/5 opacity-50 pointer-events-none" />
       </motion.div>
+
+      {/* HIGH YIELD HOT TASK SECTION */}
+      <div className="mb-16">
+         <div className="flex items-center justify-between mb-6 px-2">
+            <h2 className="text-2xl font-black text-white tracking-tighter flex items-center gap-3">
+               <div className="w-3 h-8 bg-gradient-to-b from-orange-400 to-red-500 rounded-full" />
+               Hot Deals
+            </h2>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[9px] font-black uppercase tracking-widest animate-pulse">
+               <Zap className="w-3 h-3" /> High Yield
+            </div>
+         </div>
+         <Link href="/cpa-offers">
+            <motion.div 
+               whileHover={{ scale: 1.01 }}
+               whileTap={{ scale: 0.99 }}
+               className="relative overflow-hidden rounded-[2rem] md:rounded-[2.5rem] p-8 md:p-10 border border-orange-500/20 bg-gradient-to-br from-orange-500/10 via-[#0A0F1E] to-[#0A0F1E] shadow-[0_20px_50px_rgba(249,115,22,0.1)] group flex flex-col md:flex-row items-center justify-between gap-8 cursor-pointer"
+            >
+               {/* Animated Background Rays */}
+               <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.15),transparent_50%)] pointer-events-none group-hover:opacity-100 opacity-50 transition-opacity" />
+               
+               <div className="relative z-10 flex items-center gap-6">
+                  <div className="w-16 h-16 shrink-0 rounded-[1.5rem] bg-orange-500/20 flex items-center justify-center border border-orange-500/30 text-orange-400 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
+                     <Rocket className="w-8 h-8" />
+                  </div>
+                  <div>
+                     <h3 className="text-2xl font-black text-white tracking-tight mb-2">Premium CPA Campaigns</h3>
+                     <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Complete verification or install apps for massive payouts.</p>
+                  </div>
+               </div>
+
+               <div className="relative z-10 flex flex-col items-start md:items-end w-full md:w-auto">
+                  <div className="text-[10px] font-black text-white/30 uppercase tracking-[3px] mb-1">Earn Up To</div>
+                  <div className="text-4xl font-black text-orange-400 tracking-[-0.05em] drop-shadow-lg mb-4">₦5,000+</div>
+                  <div className="w-full md:w-auto bg-orange-500 hover:bg-orange-400 text-white px-8 py-4 rounded-xl font-black text-xs uppercase tracking-widest text-center transition-all shadow-lg active:scale-95">
+                     Claim Offers Now
+                  </div>
+               </div>
+            </motion.div>
+         </Link>
+      </div>
 
       {/* 2-Column Grid */}
       <div className="flex items-center justify-between mb-8 px-2">
