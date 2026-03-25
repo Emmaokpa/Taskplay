@@ -6,14 +6,14 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import AppShell from "@/app/components/AppShell";
 
 export const metadata: Metadata = {
-  title: "People Are Getting Paid Daily… Why Aren’t You? | TaskPlay Nigeria",
-  description: "Join thousands earning real money by completing simple tasks online. No experience. No stress. Just results. The most trusted rewards platform for Nigerians.",
+  title: "TaskPlay Nigeria | Turn Your Online Activity Into Real Cash Rewards",
+  description: "The simplest way to make money online in Nigeria. Complete simple tasks like following social accounts and get paid instantly to your bank account. Join 15,000+ active earners today.",
   keywords: ["earn money online nigeria", "paid tasks nigeria", "make money with phone", "taskplay", "social mining nigeria", "cpa offers nigeria"],
   authors: [{ name: "TaskPlay Team" }],
   publisher: "TaskPlay Nigeria",
   openGraph: {
-    title: "Start Earning Daily with TaskPlay Nigeria",
-    description: "Your phone is now your office. Complete simple gigs and get paid instantly to your bank account.",
+    title: "TaskPlay Nigeria - Monetize Your Online Activity",
+    description: "Your phone is now your office. Complete simple gigs and get paid instantly to your bank account. The most trusted rewards platform in Nigeria.",
     url: "https://taskplay.ng",
     siteName: "TaskPlay",
     locale: "en_NG",
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "TaskPlay - Legit Earning for Nigerians",
-    description: "Stop searching, start earning. Join the elite earners community today.",
+    title: "TaskPlay Nigeria | Real Cash for Simple Tasks",
+    description: "Turn your idle time into a consistent revenue stream. Join the elite earners community today.",
   },
   icons: {
     icon: '/favicon.svg',
