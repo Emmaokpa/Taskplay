@@ -56,7 +56,7 @@ export default function SignupForm() {
          body: JSON.stringify({ email, type: 'verification' }),
       });
 
-      router.push('/dashboard');
+      router.push('/verify?email=' + encodeURIComponent(email));
     } catch (err) {
       setError((err as Error).message || 'Signup failed');
     } finally {

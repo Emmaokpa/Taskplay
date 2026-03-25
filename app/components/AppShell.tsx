@@ -58,7 +58,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           )}
         </AnimatePresence>
 
-        <main className="flex-1 md:ml-64 bg-background text-foreground p-0">
+        <main className="flex-1 md:ml-64 bg-background text-foreground p-0 overflow-x-hidden relative w-full">
           {children}
         </main>
       </div>

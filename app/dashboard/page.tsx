@@ -70,7 +70,7 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="p-6 md:p-10 max-w-7xl mx-auto pb-40">
+    <div className="p-4 sm:p-6 md:p-10 max-w-7xl mx-auto pb-40">
       <div className="mb-12 flex items-center justify-between">
          <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}>
             <h1 className="text-4xl font-black text-white mb-2 tracking-tighter">Main Wallet</h1>
@@ -93,7 +93,7 @@ export default function DashboardPage() {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         whileHover={{ scale: 1.01 }}
-        className="clay-card p-12 md:p-16 bg-[#0A0F1E]/40 backdrop-blur-3xl relative overflow-hidden mb-16 shadow-[0_40px_100px_-20px_rgba(139,92,246,0.15)] border-white/10 group transition-all duration-700"
+        className="clay-card p-8 sm:p-12 md:p-16 bg-[#0A0F1E]/40 backdrop-blur-3xl relative overflow-hidden mb-16 shadow-[0_40px_100px_-20px_rgba(139,92,246,0.15)] border-white/10 group transition-all duration-700"
       >
          <div className="relative z-10">
             <div className="flex items-center gap-3 mb-6 opacity-30 group-hover:opacity-60 transition-opacity">
@@ -104,7 +104,7 @@ export default function DashboardPage() {
             </div>
             
             <div className="flex items-baseline gap-2 mb-12">
-               <span className="text-7xl font-black text-white tracking-[-0.075em] drop-shadow-2xl">
+               <span className="text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-[-0.075em] drop-shadow-2xl">
                   ₦{(userData?.balance || 0).toLocaleString()}
                </span>
                <span className="text-white/20 text-sm font-black uppercase tracking-widest">NGN</span>
@@ -134,12 +134,12 @@ export default function DashboardPage() {
          </h2>
       </div>
 
-      <div className="grid grid-cols-2 gap-5 md:gap-10">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
          <Link href="/cpa-offers">
             <motion.div 
                whileHover={{ y: -5, scale: 1.02 }}
                whileTap={{ scale: 0.98 }}
-               className="glass p-8 aspect-square flex flex-col justify-between group cursor-pointer border-white/5 hover:border-primary/20 transition-all duration-300 rounded-[2.5rem]"
+               className="glass p-5 sm:p-6 md:p-8 aspect-square flex flex-col justify-between group cursor-pointer border-white/5 hover:border-primary/20 transition-all duration-300 rounded-[2rem] md:rounded-[2.5rem]"
             >
                <div className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-primary border-primary/10 shadow-lg">
                   <Rocket className="w-6 h-6" />
@@ -155,7 +155,7 @@ export default function DashboardPage() {
             <motion.div 
                whileHover={{ y: -5, scale: 1.02 }}
                whileTap={{ scale: 0.98 }}
-               className="glass p-8 aspect-square flex flex-col justify-between group cursor-pointer border-white/5 hover:border-blue-400/20 transition-all duration-300 rounded-[2.5rem]"
+               className="glass p-5 sm:p-6 md:p-8 aspect-square flex flex-col justify-between group cursor-pointer border-white/5 hover:border-blue-400/20 transition-all duration-300 rounded-[2rem] md:rounded-[2.5rem]"
             >
                <div className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-blue-400 border-blue-400/10 shadow-lg">
                   <Share2 className="w-6 h-6" />
@@ -171,7 +171,7 @@ export default function DashboardPage() {
             <motion.div 
                whileHover={{ y: -5, scale: 1.02 }}
                whileTap={{ scale: 0.98 }}
-               className="glass p-8 aspect-square flex flex-col justify-between group cursor-pointer border-white/5 hover:border-yellow-400/20 transition-all duration-300 rounded-[2.5rem]"
+               className="glass p-5 sm:p-6 md:p-8 aspect-square flex flex-col justify-between group cursor-pointer border-white/5 hover:border-yellow-400/20 transition-all duration-300 rounded-[2rem] md:rounded-[2.5rem]"
             >
                <div className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-yellow-400 border-yellow-400/10 shadow-lg">
                   <Zap className="w-6 h-6" />
@@ -187,7 +187,7 @@ export default function DashboardPage() {
             <motion.div 
                whileHover={{ y: -5, scale: 1.02 }}
                whileTap={{ scale: 0.98 }}
-               className="glass p-8 aspect-square flex flex-col justify-between group border-white/5 opacity-60 rounded-[2.5rem]"
+               className="glass p-5 sm:p-6 md:p-8 aspect-square flex flex-col justify-between group border-white/5 opacity-60 rounded-[2rem] md:rounded-[2.5rem]"
             >
                <div className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-gray-500 border-gray-500/10 shadow-lg">
                   <Gamepad2 className="w-6 h-6" />
@@ -207,7 +207,7 @@ export default function DashboardPage() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="clay-card p-12 md:p-16 max-w-xl w-full relative z-10 border-white/10 shadow-[0_0_100px_rgba(139,92,246,0.1)]"
+            className="clay-card p-8 sm:p-12 md:p-16 max-w-xl w-full relative z-10 border-white/10 shadow-[0_0_100px_rgba(139,92,246,0.1)]"
           >
             <button 
               onClick={() => setShowMembershipModal(false)}

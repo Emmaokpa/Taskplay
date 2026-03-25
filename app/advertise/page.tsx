@@ -92,7 +92,7 @@ export default function AdvertiseDashboard() {
   );
 
   return (
-    <div className="p-6 md:p-12 max-w-7xl mx-auto pb-44 relative">
+    <div className="p-4 sm:p-6 md:p-12 max-w-7xl mx-auto pb-44 relative">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[120px] -mr-48 -mt-48 pointer-events-none" />
       
       {isMember === false && (
@@ -116,9 +116,9 @@ export default function AdvertiseDashboard() {
         </motion.div>
       )}
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-16">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-10 mb-16">
         <div>
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-3 tracking-tighter">Advertiser Hub</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-3 tracking-tighter">Advertiser Hub</h1>
           <p className="text-white/30 text-[10px] font-black tracking-[5px] uppercase flex items-center gap-3">
              <span className="w-2 h-2 rounded-full bg-primary shadow-lg shadow-primary/50" />
              Engaging 100K+ Active Nodes
@@ -135,7 +135,7 @@ export default function AdvertiseDashboard() {
           <motion.div 
             key={i} 
             whileHover={{ y: -5 }}
-            className="clay-card p-10 bg-[#0A0F1E]/40 backdrop-blur-3xl border-white/5 hover:border-white/10 transition-all group"
+            className="clay-card p-6 sm:p-8 md:p-10 bg-[#0A0F1E]/40 backdrop-blur-3xl border-white/5 hover:border-white/10 transition-all group"
           >
             <div className="flex items-center gap-5 mb-8">
               <div className="p-4 rounded-2xl glass-dark group-hover:text-white transition-colors">
@@ -143,14 +143,14 @@ export default function AdvertiseDashboard() {
               </div>
               <span className="text-[10px] font-black text-white/20 uppercase tracking-[4px]">{s.label}</span>
             </div>
-            <div className="text-5xl font-black text-white tracking-tighter group-hover:scale-[1.02] transition-transform origin-left">{s.value}</div>
+            <div className="text-4xl sm:text-5xl font-black text-white tracking-tighter group-hover:scale-[1.02] transition-transform origin-left text-wrap break-all">{s.value}</div>
           </motion.div>
         ))}
       </div>
 
       <div className="flex items-center gap-4 mb-10">
          <div className="h-px flex-1 bg-white/5" />
-         <h2 className="text-[10px] font-black text-white/20 uppercase tracking-[10px] flex items-center gap-4">
+         <h2 className="text-[9px] sm:text-[10px] font-black text-white/20 uppercase tracking-[4px] sm:tracking-[10px] flex items-center gap-4 text-center">
             Available Objectives
          </h2>
          <div className="h-px flex-1 bg-white/5" />
@@ -164,7 +164,7 @@ export default function AdvertiseDashboard() {
           const content = (
             <motion.div
               whileHover={isComingSoon ? {} : { y: -12, scale: 1.02 }}
-              className={`clay-card p-12 group relative transition-all duration-500 overflow-hidden ${isComingSoon ? 'opacity-40 cursor-not-allowed' : ''} ${isMember === false ? 'grayscale-[0.5] opacity-80' : ''}`}
+              className={`clay-card p-6 sm:p-8 md:p-12 group relative transition-all duration-500 overflow-hidden ${isComingSoon ? 'opacity-40 cursor-not-allowed' : ''} ${isMember === false ? 'grayscale-[0.5] opacity-80' : ''}`}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               
@@ -212,7 +212,7 @@ export default function AdvertiseDashboard() {
       <motion.div 
         initial={{ y: 30, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
-        className="clay-card p-16 text-center border-white/5 bg-[#0A0F1E]/20 backdrop-blur-3xl relative overflow-hidden"
+        className="clay-card p-8 sm:p-10 md:p-16 text-center border-white/5 bg-[#0A0F1E]/20 backdrop-blur-3xl relative overflow-hidden"
       >
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/5 blur-[100px] pointer-events-none" />
         <div className="w-24 h-24 rounded-[2.5rem] glass flex items-center justify-center mx-auto mb-10 border-white/10 shadow-2xl group transition-transform hover:scale-110">

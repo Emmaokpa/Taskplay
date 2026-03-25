@@ -168,7 +168,7 @@ export default function EarnPage() {
   };
 
   return (
-    <div className="p-6 md:p-12 max-w-5xl mx-auto pb-44 relative">
+    <div className="p-4 sm:p-6 md:p-12 max-w-5xl mx-auto pb-44 relative">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[120px] -mr-48 -mt-48 pointer-events-none" />
       
       <Link href="/dashboard" className="inline-flex items-center gap-3 text-white/20 hover:text-white mb-12 transition-all font-black text-[10px] uppercase tracking-[5px] group">
@@ -188,7 +188,7 @@ export default function EarnPage() {
            <h1 className="text-4xl md:text-6xl font-black text-white mb-2 tracking-tighter">TaskPlay Earn</h1>
            <p className="text-white/30 text-[10px] font-black tracking-[5px] uppercase italic">Deploy your influence • Get paid instant rewards</p>
         </div>
-        <div className="clay-card py-5 px-8 flex items-center gap-5 bg-primary/5 border-primary/20 shadow-[0_20px_40px_rgba(139,92,246,0.1)] group hover:border-primary/40 transition-all cursor-default">
+        <div className="clay-card py-4 px-5 sm:py-5 sm:px-8 flex items-center gap-4 sm:gap-5 bg-primary/5 border-primary/20 shadow-[0_20px_40px_rgba(139,92,246,0.1)] group hover:border-primary/40 transition-all cursor-default">
            <div className="relative">
               <Diamond className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
               <div className="absolute inset-0 bg-primary/40 blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -203,7 +203,7 @@ export default function EarnPage() {
         <motion.div 
            initial={{ scale: 0.95, opacity: 0 }}
            animate={{ scale: 1, opacity: 1 }}
-           className="clay-card p-20 text-center border-white/5 mx-auto max-w-xl bg-[#0A0F1E]/20 backdrop-blur-3xl relative overflow-hidden"
+           className="clay-card p-8 sm:p-10 md:p-20 text-center border-white/5 mx-auto max-w-xl bg-[#0A0F1E]/20 backdrop-blur-3xl relative overflow-hidden"
         >
            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/5 blur-[100px] pointer-events-none" />
            <div className="w-24 h-24 rounded-[2.5rem] glass flex items-center justify-center mx-auto mb-10 border-white/10 shadow-2xl group transition-transform hover:scale-110">
@@ -229,17 +229,17 @@ export default function EarnPage() {
                    initial={{ y: 20, opacity: 0 }}
                    animate={{ y: 0, opacity: 1 }}
                    transition={{ delay: i * 0.05 }}
-                   className={`glass p-5 rounded-[2rem] flex items-center justify-between border-white/5 hover:bg-white/5 transition-all group cursor-pointer ${isClaiming ? 'opacity-50 pointer-events-none' : ''}`}
+                   className={`glass p-5 rounded-[2rem] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 border-white/5 hover:bg-white/5 transition-all group cursor-pointer ${isClaiming ? 'opacity-50 pointer-events-none' : ''}`}
                    onClick={() => handleTaskClick(task)}
                 >
-                   <div className="flex items-center gap-5">
-                      <div className={`w-14 h-14 rounded-2xl glass flex items-center justify-center ${platformInfo.color}`}>
+                   <div className="flex items-center gap-3 sm:gap-5">
+                      <div className={`w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-2xl glass flex items-center justify-center ${platformInfo.color}`}>
                          {platformInfo.icon}
                       </div>
                       <div>
-                         <h4 className="text-lg font-bold text-white mb-1 tracking-tight">{cleanTitle}</h4>
+                         <h4 className="text-base md:text-lg font-bold text-white mb-1 tracking-tight">{cleanTitle}</h4>
                          <div className="flex items-center gap-3">
-                            <span className={`text-[10px] font-black uppercase tracking-widest ${platformInfo.color}`}>
+                             <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-widest ${platformInfo.color}`}>
                                {platformInfo.label} Network
                             </span>
                             <span className="w-1 h-1 rounded-full bg-white/10" />
@@ -248,7 +248,7 @@ export default function EarnPage() {
                       </div>
                    </div>
 
-                   <div className="flex items-center gap-4">
+                   <div className="flex items-center gap-4 w-full sm:w-auto justify-end">
                       {isClaiming ? (
                         <Loader className="w-5 h-5 text-primary animate-spin" />
                       ) : (
