@@ -10,7 +10,7 @@ import {
   ArrowLeft,
   XCircle
 } from 'lucide-react';
-import { db } from '@/lib/firebase';
+import { db, auth } from '@/lib/firebase';
 import { collection, query, orderBy, limit, getDocs, where, doc, updateDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import AdminGuard from '@/app/components/AdminGuard';
@@ -54,6 +54,27 @@ export default function ManageUsers() {
        alert("Action failed");
     } finally {
        setProcessingId(null);
+    }
+  };
+
+  const deleteUser = async (userId: string) => {
+    if (!window.confirm("CRITICAL WARNING: Are you sure you want to permanently delete this user's account? This cannot be undone.")) return;
+    setProcessingId(userId);
+    try {
+      const adminId = auth.currentUser?.uid;
+      const res = await fetch('/api/admin/users/delete', {
+        method: 'POST',
+        body: JSON.stringify({ adminId, targetUserId: userId })
+      });
+      const data = await res.json();
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to delete');
+      }
+      setUsers(prev => prev.filter(u => u.id !== userId));
+    } catch (err: unknown) {
+      alert((err as Error).message || 'Delete Action failed');
+    } finally {
+      setProcessingId(null);
     }
   };
 
@@ -159,6 +180,13 @@ export default function ManageUsers() {
                           className={`flex-1 p-3 rounded-xl border text-[9px] font-black uppercase tracking-widest transition-all ${user.isAdmin ? 'border-primary/20 text-primary bg-primary/5' : 'border-white/5 text-white/20 hover:text-white hover:bg-white/5'}`}
                        >
                           {processingId === user.id ? <Loader className="w-3 h-3 animate-spin mx-auto"/> : user.isAdmin ? 'Admin Root' : 'Set Admin'}
+                       </button>
+                       <button 
+                          disabled={processingId === user.id}
+                          onClick={() => deleteUser(user.id)}
+                          className="flex-1 p-3 rounded-xl border border-red-500/10 text-red-500 bg-red-500/5 hover:bg-red-500/20 text-[9px] font-black uppercase tracking-widest transition-all"
+                       >
+                          {processingId === user.id ? <Loader className="w-3 h-3 animate-spin mx-auto"/> : 'Delete Acc'}
                        </button>
                     </div>
                  </motion.div>
