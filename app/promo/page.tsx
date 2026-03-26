@@ -1,379 +1,327 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Share2, 
   ArrowLeft,
-  Copy,
-  MessageCircle,
-  Send,
   Download,
-  CheckCircle2,
   Sparkles,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  EyeOff,
   Loader
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { auth, db } from '@/lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
-import { ListSkeleton } from '@/app/components/Skeleton';
 import { toPng } from 'html-to-image';
 
-interface PromoCampaign {
+interface Campaign {
   id: string;
-  title: string;
-  description: string;
-  imagePath: string;
-  writeup: string;
-  headline: string;
+  badge: string;
+  headlineTitle: string;
+  headlineHighlight: string;
+  headlineEnd?: string;
   subHeadline: string;
-  bgColor: string;
+  features: string[];
 }
 
-export default function PromoHubPage() {
-  const [userData, setUserData] = useState<{ referralCode: string; fullName: string } | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [downloadingId, setDownloadingId] = useState<string | null>(null);
-  const router = useRouter();
+export default function PromoHubFullScreen() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [downloading, setDownloading] = useState(false);
+  const [uiVisible, setUiVisible] = useState(true);
+  const targetRef = useRef<HTMLDivElement>(null);
 
-  // Refs for capture
-  const posterRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-
-  useEffect(() => {
-    let isMounted = true;
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          const userDoc = await getDoc(doc(db, 'users', user.uid));
-          if (userDoc.exists() && isMounted) {
-            setUserData(userDoc.data() as { referralCode: string; fullName: string });
-          }
-        } catch (err) {
-          console.error('Error fetching data:', err);
-        } finally {
-          if (isMounted) setLoading(false);
-        }
-      } else {
-        router.push('/login');
-      }
-    });
-    return () => {
-      isMounted = false;
-      unsubscribe();
-    };
-  }, [router]);
-
-  const referralLink = typeof window !== 'undefined' ? `${window.location.origin}/signup?ref=${userData?.referralCode || 'YOUR_CODE'}` : '';
-
-  const campaigns: PromoCampaign[] = [
+  const campaigns: Campaign[] = [
     {
-      id: 'dashboard-flex',
-      title: "The Earnings Flex",
-      description: "Show off a real account balance to instantly catch attention. Perfect for WhatsApp Status.",
-      imagePath: "/mockups/dashboard.png", // USER MUST REPLACE THIS WITH THEIR UPLOAD
-      writeup: `🚀 I'm cashing out daily with my smartphone on TaskPlay Nigeria! \n\nNo experience needed—just complete simple social tasks and get paid directly to your bank account. Stop watching others win and start earning today! 💰🔥\n\nClick my link to join the VIP circle right now:\n[LINK]`,
-      headline: "TURN YOUR ONLINE ACTIVITY INTO REAL CASH.",
-      subHeadline: "Start earning instantly today.",
-      bgColor: "from-purple-900 via-[#0A0F1E] to-blue-900"
+      id: 'flex-protocol',
+      badge: 'VERSION 2.0 FOR EARNERS',
+      headlineTitle: 'The Future\nof',
+      headlineHighlight: 'Earning.',
+      subHeadline: 'The ultimate platform for online entrepreneurs. Complete simple social tasks, refer friends, and get paid directly to your bank account securely and instantly.',
+      features: ['INSTANT PAYOUTS', 'SOCIAL REWARDS', 'PREMIUM CPA TASKS']
     },
     {
-      id: 'casual-invite',
-      title: "The Viral Promo",
-      description: "A gorgeous, high-energy flyer that converts incredibly well on Instagram and Facebook.",
-      imagePath: "/mockups/dashboard.png", // USER MUST REPLACE THIS WITH THEIR UPLOAD
-      writeup: `Hey guys, I wanted to share this platform I’ve been using called TaskPlay. It actually pays you to do things like follow Instagram pages or download apps. 💸\n\nI've already started making money from it. If you want to try it out, use my invite link below so we can earn together! 👇\n[LINK]`,
-      headline: "GET PAID FOR YOUR SCREEN TIME.",
-      subHeadline: "The ultimate side hustle.",
-      bgColor: "from-orange-900 via-[#0A0F1E] to-red-900"
+      id: 'infinity-stack',
+      badge: 'THE FULL STACK',
+      headlineTitle: 'One App.\nInfinite',
+      headlineHighlight: 'Potential.',
+      subHeadline: 'The ultimate 3-in-1 protocol for modern earners: Instant Rewards, High-Yield CPA campaigns, and a seamless withdrawal experience.',
+      features: ['DAILY TASKS', 'BONUS MULTIPLIERS', 'NO HIDDEN FEES']
+    },
+    {
+      id: 'cash-flow',
+      badge: 'GUARANTEED INCOME',
+      headlineTitle: 'Make Every\nSecond',
+      headlineHighlight: 'Count.',
+      subHeadline: 'Turn your everyday screen time into a steady stream of income. No complex skills needed—just follow simple instructions and get paid.',
+      features: ['ZERO EXPERIENCE', '24/7 EARNING', 'VERIFIED CLIENTS']
     }
   ];
 
-  const copyToClipboard = (text: string, stringId: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(stringId);
-    setTimeout(() => setCopiedId(null), 2500);
-  };
+  const current = campaigns[activeIndex];
 
-  const shareToPlatform = async (platform: 'whatsapp' | 'telegram' | 'native', campaign: PromoCampaign) => {
-    const fullMessage = campaign.writeup.replace('[LINK]', referralLink);
+  const handleNext = () => setActiveIndex((prev) => (prev + 1) % campaigns.length);
+  const handlePrev = () => setActiveIndex((prev) => (prev - 1 + campaigns.length) % campaigns.length);
 
-    if (platform === 'native' && navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Make Money with TaskPlay',
-          text: fullMessage,
-        });
-      } catch (error) {
-        console.log('Error sharing naturally', error);
-      }
-      return;
-    }
-
-    const encodedMessage = encodeURIComponent(fullMessage);
-    let url = '';
-
-    if (platform === 'whatsapp') {
-      url = `https://wa.me/?text=${encodedMessage}`;
-    } else if (platform === 'telegram') {
-      url = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(campaign.writeup.replace('[LINK]', ''))}`;
-    }
-
-    if (url) {
-      window.open(url, '_blank');
-    }
-  };
-
-  const downloadPoster = async (campaign: PromoCampaign) => {
-    const node = posterRefs.current[campaign.id];
-    if (!node) return;
-
-    setDownloadingId(campaign.id);
+  const handleDownload = async () => {
+    if (!targetRef.current) return;
     try {
-      // Temporarily remove transform restrictions for higher quality capture
-      node.style.transform = 'scale(1)';
+      setDownloading(true);
+      setUiVisible(false); // Hide the floating UI during capture
       
-      const dataUrl = await toPng(node, {
+      // Allow React to re-render to hide the UI
+      await new Promise((r) => setTimeout(r, 100));
+
+      const dataUrl = await toPng(targetRef.current, {
         quality: 1.0,
-        pixelRatio: 2,
-        backgroundColor: '#05070A',
-        style: { transform: 'scale(1)' } // Ensure no scaling affects capture
+        pixelRatio: 2, // High resolution
+        backgroundColor: '#0A0F1E',
+        style: {
+          margin: '0',
+          padding: '0'
+        }
       });
       
       const link = document.createElement('a');
-      link.download = `TaskPlay_Promo_${campaign.id}.png`;
+      link.download = `TaskPlay_${current.id}_mockup.png`;
       link.href = dataUrl;
       link.click();
     } catch (err) {
-      console.error('Failed to generate poster', err);
-      alert('Failed to generate poster. Ensure images are fully loaded.');
+      console.error('Download failed', err);
+      alert('Failed to generate image.');
     } finally {
-      setDownloadingId(null);
+      setUiVisible(true);
+      setDownloading(false);
     }
   };
 
-  if (loading) return (
-    <div className="p-6 md:p-12 max-w-5xl mx-auto">
-      <ListSkeleton />
-    </div>
-  );
-
   return (
-    <div className="p-4 sm:p-6 md:p-12 max-w-7xl mx-auto pb-44 relative overflow-x-hidden">
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 blur-[120px] -mr-48 -mt-48 pointer-events-none" />
+    <div className="min-h-screen bg-black overflow-x-hidden font-sans relative">
       
-      <Link href="/profile" className="inline-flex items-center gap-3 text-white/20 hover:text-white mb-12 transition-all font-black text-[10px] uppercase tracking-[5px] group">
-         <div className="p-2 rounded-xl glass group-hover:bg-white/10 transition-colors">
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-         </div>
-         Back to Profile
-      </Link>
+      {/* THE ACTUAL RENDER TARGET - Fully Responsive & Scalable */}
+      <div 
+        ref={targetRef} 
+        className="w-full min-h-screen relative overflow-hidden flex flex-col justify-center py-20 lg:py-0"
+        style={{ backgroundColor: '#0A0F1E' }}
+      >
+        {/* Background Gradients */}
+        <div className="absolute top-0 right-0 w-[80vw] lg:w-[60vw] h-[100vh] bg-[radial-gradient(ellipse_at_top_right,rgba(59,130,246,0.18),transparent_70%)] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[80vw] lg:w-[50vw] h-[80vh] bg-[radial-gradient(ellipse_at_bottom_left,rgba(99,102,241,0.12),transparent_70%)] pointer-events-none" />
+        
+        {/* Abstract grids / texture */}
+        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
-        <div>
-           <div className="flex items-center gap-4 mb-3">
-              <div className="w-10 h-10 rounded-[1.5rem] bg-accent/20 flex items-center justify-center border border-accent/20 shadow-xl">
-                 <Sparkles className="w-5 h-5 text-accent shadow-[0_0_15px_rgba(236,72,153,0.5)]" />
-              </div>
+        <div className="max-w-[1400px] mx-auto w-full px-6 md:px-12 lg:px-24 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center z-10 relative">
+           
+           {/* LEFT TEXT CONTENT */}
+           <div className="flex flex-col justify-center order-2 lg:order-1 relative lg:pl-10">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={current.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -30 }}
+                  transition={{ duration: 0.5 }}
+                  className="max-w-xl mx-auto lg:mx-0"
+                >
+                  {/* Badge */}
+                  <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 font-extrabold uppercase tracking-[3px] text-xs mb-8 shadow-[0_0_30px_rgba(59,130,246,0.15)]">
+                     <Sparkles className="w-4 h-4" /> {current.badge}
+                  </div>
+
+                  {/* Massive Headline */}
+                  <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-black text-white tracking-tighter leading-[1.05] mb-6 drop-shadow-lg whitespace-pre-wrap">
+                     {current.headlineTitle}{' '}
+                     <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 drop-shadow-sm">
+                       {current.headlineHighlight}
+                     </span>
+                     {current.headlineEnd}
+                  </h1>
+
+                  {/* Subheadline */}
+                  <p className="text-base sm:text-lg lg:text-xl text-white/50 font-medium leading-[1.7] mb-10 max-w-lg">
+                     {current.subHeadline}
+                  </p>
+
+                  {/* Features */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-6 mb-12">
+                     {current.features.map((f, idx) => (
+                       <motion.div 
+                         initial={{ opacity: 0, x: -10 }}
+                         animate={{ opacity: 1, x: 0 }}
+                         transition={{ delay: 0.2 + (idx * 0.1) }}
+                         key={f} 
+                         className="flex items-center gap-3"
+                       >
+                          <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shrink-0">
+                            <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                          </div>
+                          <span className="text-[13px] font-black text-white/90 uppercase tracking-[2px]">{f}</span>
+                       </motion.div>
+                     ))}
+                  </div>
+
+                  {/* Trust Footer */}
+                  <div className="flex items-center gap-5 mt-6 pt-8 border-t border-white/5">
+                     <div className="flex -space-x-3 shrink-0">
+                        <div className="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-[#0A0F1E] bg-blue-500 flex items-center justify-center text-white font-black text-xs md:text-sm shadow-xl z-30">E</div>
+                        <div className="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-[#0A0F1E] bg-indigo-500 flex items-center justify-center text-white font-black text-xs md:text-sm shadow-xl z-20">S</div>
+                        <div className="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-[#0A0F1E] bg-purple-500 flex items-center justify-center text-white font-black text-xs md:text-sm shadow-xl z-10">J</div>
+                        <div className="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-[#0A0F1E] bg-white flex items-center justify-center text-[#0A0F1E] font-black text-[10px] md:text-xs shadow-xl tracking-tighter z-0">15k+</div>
+                     </div>
+                     <div>
+                        <h4 className="text-base font-black text-white leading-tight">Trusted by Top Earners</h4>
+                        <p className="text-[9px] sm:text-[10px] font-bold text-white/40 uppercase tracking-[3px] mt-0.5">Official TaskPlay Protocol</p>
+                     </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
            </div>
-           <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter">Growth Hub</h1>
-           <p className="text-white/40 text-[10px] font-black tracking-[3px] uppercase italic">Download premium flyers • Share • Earn Unlimited Commissions</p>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-        {campaigns.map((campaign, i) => {
-          const fullMessage = campaign.writeup.replace('[LINK]', referralLink);
-          const isCopied = copiedId === campaign.id;
-          const isDownloading = downloadingId === campaign.id;
-
-          return (
-            <motion.div 
-              key={campaign.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="clay-card bg-[#0A0F1E]/40 backdrop-blur-3xl border-white/5 relative group overflow-hidden flex flex-col h-full rounded-[2.5rem]"
-            >
-              {/* Header */}
-              <div className="p-8 relative z-10 flex items-start justify-between gap-4 border-b border-white/5">
-                 <div>
-                    <h3 className="text-2xl font-black text-white tracking-tighter mb-2">{campaign.title}</h3>
-                    <p className="text-white/40 text-xs uppercase tracking-widest font-bold">{campaign.description}</p>
-                 </div>
-              </div>
-
-              {/* POSTER RENDER CONTAINER */}
-              {/* We render a pristine 1080x1080 square poster inside a scaled container for viewing, but html-to-image captures the full res */}
-              <div className="bg-[#05070A] border-b border-white/5 flex items-center justify-center p-8 overflow-hidden relative min-h-[400px]">
-                 <div className="absolute inset-0 bg-black/50 z-10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm pointer-events-none">
-                    {/* Dark overlay on hover for better button visibility */}
-                 </div>
+           {/* RIGHT PHONE CONTENT */}
+           <div className="flex justify-center lg:justify-end items-center order-1 lg:order-2 relative w-full h-full lg:min-h-[85vh]">
+              
+              <div className="relative w-full max-w-[340px] sm:max-w-[380px] lg:max-w-[420px] mx-auto lg:mr-0 z-20">
                  
-                 {/* The actual HD Poster Element (Scaled down visually, native size for capture) */}
-                 <div className="w-full relative flex items-center justify-center">
-                    <div 
-                      ref={(el) => { posterRefs.current[campaign.id] = el }}
-                      className={`w-[1080px] h-[1080px] bg-white relative overflow-hidden flex flex-row items-center justify-between shadow-2xl`}
-                      style={{ transform: 'scale(0.35)', transformOrigin: 'center' }}
-                    >
-                       {/* Subtle Background Gradients */}
-                       <div className={`absolute top-0 right-0 w-[800px] h-[1080px] bg-gradient-to-l ${campaign.bgColor} opacity-20 pointer-events-none`} />
-                       <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] bg-gray-50 rounded-full blur-[80px] pointer-events-none" />
+                 {/* Floating Gamification Elements - Like Prepwise */}
+                 <motion.div 
+                   animate={{ y: [0, -15, 0] }} 
+                   transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                   className="absolute -top-[5%] -right-[10%] lg:-top-[10%] lg:-right-[15%] w-20 h-20 lg:w-28 lg:h-28 bg-white/5 backdrop-blur-xl rounded-[1.5rem] md:rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-center rotate-12 z-40"
+                 >
+                    <span className="text-4xl lg:text-6xl drop-shadow-2xl">🎁</span>
+                 </motion.div>
+
+                 <motion.div 
+                   animate={{ y: [0, 20, 0] }} 
+                   transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                   className="absolute bottom-[15%] -left-[10%] lg:bottom-[20%] lg:-left-[15%] w-16 h-16 lg:w-24 lg:h-24 bg-white/5 backdrop-blur-xl rounded-2xl md:rounded-[1.5rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-center -rotate-[15deg] z-40"
+                 >
+                    <span className="text-3xl lg:text-5xl drop-shadow-2xl">💸</span>
+                 </motion.div>
+
+                 {/* The Actual Phone Mockup Container */}
+                 <div className="relative shadow-[0_40px_100px_rgba(37,99,235,0.2)] rounded-[3.5rem] sm:rounded-[4rem] lg:rounded-[4.5rem] bg-[#0A0F1E] border border-white/5 p-1.5 sm:p-2 z-30 transform transition-transform duration-700 w-full aspect-[9/19.5]">
+                    
+                    {/* The Phone Frame */}
+                    <div className="relative w-full h-full rounded-[3.2rem] sm:rounded-[3.8rem] lg:rounded-[4.2rem] border-[10px] sm:border-[12px] lg:border-[14px] border-[#1c1c1e] bg-black overflow-hidden shadow-inner flex flex-col">
                        
-                       {/* LEFT CONTENT AREA */}
-                       <div className="w-[55%] h-full pl-20 pr-10 py-24 flex flex-col justify-center relative z-20">
-                          {/* Top Pill Badge */}
-                          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-primary text-primary font-black uppercase tracking-widest text-sm mb-10 w-max shadow-sm bg-white">
-                             <Sparkles className="w-4 h-4" /> THE FULL STACK
-                          </div>
+                       {/* Hardware Details - Side Buttons */}
+                       <div className="absolute -left-[10px] sm:-left-[12px] lg:-left-[14px] top-20 w-[4px] sm:w-[5px] h-10 bg-[#2c2c2e] rounded-l-sm z-50" />
+                       <div className="absolute -left-[10px] sm:-left-[12px] lg:-left-[14px] top-36 w-[4px] sm:w-[5px] h-16 bg-[#2c2c2e] rounded-l-sm z-50" />
+                       <div className="absolute -left-[10px] sm:-left-[12px] lg:-left-[14px] top-56 w-[4px] sm:w-[5px] h-16 bg-[#2c2c2e] rounded-l-sm z-50" />
+                       <div className="absolute -right-[10px] sm:-right-[12px] lg:-right-[14px] top-44 w-[4px] sm:w-[5px] h-20 bg-[#2c2c2e] rounded-r-sm z-50" />
 
-                          {/* Massive Typography */}
-                          <h1 className="text-[90px] font-black text-[#0A0F1E] tracking-tighter leading-[0.95] mb-6 drop-shadow-sm">
-                             {campaign.headline.split(' ').slice(0, 2).join(' ')}<br/>
-                             <span className="text-primary">{campaign.headline.split(' ').slice(2).join(' ')}</span>
-                          </h1>
-                          
-                          <p className="text-[28px] text-gray-500 font-medium leading-[1.4] mb-12 max-w-lg">
-                             {campaign.subHeadline}
-                          </p>
-
-                          {/* Checkmarks / Features */}
-                          <div className="grid grid-cols-2 gap-y-8 gap-x-6 mb-16">
-                             <div className="flex items-center gap-3">
-                                <CheckCircle2 className="w-8 h-8 text-[#0A0F1E]" />
-                                <span className="text-lg font-black text-[#0A0F1E] uppercase tracking-widest">Instant Payouts</span>
-                             </div>
-                             <div className="flex items-center gap-3">
-                                <CheckCircle2 className="w-8 h-8 text-[#0A0F1E]" />
-                                <span className="text-lg font-black text-[#0A0F1E] uppercase tracking-widest">Social Tasks</span>
-                             </div>
-                             <div className="flex items-center gap-3">
-                                <CheckCircle2 className="w-8 h-8 text-[#0A0F1E]" />
-                                <span className="text-lg font-black text-[#0A0F1E] uppercase tracking-widest">Premium CPA</span>
-                             </div>
-                          </div>
-
-                          {/* Footer Trust Badge */}
-                          <div className="absolute bottom-20 left-20 flex items-center gap-6">
-                             <div className="flex -space-x-4">
-                                <div className="w-16 h-16 rounded-full border-4 border-white bg-green-400 flex items-center justify-center text-white font-black text-xl shadow-lg">P</div>
-                                <div className="w-16 h-16 rounded-full border-4 border-white bg-blue-400 flex items-center justify-center text-white font-black text-xl shadow-lg">T</div>
-                                <div className="w-16 h-16 rounded-full border-4 border-white bg-purple-400 flex items-center justify-center text-white font-black text-xl shadow-lg">E</div>
-                                <div className="w-16 h-16 rounded-full border-4 border-white bg-[#0A0F1E] flex items-center justify-center text-white font-black text-sm shadow-lg tracking-tighter">15k+</div>
-                             </div>
-                             <div>
-                                <h4 className="text-xl font-black text-[#0A0F1E]">Trusted by Nigerians</h4>
-                                <p className="text-sm font-bold text-gray-400 uppercase tracking-[3px]">Official Task Protocol</p>
-                             </div>
-                          </div>
+                       {/* Screenshot Background Display */}
+                       <div className="absolute inset-0 z-10 bg-[#0A0F1E]">
+                          <Image
+                            src="/mockups/dashboard.png" // User uploaded screenshot
+                            alt="Screenshot Mockup"
+                            fill
+                            className="object-cover object-top"
+                            unoptimized
+                          />
                        </div>
 
-                       {/* RIGHT PHONE AREA */}
-                       <div className="w-[45%] h-full flex flex-col items-center justify-center relative z-20 pr-12">
-                          
-                          {/* Floating Elements (Trophy/Gift) */}
-                          <div className="absolute top-48 right-16 w-32 h-32 bg-white rounded-[2rem] shadow-[0_30px_60px_rgba(0,0,0,0.1)] flex items-center justify-center rotate-12 z-40 border border-gray-100">
-                             <span className="text-6xl">🎁</span>
-                          </div>
-
-                          <div className="absolute bottom-60 -left-10 w-24 h-24 bg-white rounded-[1.5rem] shadow-[0_20px_40px_rgba(0,0,0,0.1)] flex items-center justify-center -rotate-6 z-40 border border-gray-100">
-                             <span className="text-4xl">💸</span>
-                          </div>
-
-                          {/* 3D Phone Mockup */}
-                          <div className="relative shadow-[30px_30px_80px_rgba(0,0,0,0.2)] rounded-[4.5rem] bg-white border border-gray-200 p-3 z-30">
-                             <div className="relative w-[400px] h-[820px] rounded-[4rem] border-[14px] border-[#1c1c1e] bg-black overflow-hidden shadow-inner">
-                                
-                                {/* Screen content entirely driven by user screenshot */}
-                                <div className="absolute inset-0 z-10 bg-white">
-                                   <Image
-                                     src={campaign.imagePath}
-                                     alt="Screenshot Mockup"
-                                     fill
-                                     className="object-cover object-top"
-                                     unoptimized
-                                   />
-                                </div>
-
-                                {/* Modern Dynamic Island / Notch */}
-                                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 w-36 h-9 bg-black rounded-full flex items-center justify-between px-3">
-                                   <div className="w-3 h-3 rounded-full bg-[#111] shadow-inner" />
-                                   <div className="w-3 h-3 rounded-full bg-[#0a0a0a]" />
-                                </div>
-                                
-                                {/* Home Indicator */}
-                                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 w-32 h-1.5 bg-black/20 rounded-full" />
-                             </div>
-                          </div>
-                          
-                          {/* Floor Shadow */}
-                          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-[80%] h-12 bg-black/10 blur-xl rounded-full z-10" />
+                       {/* Dynamic Island / Notch Area */}
+                       <div className="absolute top-2 sm:top-3 lg:top-4 left-1/2 -translate-x-1/2 z-30 w-[100px] sm:w-[110px] lg:w-[130px] h-7 sm:h-8 lg:h-9 bg-black rounded-full flex items-center justify-between px-3 md:px-4 shadow-xl">
+                          <div className="w-2.5 h-2.5 rounded-full bg-[#111] shadow-inner" />
+                          <div className="w-2.5 h-2.5 rounded-full bg-[#0a0a0a]" />
                        </div>
-
-                       {/* Very Bottom Centered Watermark */}
-                       <div className="absolute bottom-8 left-0 w-full flex justify-center items-center gap-3 text-gray-300 font-bold text-sm tracking-[5px] uppercase">
-                          <div className="w-6 h-6 rounded bg-gray-200 text-white flex items-center justify-center">T</div>
-                          TASKPLAY SYSTEMS INC.
-                       </div>
+                       
+                       {/* Glossy Screen Glare */}
+                       <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.04] via-transparent to-white/[0.1] pointer-events-none z-20 mix-blend-overlay" />
+                       
+                       {/* Home Indicator */}
+                       <div className="absolute bottom-2 sm:bottom-3 lg:bottom-4 left-1/2 -translate-x-1/2 z-30 w-24 sm:w-28 h-1 sm:h-1.5 bg-white/40 rounded-full" />
                     </div>
                  </div>
 
-                 {/* Download Action Float Button */}
-                 <button
-                   disabled={isDownloading}
-                   onClick={() => downloadPoster(campaign)}
-                   className="absolute bottom-6 right-6 px-6 py-4 rounded-2xl bg-white text-black hover:bg-gray-200 transition-all shadow-2xl z-40 font-black text-xs uppercase tracking-widest flex items-center gap-3 disabled:opacity-50 active:scale-95"
-                 >
-                   {isDownloading ? <Loader className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
-                   {isDownloading ? 'Rendering Poster...' : 'Download HD Flyer'}
-                 </button>
+                 {/* Floor Shadow Under Phone */}
+                 <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-10 bg-black/80 blur-2xl rounded-full z-10 pointer-events-none" />
+                 
               </div>
+           </div>
+        </div>
 
-              {/* Copy/Paste Writeup Area */}
-              <div className="p-8">
-                <span className="inline-block px-3 py-1 bg-white/5 rounded-full text-[9px] font-black uppercase tracking-widest text-primary border border-white/10 mb-4">
-                   Caption Template
-                </span>
-                <p className="text-white/60 text-sm whitespace-pre-wrap font-medium leading-relaxed italic border-l-2 border-primary/30 pl-4">
-                  {fullMessage}
-                </p>
-                <div className="mt-6 pt-6 border-t border-white/5">
-                  <button 
-                    onClick={() => copyToClipboard(fullMessage, campaign.id)}
-                    className={`w-full flex items-center justify-center gap-3 py-4 rounded-xl transition-all shadow-lg active:scale-95 ${isCopied ? 'bg-green-500 text-white' : 'glass bg-white/5 hover:bg-white/10 text-white'}`}
-                  >
-                    {isCopied ? <CheckCircle2 className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                    <span className="text-xs font-black uppercase tracking-[3px]">{isCopied ? 'Copied to Clipboard' : 'Copy Caption & Link'}</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="grid grid-cols-2 gap-px bg-white/5">
-                <button 
-                  onClick={() => shareToPlatform('whatsapp', campaign)}
-                  className="flex flex-col items-center justify-center gap-2 py-6 bg-[#0A0F1E] hover:bg-white/5 text-[#25D366] transition-all group/btn"
-                >
-                  <MessageCircle className="w-6 h-6 group-hover/btn:scale-110 transition-transform" />
-                  <span className="text-[10px] font-black uppercase tracking-[2px]">WhatsApp Status</span>
-                </button>
-                
-                <button 
-                  onClick={() => shareToPlatform('telegram', campaign)}
-                  className="flex flex-col items-center justify-center gap-2 py-6 bg-[#0A0F1E] hover:bg-white/5 text-[#0088cc] transition-all group/btn"
-                >
-                  <Send className="w-6 h-6 group-hover/btn:scale-110 transition-transform" />
-                  <span className="text-[10px] font-black uppercase tracking-[2px]">Telegram Distro</span>
-                </button>
-              </div>
-            </motion.div>
-          );
-        })}
+        {/* Global Footer Watermark */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex justify-center items-center gap-2 sm:gap-3 text-white/10 font-bold text-[8px] sm:text-[10px] tracking-[4px] uppercase z-10 pointer-events-none opacity-50 w-full px-4 text-center">
+           <div className="w-4 h-4 sm:w-5 sm:h-5 rounded bg-white/5 flex items-center justify-center shrink-0">T</div>
+           PREPWISE-INSPIRED TASKPLAY PROTOCOL • ALL RIGHTS RESERVED
+        </div>
       </div>
+
+
+      {/* THE FLOATING MARKETING CONTROLS - (Hidden during capture) */}
+      <AnimatePresence>
+        {uiVisible && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="fixed bottom-6 left-0 right-0 lg:bottom-auto lg:top-12 lg:left-12 lg:right-auto z-[100] w-[90%] mx-auto lg:mx-0 lg:w-80 bg-[#0e1424]/90 backdrop-blur-3xl border border-white/10 rounded-[2rem] p-5 lg:p-6 shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex flex-col overflow-hidden max-h-[85vh] lg:max-h-none"
+          >
+             {/* Header */}
+             <div className="flex items-center justify-between mb-6 shrink-0 pt-2 lg:pt-0">
+                <div className="flex bg-blue-500/10 border border-blue-500/20 rounded-lg px-3 py-1.5">
+                  <span className="text-[10px] font-black text-blue-400 uppercase tracking-[3px]">Marketing V3</span>
+                </div>
+                <button title="Hide Controls (They are automatically hidden on download)" className="text-white/20 hover:text-white transition-colors bg-white/5 rounded-full p-2">
+                   <EyeOff className="w-4 h-4" />
+                </button>
+             </div>
+
+             {/* Navigation Arrows */}
+             <div className="flex items-center justify-between gap-3 mb-6 shrink-0 relative bg-black/20 p-1.5 rounded-2xl border border-white/5">
+                <button onClick={handlePrev} className="flex-1 h-12 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors text-white active:scale-95 border border-white/5">
+                   <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button onClick={handleNext} className="flex-1 h-12 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors text-white active:scale-95 border border-white/5">
+                   <ChevronRight className="w-5 h-5" />
+                </button>
+             </div>
+
+             {/* Campaign List */}
+             <div className="space-y-1.5 mb-6 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                {campaigns.map((c, i) => (
+                  <button 
+                    key={c.id}
+                    onClick={() => setActiveIndex(i)}
+                    className={`w-full text-left px-5 py-4 rounded-2xl text-[13px] font-black tracking-wide transition-all ${i === activeIndex ? 'bg-blue-500 text-white shadow-xl shadow-blue-500/20' : 'text-white/40 hover:text-white hover:bg-white/5 bg-black/20 border border-white/5'}`}
+                  >
+                     <div className="flex items-center gap-3">
+                        {i === activeIndex && <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shrink-0" />}
+                        <span className="truncate">{c.headlineTitle.replace('\n', ' ')}</span>
+                     </div>
+                  </button>
+                ))}
+             </div>
+
+             {/* Actions */}
+             <div className="space-y-3 shrink-0 pt-2 border-t border-white/10">
+                <button 
+                  onClick={handleDownload}
+                  disabled={downloading}
+                  className="w-full py-4 rounded-2xl bg-white hover:bg-gray-100 text-black font-black uppercase text-xs tracking-[3px] flex items-center justify-center gap-3 transition-all active:scale-95 shadow-xl disabled:opacity-50"
+                >
+                   {downloading ? (
+                     <><Loader className="w-4 h-4 text-black animate-spin" /> Rendering...</>
+                   ) : (
+                     <><Download className="w-4 h-4 text-black" /> Download PNG</>
+                   )}
+                </button>
+
+                <Link 
+                  href="/profile"
+                  className="w-full py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-white/50 hover:text-white font-black uppercase text-xs tracking-[3px] flex items-center justify-center gap-3 transition-all border border-white/5"
+                >
+                  <ArrowLeft className="w-4 h-4" /> Exit Setup
+                </Link>
+             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
