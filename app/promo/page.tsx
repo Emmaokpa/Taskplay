@@ -217,66 +217,107 @@ export default function PromoHubPage() {
                  <div className="w-full relative flex items-center justify-center">
                     <div 
                       ref={(el) => { posterRefs.current[campaign.id] = el }}
-                      className={`w-[800px] h-[800px] bg-gradient-to-br ${campaign.bgColor} relative overflow-hidden flex flex-col items-center justify-center shadow-2xl`}
-                      style={{ transform: 'scale(0.4)', transformOrigin: 'center' }}
+                      className={`w-[1080px] h-[1080px] bg-white relative overflow-hidden flex flex-row items-center justify-between shadow-2xl`}
+                      style={{ transform: 'scale(0.35)', transformOrigin: 'center' }}
                     >
-                       {/* Abstract glowing orbs */}
-                       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/10 blur-[100px] rounded-full mix-blend-overlay" />
-                       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-black/40 blur-[80px] rounded-full" />
+                       {/* Subtle Background Gradients */}
+                       <div className={`absolute top-0 right-0 w-[800px] h-[1080px] bg-gradient-to-l ${campaign.bgColor} opacity-20 pointer-events-none`} />
+                       <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] bg-gray-50 rounded-full blur-[80px] pointer-events-none" />
                        
-                       {/* Poster Typography */}
-                       <div className="absolute top-16 w-full text-center z-20 px-12">
-                          <h1 className="text-6xl font-black text-white tracking-tighter uppercase drop-shadow-2xl leading-[1.1]">
-                             {campaign.headline}
+                       {/* LEFT CONTENT AREA */}
+                       <div className="w-[55%] h-full pl-20 pr-10 py-24 flex flex-col justify-center relative z-20">
+                          {/* Top Pill Badge */}
+                          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-primary text-primary font-black uppercase tracking-widest text-sm mb-10 w-max shadow-sm bg-white">
+                             <Sparkles className="w-4 h-4" /> THE FULL STACK
+                          </div>
+
+                          {/* Massive Typography */}
+                          <h1 className="text-[90px] font-black text-[#0A0F1E] tracking-tighter leading-[0.95] mb-6 drop-shadow-sm">
+                             {campaign.headline.split(' ').slice(0, 2).join(' ')}<br/>
+                             <span className="text-primary">{campaign.headline.split(' ').slice(2).join(' ')}</span>
                           </h1>
-                          <p className="text-2xl text-white/80 font-bold mt-4 tracking-[5px] uppercase drop-shadow-lg">
+                          
+                          <p className="text-[28px] text-gray-500 font-medium leading-[1.4] mb-12 max-w-lg">
                              {campaign.subHeadline}
                           </p>
-                       </div>
 
-                       {/* 3D Phone Frame */}
-                       <div className="relative z-30 mt-32" style={{ perspective: '1500px' }}>
-                          <div
-                            style={{ transform: 'rotateY(-15deg) rotateX(10deg) scale(1.1)' }}
-                            className="relative w-[320px] rounded-[3.5rem] border-[12px] border-[#1c1c1e] shadow-[0_50px_100px_rgba(0,0,0,0.9),inset_0_2px_0_rgba(255,255,255,0.2)] overflow-hidden bg-black aspect-[9/19.5]"
-                          >
-                             {/* Phone Buttons */}
-                             <div className="absolute -right-[15px] top-32 w-[6px] h-20 bg-[#2c2c2e] rounded-r-md" />
-                             <div className="absolute -left-[15px] top-24 w-[6px] h-12 bg-[#2c2c2e] rounded-l-md" />
-                             <div className="absolute -left-[15px] top-40 w-[6px] h-20 bg-[#2c2c2e] rounded-l-md" />
-                             
-                             {/* Screen */}
-                             <div className="absolute inset-0 overflow-hidden rounded-[2.5rem]">
-                               {/* Notch */}
-                               <div className="absolute top-0 left-1/2 -translate-x-1/2 z-30 w-32 h-8 bg-[#1c1c1e] rounded-b-3xl" />
-                               {/* User's Screenshot Here */}
-                               <Image
-                                 src={campaign.imagePath}
-                                 alt="Screenshot Mockup"
-                                 fill
-                                 className="object-cover object-top"
-                                 unoptimized
-                               />
-                               {/* Screen Glare */}
-                               <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.1] via-transparent to-white/[0.05] pointer-events-none z-20" />
-                               <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 w-24 h-1.5 bg-white/40 rounded-full" />
+                          {/* Checkmarks / Features */}
+                          <div className="grid grid-cols-2 gap-y-8 gap-x-6 mb-16">
+                             <div className="flex items-center gap-3">
+                                <CheckCircle2 className="w-8 h-8 text-[#0A0F1E]" />
+                                <span className="text-lg font-black text-[#0A0F1E] uppercase tracking-widest">Instant Payouts</span>
+                             </div>
+                             <div className="flex items-center gap-3">
+                                <CheckCircle2 className="w-8 h-8 text-[#0A0F1E]" />
+                                <span className="text-lg font-black text-[#0A0F1E] uppercase tracking-widest">Social Tasks</span>
+                             </div>
+                             <div className="flex items-center gap-3">
+                                <CheckCircle2 className="w-8 h-8 text-[#0A0F1E]" />
+                                <span className="text-lg font-black text-[#0A0F1E] uppercase tracking-widest">Premium CPA</span>
                              </div>
                           </div>
-                          {/* Intense inner shadow behind phone */}
-                          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[120%] h-20 bg-black/80 blur-3xl -z-10" />
+
+                          {/* Footer Trust Badge */}
+                          <div className="absolute bottom-20 left-20 flex items-center gap-6">
+                             <div className="flex -space-x-4">
+                                <div className="w-16 h-16 rounded-full border-4 border-white bg-green-400 flex items-center justify-center text-white font-black text-xl shadow-lg">P</div>
+                                <div className="w-16 h-16 rounded-full border-4 border-white bg-blue-400 flex items-center justify-center text-white font-black text-xl shadow-lg">T</div>
+                                <div className="w-16 h-16 rounded-full border-4 border-white bg-purple-400 flex items-center justify-center text-white font-black text-xl shadow-lg">E</div>
+                                <div className="w-16 h-16 rounded-full border-4 border-white bg-[#0A0F1E] flex items-center justify-center text-white font-black text-sm shadow-lg tracking-tighter">15k+</div>
+                             </div>
+                             <div>
+                                <h4 className="text-xl font-black text-[#0A0F1E]">Trusted by Nigerians</h4>
+                                <p className="text-sm font-bold text-gray-400 uppercase tracking-[3px]">Official Task Protocol</p>
+                             </div>
+                          </div>
                        </div>
 
-                       {/* Brand Footer */}
-                       <div className="absolute bottom-16 w-full text-center z-20">
-                          <div className="text-4xl font-black text-white/90 tracking-tighter flex items-center justify-center gap-4 drop-shadow-2xl">
-                             <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                                <Sparkles className="w-6 h-6 text-black" />
+                       {/* RIGHT PHONE AREA */}
+                       <div className="w-[45%] h-full flex flex-col items-center justify-center relative z-20 pr-12">
+                          
+                          {/* Floating Elements (Trophy/Gift) */}
+                          <div className="absolute top-48 right-16 w-32 h-32 bg-white rounded-[2rem] shadow-[0_30px_60px_rgba(0,0,0,0.1)] flex items-center justify-center rotate-12 z-40 border border-gray-100">
+                             <span className="text-6xl">🎁</span>
+                          </div>
+
+                          <div className="absolute bottom-60 -left-10 w-24 h-24 bg-white rounded-[1.5rem] shadow-[0_20px_40px_rgba(0,0,0,0.1)] flex items-center justify-center -rotate-6 z-40 border border-gray-100">
+                             <span className="text-4xl">💸</span>
+                          </div>
+
+                          {/* 3D Phone Mockup */}
+                          <div className="relative shadow-[30px_30px_80px_rgba(0,0,0,0.2)] rounded-[4.5rem] bg-white border border-gray-200 p-3 z-30">
+                             <div className="relative w-[400px] h-[820px] rounded-[4rem] border-[14px] border-[#1c1c1e] bg-black overflow-hidden shadow-inner">
+                                
+                                {/* Screen content entirely driven by user screenshot */}
+                                <div className="absolute inset-0 z-10 bg-white">
+                                   <Image
+                                     src={campaign.imagePath}
+                                     alt="Screenshot Mockup"
+                                     fill
+                                     className="object-cover object-top"
+                                     unoptimized
+                                   />
+                                </div>
+
+                                {/* Modern Dynamic Island / Notch */}
+                                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 w-36 h-9 bg-black rounded-full flex items-center justify-between px-3">
+                                   <div className="w-3 h-3 rounded-full bg-[#111] shadow-inner" />
+                                   <div className="w-3 h-3 rounded-full bg-[#0a0a0a]" />
+                                </div>
+                                
+                                {/* Home Indicator */}
+                                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 w-32 h-1.5 bg-black/20 rounded-full" />
                              </div>
-                             TASKPLAY.NG
                           </div>
-                          <div className="mt-4 inline-block px-6 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white font-bold text-xl tracking-widest">
-                             JOIN {userData?.fullName?.toUpperCase() || 'ME'} ONLINE
-                          </div>
+                          
+                          {/* Floor Shadow */}
+                          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-[80%] h-12 bg-black/10 blur-xl rounded-full z-10" />
+                       </div>
+
+                       {/* Very Bottom Centered Watermark */}
+                       <div className="absolute bottom-8 left-0 w-full flex justify-center items-center gap-3 text-gray-300 font-bold text-sm tracking-[5px] uppercase">
+                          <div className="w-6 h-6 rounded bg-gray-200 text-white flex items-center justify-center">T</div>
+                          TASKPLAY SYSTEMS INC.
                        </div>
                     </div>
                  </div>
