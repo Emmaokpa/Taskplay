@@ -96,8 +96,12 @@ export default function SignupForm() {
         }).catch(console.error);
       }
       router.push('/dashboard');
-    } catch (err) {
-      setError((err as Error).message || 'Google signup failed');
+    } catch (err: any) {
+      // Silently ignore if user simply closed or dismissed the popup
+      const ignoredErrors = ['auth/popup-closed-by-user', 'auth/cancelled-popup-request'];
+      if (!ignoredErrors.includes(err.code)) {
+        setError(err.message || 'Google signup failed');
+      }
     } finally {
       setLoading(false);
     }

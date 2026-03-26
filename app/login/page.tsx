@@ -63,7 +63,11 @@ export default function LoginPage() {
       router.push('/dashboard');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(err.message || 'Google login failed');
+      // Silently ignore if user simply closed or dismissed the popup
+      const ignoredErrors = ['auth/popup-closed-by-user', 'auth/cancelled-popup-request'];
+      if (!ignoredErrors.includes(err.code)) {
+        setError(err.message || 'Google login failed');
+      }
     } finally {
       setLoading(false);
     }
