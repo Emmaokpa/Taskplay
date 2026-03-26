@@ -18,59 +18,87 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
-    // OTP Generation
-    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiresAt = new Date();
-    expiresAt.setMinutes(expiresAt.getMinutes() + 15); // 15 mins expiry
+    // OTP Generation (Only for verification and password reset)
+    let otpCode = '';
+    if (type !== 'welcome') {
+      otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+      const expiresAt = new Date();
+      expiresAt.setMinutes(expiresAt.getMinutes() + 15);
 
-    // Save OTP via Admin Firestore SDK
-    const { getFirestore } = await import('firebase-admin/firestore');
-    const db = getFirestore(adminApp);
-    await db.collection('otps').doc(email).set({
-       code: otpCode,
-       type: type,
-       expiresAt: expiresAt.toISOString(),
-       used: false
-    });
+      const { getFirestore } = await import('firebase-admin/firestore');
+      const db = getFirestore(adminApp);
+      await db.collection('otps').doc(email).set({
+         code: otpCode,
+         type: type,
+         expiresAt: expiresAt.toISOString(),
+         used: false
+      });
+    }
 
-    const emailHeader = type === 'verification' ? 'VERIFY IDENTITY' : 'RESET PROTOCOL';
-    const emailSub = type === 'verification' ? 'Welcome to TaskPlay' : 'Security Alert';
-    const emailInstructions = type === 'verification'
-       ? 'To finalize your network access and start earning daily, provide the authorization code below.'
-       : 'A security breach was intercepted. Use the highly classified code below to reset your authentication matrix.';
+    // Email content based on type
+    let emailSubject = '';
+    let emailHeader = '';
+    let emailBody = '';
+
+    if (type === 'verification') {
+       emailSubject = "Verify your TaskPlay email";
+       emailHeader = "Welcome to TaskPlay! 🎉";
+       emailBody = `
+         <p style="font-size: 16px; color: #4b5563; margin-bottom: 24px;">Please use the verification code below to complete your registration and start earning.</p>
+         <div style="background-color: #f3f4f6; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 24px;">
+           <span style="font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #2563eb;">${otpCode}</span>
+         </div>
+         <p style="font-size: 14px; text-align: center; color: #9ca3af;">This code expires in 15 minutes.</p>
+       `;
+    } else if (type === 'passwordReset') {
+       emailSubject = "Reset your TaskPlay password";
+       emailHeader = "Password Reset Request";
+       emailBody = `
+         <p style="font-size: 16px; color: #4b5563; margin-bottom: 24px;">We received a request to reset your password. Use the code below to securely change it.</p>
+         <div style="background-color: #f3f4f6; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 24px;">
+           <span style="font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #2563eb;">${otpCode}</span>
+         </div>
+         <p style="font-size: 14px; text-align: center; color: #9ca3af;">This code expires in 15 minutes. Ignore this email if you didn't request a password reset.</p>
+       `;
+    } else if (type === 'welcome') {
+       emailSubject = "🎉 Welcome to TaskPlay! Start Earning Now";
+       emailHeader = "Congratulations on joining TaskPlay!";
+       emailBody = `
+         <p style="font-size: 16px; color: #4b5563; margin-bottom: 20px;">We are so excited to have you on board!</p>
+         <p style="font-size: 16px; color: #4b5563; margin-bottom: 20px;">Did you know you can make up to <strong>₦100,000 monthly</strong> just by performing simple social tasks?</p>
+         <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; margin-bottom: 24px; border-radius: 0 8px 8px 0;">
+           <h3 style="margin-top: 0; color: #1e3a8a; font-size: 18px;">How to start earning:</h3>
+           <ol style="color: #3b82f6; margin-bottom: 0; padding-left: 20px;">
+             <li style="margin-bottom: 8px;"><span style="color: #4b5563;">Go to your Dashboard and click on <strong>Social Tasks</strong> or <strong>CPA Offers</strong>.</span></li>
+             <li style="margin-bottom: 8px;"><span style="color: #4b5563;">Follow the simple instructions (like following a page or downloading an app).</span></li>
+             <li style="margin-bottom: 0;"><span style="color: #4b5563;">Get paid instantly to your wallet, and withdraw directly to your Nigerian bank account!</span></li>
+           </ol>
+         </div>
+         <p style="font-size: 16px; color: #4b5563; margin-bottom: 24px;">Log in now to claim your first available tasks before slots run out!</p>
+         <div style="text-align: center;">
+           <a href="https://taskplay.ng/dashboard" style="display: inline-block; background-color: #2563eb; color: #ffffff; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px;">Go to Dashboard</a>
+         </div>
+       `;
+    }
 
     const templateHTML = `
-      <div style="font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #05070A; color: white; padding: 40px 20px; line-height: 1.6; max-width: 100%; border-top: 5px solid #8b5cf6;">
-        <div style="max-width: 600px; margin: 0 auto; background-color: #0A0F1E; padding: 50px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 20px 50px rgba(139,92,246,0.05);">
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f9fafb; padding: 40px 20px;">
+        <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); border: 1px solid #e5e7eb;">
            
-           <div style="text-align: center; margin-bottom: 40px;">
-              <span style="display: inline-block; padding: 5px 15px; background: rgba(139,92,246,0.1); color: #8b5cf6; border-radius: 50px; font-size: 10px; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px;">
-                 ${emailSub}
-              </span>
-              <h1 style="font-size: 32px; font-weight: 900; margin: 0; color: #ffffff; letter-spacing: -1px; text-transform: uppercase;">
+           <div style="background-color: #ffffff; padding: 30px 40px 20px; text-align: center; border-bottom: 1px solid #f3f4f6;">
+              <h1 style="font-size: 24px; font-weight: bold; margin: 0; color: #111827;">
                  ${emailHeader}
               </h1>
            </div>
 
-           <p style="text-align: center; color: rgba(255,255,255,0.5); font-size: 15px; margin-bottom: 50px; font-weight: 500;">
-              ${emailInstructions}
-           </p>
-
-           <div style="background: linear-gradient(135deg, rgba(139,92,246,0.2) 0%, rgba(139,92,246,0.05) 100%); border: 1px solid rgba(139,92,246,0.3); padding: 40px; border-radius: 20px; text-align: center; margin-bottom: 30px; box-shadow: inset 0 0 30px rgba(139,92,246,0.1);">
-              <div style="font-size: 52px; font-weight: 900; color: #ffffff; letter-spacing: 15px; font-variant-numeric: tabular-nums;">
-                 ${otpCode}
-              </div>
+           <div style="padding: 30px 40px;">
+              ${emailBody}
            </div>
 
-           <p style="text-align: center; color: rgba(255,255,255,0.3); font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
-              CODE EXPIRES IN 15 MINUTES
-           </p>
-
-           <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.05); margin: 40px 0;" />
-           
-           <p style="text-align: center; color: rgba(255,255,255,0.2); font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">
-              SECURE SECTOR &bull; TASKPLAY NIGERIA &bull; ALL SYSTEMS OPERATIONAL
-           </p>
+           <div style="background-color: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #f3f4f6;">
+              <p style="margin: 0; color: #9ca3af; font-size: 12px;">TaskPlay Nigeria &copy; ${new Date().getFullYear()}</p>
+              <p style="margin: 8px 0 0; color: #9ca3af; font-size: 12px;">The simplest way to make money online.</p>
+           </div>
         </div>
       </div>
     `;
@@ -78,7 +106,7 @@ export async function POST(req: Request) {
     const result = await resend.emails.send({
       from: 'TaskPlay <noreply@taskplay.com.ng>',
       to: email,
-      subject: type === 'verification' ? 'Your TaskPlay Verification Code' : 'TaskPlay Password Reset Code',
+      subject: emailSubject,
       html: templateHTML,
     });
 

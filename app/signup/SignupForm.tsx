@@ -88,6 +88,12 @@ export default function SignupForm() {
           earnedFromReferrals: 0,
           createdAt: serverTimestamp(),
         });
+
+        // Send Welcome Email upon proper first-time Google Signup
+        await fetch('/api/email', {
+           method: 'POST',
+           body: JSON.stringify({ email: user.email, type: 'welcome' }),
+        }).catch(console.error);
       }
       router.push('/dashboard');
     } catch (err) {

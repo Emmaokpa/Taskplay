@@ -52,6 +52,14 @@ export async function POST(req: Request) {
          const userRecord = await auth.getUserByEmail(email);
          await auth.updateUser(userRecord.uid, { emailVerified: true });
          actionResult = { message: 'Email successfully verified' };
+         
+         // Send the Welcome Email automatically
+         fetch(req.url.replace('/api/verify-otp', '/api/email'), {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({ email, type: 'welcome' }),
+         }).catch(console.error); // Fire and forget
+         
        } catch (err: any) {
          return NextResponse.json({ error: 'User not found in authentication system.' }, { status: 404 });
        }
