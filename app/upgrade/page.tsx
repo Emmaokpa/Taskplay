@@ -155,72 +155,61 @@ export default function UpgradePage() {
       </Link>
 
       <div className="text-center mb-16 px-4">
-        <h1 className="text-5xl md:text-8xl font-black text-white mb-6 tracking-tighter leading-[0.9] drop-shadow-2xl">
-           Elite <span className="text-primary italic">Identity</span>
+        <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter drop-shadow-lg">
+           Upgrade Your <span className="text-blue-500">Account</span>
         </h1>
-        <p className="text-white/30 text-[10px] md:text-xs font-black tracking-[8px] uppercase max-w-lg mx-auto leading-relaxed">Single synchronization • Infinite task engagement capacity</p>
+        <p className="text-white/60 text-sm md:text-base font-bold max-w-lg mx-auto">Pay a one-time fee to unlock unlimited tasks and instant bank withdrawals.</p>
       </div>
 
-      {/* Main Pricing Card - PREMIUM OVERHAUL */}
+      {/* Main Pricing Card - Simplistic & Trustworthy */}
       <motion.div 
-         initial={{ y: 40, opacity: 0 }}
+         initial={{ y: 20, opacity: 0 }}
          animate={{ y: 0, opacity: 1 }}
-         className="clay-card p-10 md:p-24 rounded-[4rem] md:rounded-[6rem] border-white/10 bg-[#0A0F1E]/40 backdrop-blur-3xl text-center relative overflow-hidden mb-20 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] border-t border-white/20"
+         className="max-w-xl mx-auto bg-gradient-to-b from-[#1c2333] to-[#0A0F1E] border border-blue-500/20 p-8 md:p-12 rounded-[2.5rem] text-center relative overflow-hidden mb-16 shadow-[0_30px_60px_rgba(0,0,0,0.5)]"
       >
-         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-         
          <div className="relative z-10 flex flex-col items-center">
-            <motion.div 
-               whileHover={{ scale: 1.1, rotate: 5 }}
-               className="w-24 h-24 md:w-32 md:h-32 rounded-[2.5rem] bg-gradient-to-tr from-primary via-accent to-primary flex items-center justify-center mb-12 shadow-[0_20px_50px_rgba(139,92,246,0.5)] border-2 border-white/20 relative"
-            >
-               <div className="absolute inset-0 bg-primary/20 blur-2xl animate-pulse" />
-               {processing ? <Loader className="w-12 h-12 md:w-16 md:h-16 animate-spin text-white z-10" /> : <ShieldCheck className="w-12 h-12 md:w-16 md:h-16 text-white z-10 drop-shadow-lg" />}
-            </motion.div>
+            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-blue-500/10 flex items-center justify-center mb-8 border border-blue-500/30">
+               {processing ? <Loader className="w-10 h-10 animate-spin text-blue-400" /> : <ShieldCheck className="w-10 h-10 text-blue-400" />}
+            </div>
             
-            <div className="flex flex-col items-center mb-12">
-               <span className="text-primary text-[10px] font-black uppercase tracking-[8px] mb-4">Lifetime Allocation</span>
-               <div className="text-6xl md:text-9xl font-black text-white tracking-tighter flex items-start gap-2">
-                  <span className="text-2xl md:text-4xl text-white/20 mt-2 md:mt-4">₦</span>1,500
+            <div className="flex flex-col items-center mb-8">
+               <span className="bg-blue-500/20 text-blue-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[3px] mb-6 border border-blue-500/20">One-Time Payment</span>
+               <div className="text-6xl md:text-8xl font-black text-white tracking-tighter flex items-start gap-1">
+                  <span className="text-3xl md:text-4xl text-white/40 mt-2 md:mt-3">₦</span>1,500
                </div>
             </div>
 
-            <div className="w-full max-w-sm space-y-8">
-               <p className="text-white/40 font-medium text-sm md:text-base leading-relaxed uppercase tracking-widest italic">Verified status enables full withdrawal capacity, priority rewards, and unlimited mission sets.</p>
+            <div className="w-full space-y-6">
+               <p className="text-white/70 font-medium text-sm md:text-base mb-8">No monthly fees. Pay once and enjoy permanent access to high-paying tasks and fast withdrawals.</p>
                
                <button 
                   type="button"
                   onClick={handleUpgrade}
                   disabled={processing}
-                  className="clay-button w-full py-6 md:py-8 rounded-[2rem] font-black text-xl md:text-3xl text-white shadow-[0_30px_60px_-10px_rgba(139,92,246,0.4)] hover:shadow-primary/50 active:scale-[0.95] transition-all relative overflow-hidden group"
+                  className="w-full py-5 rounded-2xl bg-blue-600 hover:bg-blue-500 font-black text-lg md:text-xl text-white shadow-xl shadow-blue-500/20 active:scale-[0.98] transition-all disabled:opacity-50"
                >
-                  <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                  <span className="relative z-10 uppercase italic">{processing ? 'Syncing...' : 'Activate Hub'}</span>
+                  {processing ? 'Processing Payment...' : 'Pay ₦1,500 Now'}
                </button>
             </div>
          </div>
-
-         {/* Internal Glows */}
-         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[radial-gradient(circle,rgba(139,92,246,0.05)_0%,transparent_70%)] pointer-events-none" />
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
          {[
-           { icon: Zap, label: 'Instant Flow', desc: 'Zero verification delay on rewards' },
-           { icon: TrendingUp, label: 'Prime Tiers', desc: 'Access to elite ₦1,000+ task stacks' },
-           { icon: History, label: 'Full Access', desc: 'Complete history & performance tracking' }
+           { icon: Zap, label: 'Instant Withdrawals', desc: 'Get your money sent to your bank account with zero delays.' },
+           { icon: TrendingUp, label: 'Higher Payouts', desc: 'Unlock premium tasks that pay up to ₦1,000+ each.' },
+           { icon: ShieldCheck, label: 'Verified Account', desc: 'Get a verified badge and priority 24/7 customer support.' }
          ].map((item, i) => (
-           <motion.div 
+           <div 
              key={i} 
-             whileHover={{ y: -8 }}
-             className="clay-card p-10 md:p-14 rounded-[3rem] border-white/5 bg-[#0A0F1E]/20 backdrop-blur-3xl text-center group hover:border-primary/20 transition-all duration-500"
+             className="bg-[#1c2333]/40 border border-white/5 p-8 rounded-[2rem] text-center"
            >
-              <div className="w-16 h-16 rounded-2xl glass-dark flex items-center justify-center mx-auto mb-8 group-hover:bg-primary/10 group-hover:scale-110 transition-all duration-500 shadow-xl border-white/5 group-hover:border-primary/20">
-                 <item.icon className="w-8 h-8 text-white/10 group-hover:text-primary transition-colors" />
+              <div className="w-14 h-14 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-6">
+                 <item.icon className="w-6 h-6 text-blue-400" />
               </div>
-              <h4 className="text-white font-black text-[10px] uppercase tracking-[5px] mb-3 group-hover:text-primary transition-colors">{item.label}</h4>
-              <p className="text-white/20 text-xs font-black uppercase tracking-tight leading-relaxed italic">{item.desc}</p>
-           </motion.div>
+              <h4 className="text-white font-black text-sm uppercase tracking-[1px] mb-3">{item.label}</h4>
+              <p className="text-white/50 text-xs font-medium leading-relaxed">{item.desc}</p>
+           </div>
          ))}
       </div>
 

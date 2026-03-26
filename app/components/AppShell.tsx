@@ -12,7 +12,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = usePathname();
   
-  const publicPages = ['/', '/login', '/signup', '/about', '/privacy-policy', '/terms', '/forgot-password'];
+  const publicPages = ['/', '/login', '/signup', '/about', '/privacy-policy', '/terms', '/forgot-password', '/promo'];
   const isPublicPage = publicPages.includes(pathname);
 
   if (isPublicPage) {
