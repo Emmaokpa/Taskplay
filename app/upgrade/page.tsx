@@ -100,7 +100,7 @@ export default function UpgradePage() {
             const data = await apiRes.json();
             
             if (data.success) {
-               setModal({ isOpen: true, type: 'success', title: 'Upgrade Successful!', message: 'Welcome to VIP Elite. Redirecting...' });
+               setModal({ isOpen: true, type: 'success', title: 'Payment Successful!', message: 'Your account has been verified. Redirecting...' });
                setTimeout(() => router.push('/dashboard'), 2000);
             } else {
                throw new Error(data.error || 'Verification failed');
@@ -147,18 +147,18 @@ export default function UpgradePage() {
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 blur-[150px] -mr-48 -mt-48 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/5 blur-[150px] -ml-48 -mb-48 pointer-events-none" />
       
-      <Link href="/dashboard" className="inline-flex items-center gap-3 text-white/20 hover:text-white mb-16 transition-all font-black text-[10px] uppercase tracking-[5px] group">
+      <Link href="/dashboard" className="inline-flex items-center gap-3 text-white/40 hover:text-white mb-16 transition-all font-bold text-xs uppercase tracking-widest group">
          <div className="p-2 rounded-xl glass group-hover:bg-white/10 transition-colors">
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
          </div>
-         Back to Command Core
+         Back to Dashboard
       </Link>
 
       <div className="text-center mb-16 px-4">
-        <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter drop-shadow-lg">
-           Upgrade Your <span className="text-blue-500">Account</span>
+        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
+           Verify Your Account
         </h1>
-        <p className="text-white/60 text-sm md:text-base font-bold max-w-lg mx-auto">Pay a one-time fee to unlock unlimited tasks and instant bank withdrawals.</p>
+        <p className="text-white/60 text-sm md:text-base font-medium max-w-lg mx-auto">One-time verification fee to unlock premium tasks and bank withdrawals.</p>
       </div>
 
       {/* Main Pricing Card - Simplistic & Trustworthy */}

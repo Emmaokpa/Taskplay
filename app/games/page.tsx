@@ -28,12 +28,35 @@ export default function GamesPage() {
     fetch('/games.json')
       .then((r) => r.json())
       .then((data) => {
-        // Support both a top-level array or { games: [...] }
-        const list: Game[] = Array.isArray(data) ? data : (data.games ?? []);
-        setGames(list);
-        setFiltered(list);
+        // Correctly parse the PlayGama JSON structure
+        let list: Game[] = [];
+        if (Array.isArray(data)) {
+          list = data;
+        } else if (data.segments && Array.isArray(data.segments)) {
+          data.segments.forEach((seg: any) => {
+            if (seg.hits && Array.isArray(seg.hits)) {
+              list = [...list, ...seg.hits];
+            }
+          });
+        } else if (data.games) {
+          list = data.games;
+        }
 
-        const cats = ['All', ...Array.from(new Set(list.map((g) => g.category || 'Other').filter(Boolean))) as string[]];
+        // Map PlayGama fields to our internal Game interface
+        const mappedList = list.map((g: any) => ({
+          id: g.id,
+          title: g.title,
+          description: g.description,
+          thumbnail: g.thumbnail || (g.images && g.images[0]) || '',
+          url: g.gameURL || g.url || '',
+          category: g.category || (g.genres && g.genres[0]) || 'Game',
+          tags: g.tags || []
+        }));
+
+        setGames(mappedList);
+        setFiltered(mappedList);
+
+        const cats = ['All', ...Array.from(new Set(mappedList.map((g) => g.category || 'Other').filter(Boolean))) as string[]];
         setCategories(cats);
       })
       .catch(console.error)

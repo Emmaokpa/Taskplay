@@ -31,9 +31,30 @@ export default function GamePlayerPage() {
     fetch('/games.json')
       .then((r) => r.json())
       .then((data) => {
-        const list: Game[] = Array.isArray(data) ? data : (data.games ?? []);
-        const found = list.find((g) => g.id === gameId);
-        setGame(found || null);
+        let list: any[] = [];
+        if (Array.isArray(data)) {
+          list = data;
+        } else if (data.segments && Array.isArray(data.segments)) {
+          data.segments.forEach((seg: any) => {
+            if (seg.hits && Array.isArray(seg.hits)) {
+              list = [...list, ...seg.hits];
+            }
+          });
+        } else if (data.games) {
+          list = data.games;
+        }
+        
+        const found = list.find((g: any) => String(g.id) === gameId);
+        if (found) {
+          setGame({
+            id: found.id,
+            title: found.title,
+            description: found.description,
+            thumbnail: found.thumbnail || (found.images && found.images[0]) || '',
+            url: found.gameURL || found.url || '',
+            category: found.category || (found.genres && found.genres[0]) || ''
+          });
+        }
       })
       .catch(console.error)
       .finally(() => setLoading(false));

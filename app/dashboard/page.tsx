@@ -73,11 +73,8 @@ export default function DashboardPage() {
     <div className="p-4 sm:p-6 md:p-10 max-w-7xl mx-auto pb-40">
       <div className="mb-12 flex items-center justify-between">
          <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}>
-            <h1 className="text-4xl font-black text-white mb-2 tracking-tighter">Main Wallet</h1>
-            <p className="text-white/40 text-[9px] font-black uppercase tracking-[5px] flex items-center gap-2">
-               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-               Live Account Summary
-            </p>
+            <h1 className="text-3xl font-bold text-white mb-1 tracking-tight">Your Wallet</h1>
+            <p className="text-white/40 text-sm font-medium">Account Overview</p>
          </motion.div>
          {!userData?.isMember && (
            <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}>
@@ -151,16 +148,16 @@ export default function DashboardPage() {
                      <Rocket className="w-8 h-8" />
                   </div>
                   <div>
-                     <h3 className="text-2xl font-black text-white tracking-tight mb-2">Premium CPA Campaigns</h3>
-                     <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Complete verification or install apps for massive payouts.</p>
+                     <h3 className="text-2xl font-bold text-white tracking-tight mb-2">High-Paying Offers</h3>
+                     <p className="text-white/40 text-sm font-medium">Complete special tasks to earn up to ₦5,000+ per offer.</p>
                   </div>
                </div>
 
                <div className="relative z-10 flex flex-col items-start md:items-end w-full md:w-auto">
-                  <div className="text-[10px] font-black text-white/30 uppercase tracking-[3px] mb-1">Earn Up To</div>
-                  <div className="text-4xl font-black text-orange-400 tracking-[-0.05em] drop-shadow-lg mb-4">₦5,000+</div>
-                  <div className="w-full md:w-auto bg-orange-500 hover:bg-orange-400 text-white px-8 py-4 rounded-xl font-black text-xs uppercase tracking-widest text-center transition-all shadow-lg active:scale-95">
-                     Claim Offers Now
+                  <div className="text-xs font-medium text-white/30 mb-1">Earn Up To</div>
+                  <div className="text-4xl font-bold text-orange-400 tracking-tight mb-4">₦5,000+</div>
+                  <div className="w-full md:w-auto bg-orange-500 hover:bg-orange-400 text-white px-8 py-4 rounded-xl font-bold text-sm text-center transition-all shadow-lg active:scale-95">
+                     View Offers
                   </div>
                </div>
             </motion.div>
@@ -258,20 +255,20 @@ export default function DashboardPage() {
               <X className="w-5 h-5" />
             </button>
 
-            <div className="text-center mb-10">
+             <div className="text-center mb-10">
                <div className="w-20 h-20 rounded-[2rem] bg-orange-500/10 flex items-center justify-center mx-auto mb-8 border border-orange-500/20">
                   <AlertCircle className="w-12 h-12 text-orange-400" />
                </div>
-               <h2 className="text-4xl font-black text-white mb-3 tracking-tighter">Verify Identity</h2>
-               <p className="text-white/30 text-[10px] font-black uppercase tracking-[5px]">Standard Membership Access</p>
+               <h2 className="text-4xl font-bold text-white mb-2 tracking-tight">Verify Your Account</h2>
+               <p className="text-white/30 text-sm font-medium">Standard Membership Required</p>
             </div>
 
-            <p className="text-white/60 text-center mb-12 text-lg md:text-xl font-medium leading-relaxed italic">
-               Access high-ticket tasks and unlock instant withdrawals by joining the Standard Membership program for a one-time fee of <span className="text-white font-bold">₦1,500</span>.
+            <p className="text-white/60 text-center mb-12 text-lg font-medium leading-relaxed">
+               Access high-paying tasks and unlock instant withdrawals for a one-time verification fee of <span className="text-white font-bold">₦1,500</span>.
             </p>
 
-            <button className="clay-button w-full py-5 rounded-[2rem] font-black text-2xl text-white shadow-2xl shadow-primary/40 hover:scale-[1.02] active:scale-[0.98] uppercase tracking-tighter italic">
-               Unlock Everything Now
+            <button className="w-full py-5 rounded-[2rem] font-bold text-xl text-white bg-primary shadow-2xl shadow-primary/40 hover:scale-[1.02] active:scale-[0.98]">
+               Verify Account Now
             </button>
           </motion.div>
         </div>

@@ -56,8 +56,8 @@ export default function SupportPage() {
               <HeadphonesIcon className="w-6 h-6 text-primary shadow-[0_0_15px_rgba(139,92,246,0.5)]" />
             </div>
             <div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tighter">Support Core</h1>
-              <p className="text-white/30 text-[10px] font-black uppercase tracking-[4px] mt-1 italic">Technical Assistance & Protocol Queries</p>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tighter">Support Center</h1>
+              <p className="text-white/30 text-xs font-bold uppercase tracking-widest mt-1">Get Help & Support</p>
             </div>
           </div>
         </div>
@@ -87,7 +87,7 @@ export default function SupportPage() {
 
           {/* Email Support */}
           <motion.a 
-            href="mailto:support@taskplay.ng" 
+            href="mailto:taskplayteam@gmail.com" 
             whileHover={{ y: -5 }}
             className="clay-card p-8 border-primary/20 bg-primary/5 group relative overflow-hidden"
           >
@@ -105,10 +105,9 @@ export default function SupportPage() {
           </motion.a>
         </div>
 
-        {/* FAQ Section */}
         <div className="mb-20">
           <div className="flex items-center gap-4 mb-10">
-            <h2 className="text-2xl font-black tracking-tight italic">Protocol FAQ</h2>
+            <h2 className="text-2xl font-bold tracking-tight">Frequently Asked Questions</h2>
             <div className="h-px flex-1 bg-white/5" />
           </div>
 
@@ -140,16 +139,18 @@ export default function SupportPage() {
             <div className="flex -space-x-3">
               {[1,2,3].map(i => (
                 <div key={i} className="w-10 h-10 rounded-full border-2 border-black bg-white/10 flex items-center justify-center text-[10px] font-black font-mono">
-                  AD
+                  TP
                 </div>
               ))}
             </div>
-            <p className="text-xs font-bold text-white/40 uppercase tracking-widest"><span className="text-primary">12+</span> Agents Online Now</p>
+            <p className="text-xs font-bold text-white/40 uppercase tracking-widest">
+              <span className="text-primary">12+</span> Support Agents Online
+            </p>
           </div>
-          <h2 className="text-2xl font-black mb-2 tracking-tight">Need immediate help?</h2>
-          <p className="text-white/30 text-xs mb-8">Our support team is available 24/7 for premium members.</p>
-          <a href="https://t.me/taskplay_rewards" target="_blank" rel="noopener noreferrer" className="clay-button px-10 py-5 rounded-2xl font-black text-white text-sm uppercase tracking-widest inline-flex items-center gap-3">
-            Open Telegram <MessageCircle className="w-5 h-5" />
+          <h2 className="text-2xl font-bold mb-2 tracking-tight">Need immediate help?</h2>
+          <p className="text-white/30 text-xs mb-8">Our team is available 24/7 to help you start earning.</p>
+          <a href="https://t.me/taskplay_rewards" target="_blank" rel="noopener noreferrer" className="bg-primary hover:bg-primary/90 px-10 py-5 rounded-2xl font-bold text-white text-sm uppercase tracking-widest inline-flex items-center gap-3 transition-all">
+            Join Telegram <MessageCircle className="w-5 h-5" />
           </a>
         </div>
       </div>

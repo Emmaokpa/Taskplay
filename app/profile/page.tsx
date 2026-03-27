@@ -179,12 +179,12 @@ export default function ProfilePage() {
         {userData?.isMember ? (
           <div className="px-6 py-2.5 rounded-2xl glass-dark border-green-500/20 flex items-center gap-3 shadow-[0_10px_30px_rgba(34,197,94,0.1)]">
              <ShieldCheck className="w-5 h-5 text-green-400" />
-             <span className="text-[10px] font-black text-green-400 uppercase tracking-[4px]">Verified Network Member</span>
+             <span className="text-xs font-bold text-green-400">Verified Member</span>
           </div>
         ) : (
           <div className="px-6 py-2.5 rounded-2xl glass-dark border-orange-500/20 flex items-center gap-3 shadow-[0_10px_30px_rgba(249,115,22,0.1)]">
              <Shield className="w-5 h-5 text-orange-400 animate-pulse" />
-             <span className="text-[10px] font-black text-orange-400 uppercase tracking-[4px]">Standard Identity Node</span>
+             <span className="text-xs font-bold text-orange-400">Basic Account</span>
           </div>
         )}
       </div>
@@ -194,7 +194,7 @@ export default function ProfilePage() {
          <Link href="/withdraw" className="clay-card p-6 sm:p-8 md:p-10 bg-gradient-to-br from-primary/[0.08] to-transparent border-white/5 hover:border-primary/20 transition-all group overflow-hidden relative">
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[50px] -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors" />
             <div className="flex items-center justify-between mb-10 relative z-10">
-               <span className="text-[10px] font-black text-primary uppercase tracking-[5px]">Liquidity Pool</span>
+               <span className="text-[10px] font-black text-primary uppercase tracking-[5px]">Account Balance</span>
                <Wallet className="w-6 h-6 text-primary group-hover:scale-125 group-hover:rotate-6 transition-all duration-500" />
             </div>
             <div className="text-4xl sm:text-5xl font-black text-white mb-3 tracking-tighter group-hover:scale-[1.02] transition-transform origin-left text-wrap break-all">₦{(userData?.balance || 0).toLocaleString()}</div>
@@ -206,12 +206,12 @@ export default function ProfilePage() {
          {/* Referral Card */}
          <div className="clay-card p-6 sm:p-8 md:p-10 border-white/5 bg-[#0A0F1E]/40 backdrop-blur-3xl group relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 blur-[50px] -mr-16 -mt-16" />
-            <div className="flex items-center justify-between mb-10 relative z-10">
-               <span className="text-[10px] font-black text-white/20 uppercase tracking-[5px]">Invitation Yield</span>
-               <Gift className="w-6 h-6 text-white/10 group-hover:text-accent group-hover:scale-110 transition-all duration-500" />
-            </div>
-            <div className="text-4xl sm:text-5xl font-black text-white mb-3 tracking-tighter text-wrap break-all">₦{(userData?.earnedFromReferrals || 0).toLocaleString()}</div>
-            <p className="text-white/20 text-[10px] font-black uppercase tracking-[3px] italic">From {userData?.totalReferrals || 0} Successful Cycles</p>
+             <div className="flex items-center justify-between mb-10 relative z-10">
+                <span className="text-xs font-bold text-white/40">Referral Earnings</span>
+                <Gift className="w-6 h-6 text-white/10 group-hover:text-accent group-hover:scale-110 transition-all duration-500" />
+             </div>
+             <div className="text-4xl sm:text-5xl font-black text-white mb-3 tracking-tighter text-wrap break-all">₦{(userData?.earnedFromReferrals || 0).toLocaleString()}</div>
+             <p className="text-white/30 text-xs font-medium">From {userData?.totalReferrals || 0} active referrals</p>
          </div>
       </div>
 
@@ -256,16 +256,16 @@ export default function ProfilePage() {
                      <Shield className="w-8 h-8 animate-pulse" />
                   </div>
                   <div>
-                     <h4 className="text-xl font-black text-white tracking-tighter mb-1">Standard Node</h4>
-                     <p className="text-[10px] text-white/30 font-black uppercase tracking-[3px]">Upgrade to initiate VIP protocols</p>
+                     <h4 className="text-xl font-bold text-white tracking-tight mb-1">Standard Account</h4>
+                     <p className="text-sm text-white/40 font-medium">Upgrade to unlock all features</p>
                   </div>
                </div>
-               <Link 
-                  href="/upgrade"
-                  className="w-full md:w-auto px-10 py-5 rounded-[1.5rem] bg-orange-500 hover:bg-orange-600 text-white font-black text-xs uppercase tracking-[3px] active:scale-95 transition-all relative z-10 shadow-2xl shadow-orange-500/40 italic text-center"
-               >
-                  Authorize VIP (₦1.5k)
-               </Link>
+                <Link 
+                   href="/upgrade"
+                   className="w-full md:w-auto px-10 py-5 rounded-[1.5rem] bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm transition-all relative z-10 shadow-2xl shadow-orange-500/40 text-center"
+                >
+                   Verify Account (₦1,500)
+                </Link>
             </div>
          )}
 
@@ -277,10 +277,10 @@ export default function ProfilePage() {
                <div className="w-16 h-16 rounded-[1.5rem] glass-dark flex items-center justify-center text-primary group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-xl border-white/5 group-hover:border-primary/20">
                   <Copy className="w-7 h-7" />
                </div>
-               <div>
-                  <h4 className="text-xl font-black text-white tracking-tighter mb-1 group-hover:text-primary transition-colors">Affiliate Fragment</h4>
-                   <p className="text-[9px] sm:text-[10px] text-white/20 font-black uppercase tracking-[2px] sm:tracking-[3px] truncate w-[200px] sm:w-[150px] mx-auto sm:mx-0">Code: {userData?.referralCode}</p>
-               </div>
+                <div>
+                   <h4 className="text-xl font-bold text-white tracking-tight mb-1 group-hover:text-primary transition-colors">Referral Link</h4>
+                    <p className="text-xs text-white/30 font-medium truncate w-[200px] sm:w-[150px] mx-auto sm:mx-0">Code: {userData?.referralCode}</p>
+                </div>
             </div>
             <span className={`text-[12px] font-black uppercase tracking-[4px] transition-all duration-500 px-6 py-3 rounded-2xl glass-dark border-white/5 group-hover:border-primary/20 ${copied ? 'text-green-400 scale-105' : 'text-primary/60 group-hover:text-primary'}`}>
                {copied ? 'FRAGMENT COPIED ✓' : 'COPY PROTOCOL'}
@@ -310,10 +310,10 @@ export default function ProfilePage() {
                <div className="w-16 h-16 rounded-[1.5rem] glass-dark flex items-center justify-center text-white/10 group-hover:text-white transition-all duration-500 border-white/5 group-hover:border-white/20">
                   <Settings className="w-8 h-8" />
                </div>
-               <div>
-                  <h4 className="text-xl font-black text-white tracking-tighter mb-1">Security Core</h4>
-                  <p className="text-[10px] text-white/20 font-black uppercase tracking-[3px]">Recalibrate Authentication</p>
-               </div>
+                <div>
+                   <h4 className="text-xl font-bold text-white tracking-tight mb-1">Account Security</h4>
+                   <p className="text-xs text-white/30 font-medium">Manage your account settings</p>
+                </div>
             </div>
             <div className="w-12 h-12 rounded-full glass-dark flex items-center justify-center text-white/5 group-hover:text-white group-hover:bg-white/5 transition-all">
                <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
@@ -416,7 +416,7 @@ export default function ProfilePage() {
         onClick={handleLogout}
         className="w-full py-6 rounded-[2rem] bg-red-500/10 border border-red-500/20 text-red-500 font-black text-xl flex items-center justify-center gap-4 active:scale-[0.98] transition-all hover:bg-red-500/20 hover:border-red-500/40 shadow-2xl group italic"
       >
-        <span>Sign Out Protocol</span>
+        <span>Sign Out</span>
         <LogOut className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
       </button>
     </div>

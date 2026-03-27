@@ -106,26 +106,26 @@ export default function AdvertiseDashboard() {
                <ShieldAlert className="w-8 h-8" />
             </div>
             <div className="text-center md:text-left">
-              <h4 className="font-black text-lg md:text-xl tracking-tighter uppercase mb-1">Advertiser Account Restricted</h4>
-              <p className="text-[10px] font-black opacity-50 uppercase tracking-[4px]">Membership synchronization required to deploy campaigns</p>
+              <h4 className="font-bold text-lg md:text-xl tracking-tight mb-1">Verification Required</h4>
+              <p className="text-xs font-medium opacity-60">You need to verify your account to start advertising.</p>
             </div>
           </div>
-          <Link href="/upgrade" className="clay-button px-10 py-5 rounded-[1.5rem] bg-red-500 hover:bg-red-600 text-white font-black text-xs uppercase tracking-[3px] shadow-2xl shadow-red-500/40 italic">
-             Upgrade Protocol
+          <Link href="/upgrade" className="px-10 py-5 rounded-[1.5rem] bg-red-500 hover:bg-red-600 text-white font-bold text-sm shadow-2xl shadow-red-500/30 transition-all">
+             Verify Now
           </Link>
         </motion.div>
       )}
 
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-10 mb-16">
         <div>
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-3 tracking-tighter">Advertiser Hub</h1>
-          <p className="text-white/30 text-[10px] font-black tracking-[5px] uppercase flex items-center gap-3">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-3 tracking-tight">Ads Center</h1>
+          <p className="text-white/30 text-sm font-medium flex items-center gap-3">
              <span className="w-2 h-2 rounded-full bg-primary shadow-lg shadow-primary/50" />
-             Engaging 100K+ Active Nodes
+             Reach over 100,000 active users
           </p>
         </div>
-        <Link href="/advertise/new" className="clay-button px-12 py-5 rounded-[2rem] font-black flex items-center gap-3 text-white shadow-2xl shadow-primary/30 active:scale-95 transition-all text-sm uppercase tracking-tighter italic">
-          <Plus className="w-6 h-6" /> Create Campaign
+        <Link href="/advertise/new" className="bg-primary hover:bg-primary/90 px-12 py-5 rounded-[2rem] font-bold flex items-center gap-3 text-white shadow-2xl shadow-primary/30 active:scale-95 transition-all text-sm">
+          <Plus className="w-6 h-6" /> Create Ad
         </Link>
       </div>
 
@@ -218,10 +218,10 @@ export default function AdvertiseDashboard() {
         <div className="w-24 h-24 rounded-[2.5rem] glass flex items-center justify-center mx-auto mb-10 border-white/10 shadow-2xl group transition-transform hover:scale-110">
           <BarChart3 className="w-12 h-12 text-white/10 group-hover:text-primary transition-colors" />
         </div>
-        <h3 className="text-3xl font-black text-white mb-4 tracking-tighter">Zero Deployments</h3>
-        <p className="text-white/30 mb-12 max-w-md mx-auto text-sm font-medium leading-relaxed uppercase tracking-wide">Initiate your first campaign cluster to start engaging Nigerian market sectors.</p>
-        <Link href="/advertise/new" className="text-primary font-black uppercase tracking-[5px] text-[10px] hover:text-white transition-colors flex items-center justify-center gap-3">
-           Engage Network <Plus className="w-4 h-4" />
+        <h3 className="text-3xl font-bold text-white mb-4 tracking-tight">No Active Ads</h3>
+        <p className="text-white/30 mb-12 max-w-sm mx-auto text-sm font-medium leading-relaxed">Create your first ad campaign to start reaching customers in Nigeria.</p>
+        <Link href="/advertise/new" className="text-primary font-bold text-sm hover:text-white transition-colors flex items-center justify-center gap-3">
+           Start Advertising <Plus className="w-4 h-4" />
         </Link>
       </motion.div>
     </div>

@@ -58,8 +58,8 @@ export default function RefferalPage() {
       </Link>
 
       <div className="mb-12">
-        <h1 className="text-4xl font-black text-white mb-2 tracking-tight">Refer & Earn</h1>
-        <p className="text-white/40 text-sm font-bold tracking-[2px] uppercase">Grow the community, get rewards</p>
+        <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Invite Friends</h1>
+        <p className="text-white/40 text-sm font-medium">Earn extra cash for every friend who joins</p>
       </div>
 
       {/* Bonus Banner */}
@@ -69,7 +69,7 @@ export default function RefferalPage() {
                <Gift className="w-8 h-8" />
             </div>
             <h2 className="text-3xl md:text-5xl font-black text-white mb-3 tracking-tighter">₦500.00 Bonus</h2>
-            <p className="text-white/40 text-xs md:text-sm font-bold max-w-xs mx-auto uppercase tracking-widest leading-relaxed">Instantly earned when your friends join & upgrade.</p>
+            <p className="text-white/40 text-sm font-medium max-w-xs mx-auto">Get paid instantly when your friends sign up and verify their account.</p>
          </div>
       </div>
 
@@ -88,7 +88,7 @@ export default function RefferalPage() {
 
       {/* Referral Link Box */}
       <div className="glass p-8 md:p-12 rounded-[2.5rem] border-white/5 shadow-2xl relative overflow-hidden">
-         <h3 className="text-sm font-black text-white mb-8 uppercase tracking-[4px] text-center italic">Your Invite Link</h3>
+         <h3 className="text-sm font-bold text-white mb-6 text-center">Your Referral Link</h3>
          
          <div className="flex flex-col gap-4">
             <div className="glass p-5 rounded-2xl border-white/10 break-all text-center">
@@ -103,7 +103,7 @@ export default function RefferalPage() {
             </button>
          </div>
          
-         <p className="mt-8 text-center text-[8px] font-black uppercase text-white/10 tracking-[3px]">Share on WhatsApp or IG for fastest growth</p>
+         <p className="mt-8 text-center text-[10px] text-white/30 font-medium">Share your link on WhatsApp, Facebook, or Instagram.</p>
       </div>
     </div>
   );

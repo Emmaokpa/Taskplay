@@ -200,8 +200,8 @@ export default function WithdrawalPage() {
       </Link>
 
       <div className="mb-12">
-        <h1 className="text-4xl font-black text-white mb-2 tracking-tight">Withdrawal Hub</h1>
-        <p className="text-white/40 text-sm font-bold tracking-[2px] uppercase">Cash out your earnings</p>
+        <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Withdraw Funds</h1>
+        <p className="text-white/40 text-sm font-medium">Transfer your earnings to your bank account</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
@@ -217,7 +217,7 @@ export default function WithdrawalPage() {
            </div>
            <div className="flex items-center gap-2 text-green-400 mt-2">
               <TrendingUp className="w-3 h-3" />
-              <span className="text-[8px] font-black uppercase tracking-widest">Auto-Payout Verified</span>
+              <span className="text-[10px] font-bold">Verified Account</span>
            </div>
         </div>
       </div>
@@ -305,9 +305,9 @@ export default function WithdrawalPage() {
             <button 
                disabled={processing || isResolving || !accountName}
                type="submit"
-               className="bg-primary hover:bg-primary/80 w-full py-4 rounded-xl font-black text-sm text-white flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 disabled:opacity-40 uppercase tracking-widest"
+               className="bg-primary hover:bg-primary/90 w-full py-5 rounded-2xl font-bold text-sm text-white flex items-center justify-center gap-2 active:scale-95 transition-all shadow-xl shadow-primary/20 disabled:opacity-40"
             >
-               {processing ? <Loader className="w-5 h-5 animate-spin" /> : <>Request Payout <ArrowUpRight className="w-5 h-5" /></>}
+               {processing ? <Loader className="w-5 h-5 animate-spin" /> : <>Withdraw Now <ArrowUpRight className="w-5 h-5" /></>}
             </button>
          </form>
 

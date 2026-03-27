@@ -133,8 +133,8 @@ export default function SocialTasksPage() {
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
         <div>
-           <h1 className="text-4xl font-black text-white mb-1 tracking-tight">Social Gigs</h1>
-           <p className="text-white/40 text-[10px] font-black tracking-[3px] uppercase">Monetize your screen time</p>
+           <h1 className="text-3xl font-bold text-white mb-1 tracking-tight">Social Tasks</h1>
+           <p className="text-white/40 text-sm font-medium">Earn money by following and liking</p>
         </div>
         <div className="clay-card px-6 py-4 flex items-center gap-4 border-white/5 bg-white/[0.01]">
            <Zap className="w-5 h-5 text-blue-400 animate-pulse" />
@@ -145,11 +145,11 @@ export default function SocialTasksPage() {
       {loading ? (
         <ListSkeleton />
       ) : tasks.length === 0 ? (
-        <div className="clay-card p-20 text-center border-white/5 mx-auto max-w-md">
-           <Share2 className="w-16 h-16 text-white/10 mx-auto mb-6" />
-           <h3 className="text-xl font-bold text-white mb-3 tracking-tight uppercase">No active social tasks</h3>
-           <p className="text-white/40 text-sm mb-10 font-medium">Check back later or try CPA offers to keep earning.</p>
-           <Link href="/advertise" className="text-primary font-black uppercase text-[10px] tracking-widest hover:underline">Launch your own ad</Link>
+        <div className="glass p-16 text-center border-white/5 mx-auto max-w-sm rounded-[2.5rem]">
+           <Share2 className="w-12 h-12 text-white/10 mx-auto mb-6" />
+           <h3 className="text-lg font-bold text-white mb-2 tracking-tight">No Tasks Available</h3>
+           <p className="text-white/40 text-sm mb-8 font-medium">Check back soon for new social media tasks!</p>
+           <Link href="/dashboard" className="text-primary font-bold text-xs hover:underline">Return Home</Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4">
