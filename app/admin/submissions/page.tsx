@@ -33,6 +33,8 @@ export default function AdminSubmissions() {
   const [loading, setLoading] = useState(true);
   const [verifying, setVerifying] = useState<string | null>(null);
   const [selectedProof, setSelectedProof] = useState<string | null>(null);
+  const [rejectingSub, setRejectingSub] = useState<Submission | null>(null);
+  const [rejectionReason, setRejectionReason] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -52,7 +54,7 @@ export default function AdminSubmissions() {
     return () => { isMounted = false; };
   }, []);
 
-  const handleVerify = async (sub: Submission, action: 'approve' | 'reject') => {
+  const handleVerify = async (sub: Submission, action: 'approve' | 'reject', reason?: string) => {
     setVerifying(sub.id);
     try {
       const subRef = doc(db, 'submissions', sub.id);
@@ -88,11 +90,31 @@ export default function AdminSubmissions() {
       } else {
         await updateDoc(subRef, { 
           status: 'rejected',
+          rejectionReason: reason || "Proof rejected by admin.",
           verifiedAt: serverTimestamp(),
         });
+        
+        // Optionally send notification email here if needed
+        try {
+           const userSnap = await getDoc(doc(db, 'users', sub.userId));
+           if (userSnap.exists()) {
+              const userData = userSnap.data();
+              fetch('/api/email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                   email: userData.email, 
+                   type: 'rejection',
+                   reason: reason || "Proof rejected by admin."
+                })
+              });
+           }
+        } catch (e) { console.error("Rejection mail error", e); }
       }
 
       setSubmissions(prev => prev.filter(s => s.id !== sub.id));
+      setRejectingSub(null);
+      setRejectionReason("");
     } catch {
       alert("Verification failed");
     } finally {
@@ -160,7 +182,7 @@ export default function AdminSubmissions() {
                <div className="flex items-center gap-4">
                   <button 
                     disabled={!!verifying}
-                    onClick={() => handleVerify(sub, 'reject')}
+                    onClick={() => setRejectingSub(sub)}
                     className="p-4 rounded-2xl glass border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all active:scale-95"
                   >
                      <XCircle className="w-6 h-6" />
@@ -201,7 +223,49 @@ export default function AdminSubmissions() {
              </motion.div>
           </div>
         )}
-      </AnimatePresence>
+       </AnimatePresence>
+
+       {/* Rejection Reason Modal */}
+       <AnimatePresence>
+        {rejectingSub && (
+          <div className="fixed inset-0 z-[300] flex items-center justify-center p-6">
+             <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" onClick={() => setRejectingSub(null)} />
+             <motion.div 
+               initial={{ scale: 0.9, opacity: 0 }}
+               animate={{ scale: 1, opacity: 1 }}
+               exit={{ scale: 0.9, opacity: 0 }}
+               className="relative max-w-md w-full p-8 glass rounded-3xl border-white/20 overflow-hidden shadow-2xl"
+             >
+                <h2 className="text-2xl font-black text-white mb-4 tracking-tight">Reject Submission</h2>
+                <p className="text-white/40 text-sm mb-6">Please provide a reason why this proof was rejected. This will be sent to the user.</p>
+                
+                <textarea 
+                  autoFocus
+                  className="w-full h-32 bg-white/5 border border-white/10 rounded-2xl p-4 text-white placeholder:text-white/20 outline-none focus:border-primary/50 transition-all mb-8"
+                  placeholder="e.g. Screenshot does not match the task, or multiple tasks in one proof..."
+                  value={rejectionReason}
+                  onChange={(e) => setRejectionReason(e.target.value)}
+                />
+
+                <div className="flex gap-4">
+                   <button 
+                     onClick={() => { setRejectingSub(null); setRejectionReason(""); }}
+                     className="flex-1 py-4 rounded-2xl glass text-white/40 font-bold hover:bg-white/5 transition-all"
+                   >
+                      Cancel
+                   </button>
+                   <button 
+                     disabled={!rejectionReason || !!verifying}
+                     onClick={() => handleVerify(rejectingSub, 'reject', rejectionReason)}
+                     className="flex-1 py-4 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-black shadow-xl active:scale-95 transition-all disabled:opacity-50"
+                   >
+                      {verifying ? <Loader className="w-5 h-5 animate-spin mx-auto" /> : "Confirm Reject"}
+                   </button>
+                </div>
+             </motion.div>
+          </div>
+        )}
+       </AnimatePresence>
       </div>
     </AdminGuard>
   );

@@ -17,7 +17,8 @@ export async function POST(req: Request) {
       throw new Error('Firebase Admin not initialized.');
     }
 
-    const { email, type } = await req.json();
+    const body = await req.json();
+    const { email, type, reason, subject, content } = body;
 
     if (!email) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
@@ -84,32 +85,91 @@ export async function POST(req: Request) {
           <a href="https://taskplay.ng/dashboard" style="display: inline-block; background-color: #2563eb; color: #ffffff; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px;">Go to Dashboard &rarr;</a>
         </div>
       `;
+    } else if (type === 'rejection') {
+      emailSubject = "⚠️ Task Submission Rejected";
+      emailHeader = "Update on your submission";
+      emailBody = `
+        <p style="font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 20px;">Your recent task proof was reviewed and unfortunately rejected for the following reason:</p>
+        <div style="background-color: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; padding: 20px; border-radius: 4px; margin-bottom: 24px;">
+           <p style="margin: 0; font-size: 16px; color: #ef4444; font-weight: 500;">"${reason || "Proof did not match the task requirements."}"</p>
+        </div>
+        <p style="font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 24px;">Don't worry! You can correct the issue and re-submit your proof, or try another available task to keep earning.</p>
+        <div style="text-align: center;">
+          <a href="https://taskplay.ng/dashboard" style="display: inline-block; background-color: #ef4444; color: #ffffff; padding: 14px 28px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px;">Try Another Task &rarr;</a>
+        </div>
+      `;
+    } else if (type === 'broadcast') {
+      emailSubject = subject || "An update from TaskPlay Nigeria";
+      emailHeader = subject || "Important Update";
+      emailBody = content || "";
     } else {
       return NextResponse.json({ error: 'Invalid email type.' }, { status: 400 });
     }
 
     const templateHTML = `
-      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f9fafb; padding: 40px 20px;">
-        <div style="max-width: 520px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e5e7eb;">
-          
-          <div style="background-color: #1d4ed8; padding: 24px 40px; text-align: center;">
-            <h1 style="font-size: 22px; font-weight: bold; margin: 0; color: #ffffff; letter-spacing: -0.5px;">TaskPlay Nigeria</h1>
-          </div>
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>${emailSubject}</title>
+      </head>
+      <body style="margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #05070A;">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #05070A; padding: 40px 20px;">
+              <tr>
+                  <td align="center">
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #0A0F1E; border: 1px solid rgba(255,255,255,0.05); border-radius: 32px; overflow: hidden; box-shadow: 0 40px 100px -20px rgba(0,0,0,0.5);">
+                          
+                          <!-- Header -->
+                          <tr>
+                              <td align="center" style="padding: 40px 40px 20px;">
+                                  <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-radius: 18px; margin-bottom: 24px; display: table; font-size: 30px; line-height: 60px; color: white; font-weight: 900; box-shadow: 0 10px 20px rgba(37,99,235,0.3); text-align: center;">T</div>
+                                  <h1 style="color: #ffffff; font-size: 28px; font-weight: 900; margin: 0; letter-spacing: -1px;">TaskPlay</h1>
+                                  <p style="color: #3b82f6; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; margin: 8px 0 0;">Premium Rewards Hub</p>
+                              </td>
+                          </tr>
 
-          <div style="padding: 30px 40px 10px; text-align: center; border-bottom: 1px solid #f3f4f6;">
-            <h2 style="font-size: 20px; font-weight: bold; margin: 0 0 8px; color: #111827;">${emailHeader}</h2>
-          </div>
+                          <!-- Title Divider -->
+                          <tr>
+                              <td style="padding: 0 40px;">
+                                  <div style="height: 1px; background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.05), rgba(255,255,255,0));"></div>
+                              </td>
+                          </tr>
 
-          <div style="padding: 28px 40px;">
-            ${emailBody}
-          </div>
+                          <!-- Sub-Header -->
+                          <tr>
+                              <td align="center" style="padding: 32px 40px 10px;">
+                                  <h2 style="color: #ffffff; font-size: 20px; font-weight: 700; margin: 0;">${emailHeader}</h2>
+                              </td>
+                          </tr>
 
-          <div style="background-color: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #f3f4f6;">
-            <p style="margin: 0; color: #9ca3af; font-size: 12px;">TaskPlay Nigeria &copy; ${new Date().getFullYear()}</p>
-            <p style="margin: 6px 0 0; color: #9ca3af; font-size: 12px;">The simplest way to make money online in Nigeria.</p>
-          </div>
-        </div>
-      </div>
+                          <!-- Main Content -->
+                          <tr>
+                              <td style="padding: 32px 40px 48px;">
+                                  <div style="color: rgba(255,255,255,0.6); font-size: 16px; line-height: 1.6; font-weight: 400;">
+                                      ${emailBody}
+                                  </div>
+                              </td>
+                          </tr>
+
+                          <!-- Footer -->
+                          <tr>
+                              <td align="center" style="padding: 40px; background-color: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.03);">
+                                  <p style="color: rgba(255,255,255,0.1); font-size: 11px; font-weight: 600; margin: 0; text-transform: uppercase; letter-spacing: 2px;">TaskPlay Nigeria &copy; ${new Date().getFullYear()}</p>
+                                  <p style="color: rgba(255,255,255,0.05); font-size: 10px; margin: 8px 0 0;">Elevating the digital economy. Instant rewards, real cash.</p>
+                                  <div style="margin-top: 24px;">
+                                      <a href="https://taskplay.com.ng" style="color: #3b82f6; text-decoration: none; font-size: 12px; font-weight: 700;">Visit Website</a>
+                                      <span style="color: rgba(255,255,255,0.05); margin: 0 12px;">•</span>
+                                      <a href="https://taskplay.com.ng/support" style="color: #3b82f6; text-decoration: none; font-size: 12px; font-weight: 700;">Get Support</a>
+                                  </div>
+                              </td>
+                          </tr>
+                      </table>
+                  </td>
+              </tr>
+          </table>
+      </body>
+      </html>
     `;
 
     // Using your verified Resend domain

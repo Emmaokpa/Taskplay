@@ -11,7 +11,8 @@ import {
   BarChart3, 
   ArrowRight,
   CreditCard,
-  Zap
+  Zap,
+  Send
 } from 'lucide-react';
 import Link from 'next/link';
 import { db } from '@/lib/firebase';
@@ -100,6 +101,14 @@ export default function AdminHome() {
       href: "/admin/payouts",
       icon: <CreditCard className="w-8 h-8 text-orange-400" />,
       tag: "Revenue"
+    },
+    {
+      title: "Email Outreach",
+      count: stats.totalUsers,
+      desc: "Send bulk/targeted emails with premium templates.",
+      href: "/admin/email",
+      icon: <Send className="w-8 h-8 text-indigo-400" />,
+      tag: "Outreach"
     }
   ];
 
