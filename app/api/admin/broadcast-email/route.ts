@@ -1,5 +1,6 @@
 import { adminApp } from '@/lib/firebaseAdmin';
 import { NextResponse } from 'next/server';
+import { sendEmail } from '@/lib/mail-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,40 +36,31 @@ export async function POST(req: Request) {
     if (userEmails.length === 0) {
       return NextResponse.json({ error: 'No recipients found.' }, { status: 400 });
     }
-
-    // Since we want "Automated mails" and user-friendly UX, we'll send them in batches or sequentially.
-    // To avoid timeouts in Next.js Edge/Serverless, we'll send a subset or just loop if small.
-    // For 400 users, we can loop, but we should do it cautiously.
     
-    console.log(`[Broadcast API] Starting broadcast to ${userEmails.length} users.`);
+    console.log(`[Broadcast API] Starting direct broadcast to ${userEmails.length} users.`);
 
     const results = {
       success: 0,
       failed: 0,
     };
 
-    // We call our internal email API for each to reuse the template logic
-    // Alternatively, we could import the logic here, but calling the route is simpler for separation.
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-
+    // Sequential sending to avoid rate limits and too many concurrent promises
+    // In a real high-scale app, this would be a background job (BullMQ, QStash, etc.)
+    // But for 400 users, we'll loop directly.
     for (const email of userEmails) {
       try {
-        const response = await fetch(`${baseUrl}/api/email`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email,
-            type: 'broadcast',
-            subject,
-            content
-          })
+        const result = await sendEmail({
+          email,
+          type: 'broadcast',
+          subject,
+          content
         });
 
-        if (response.ok) {
+        if (!result.error) {
           results.success++;
         } else {
           results.failed++;
-          console.error(`[Broadcast API] Failed to send to ${email}`);
+          console.error(`[Broadcast API] Failed to send to ${email}:`, result.error);
         }
       } catch (err) {
         results.failed++;
