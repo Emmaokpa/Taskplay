@@ -14,7 +14,8 @@ import {
   CheckCircle2, 
   Send, 
   HeadphonesIcon,
-  Sparkles
+  Sparkles,
+  Download
 } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
@@ -34,6 +35,67 @@ interface ProfileData {
   earnedFromReferrals?: number;
   [key: string]: unknown;
 }
+
+// ─── Sub-components for Share & Earn ───────────────────────────────────────
+
+function PromoCaption({ referralCode }: { referralCode: string }) {
+  const [copied, setCopied] = useState(false);
+  const host = typeof window !== 'undefined' ? window.location.host : 'taskplay.ng';
+  const caption = `💰 I've been making money online with TaskPlay Nigeria! 🇳🇬\n\nThey pay you real cash for simple tasks like following social media pages, liking posts, and joining groups. You can earn up to ₦100,000+ monthly! 🔥\n\n✅ No scam. No fees. 100% real payouts.\n👇 Join using my link and start earning today!\n\nhttps://${host}/signup?ref=${referralCode}`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(caption);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className={`w-full py-4 rounded-2xl font-black text-xs uppercase tracking-[4px] flex items-center justify-center gap-3 transition-all active:scale-95 border ${
+        copied
+          ? 'bg-green-500/20 border-green-500/30 text-green-400'
+          : 'bg-blue-500/10 border-blue-500/20 text-blue-400 hover:bg-blue-500/20'
+      }`}
+    >
+      <Copy className="w-4 h-4" />
+      {copied ? '✓ Caption Copied!' : 'Copy Caption + Link'}
+    </button>
+  );
+}
+
+function PromoImageCard({ num }: { num: number }) {
+  const src = `/promo/promo-${num}.png`;
+  const [exists, setExists] = useState(true);
+
+  if (!exists) return null;
+
+  return (
+    <div className="clay-card border-white/5 bg-[#0A0F1E]/40 rounded-[2rem] overflow-hidden">
+      <div className="relative w-full aspect-square">
+        <Image
+          src={src}
+          alt={`TaskPlay Promo Image ${num}`}
+          fill
+          className="object-cover"
+          unoptimized
+          onError={() => setExists(false)}
+        />
+      </div>
+      <div className="p-5">
+        <a
+          href={src}
+          download={`TaskPlay_Promo_${num}.png`}
+          className="w-full py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-black text-xs uppercase tracking-[3px] flex items-center justify-center gap-3 transition-all active:scale-95"
+        >
+          <Download className="w-4 h-4" /> Download Image {num}
+        </a>
+      </div>
+    </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 
 export default function ProfilePage() {
   const [userData, setUserData] = useState<ProfileData | null>(null);
@@ -307,6 +369,46 @@ export default function ProfilePage() {
                <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
             </div>
          </Link>
+      </div>
+
+      {/* Share & Earn Promo Image Gallery */}
+      <div className="mb-10">
+        <div className="flex items-center gap-4 mb-6 mt-4">
+           <div className="h-px flex-1 bg-white/5" />
+           <h3 className="text-[10px] font-black text-white/20 uppercase tracking-[6px] italic px-1">Share & Earn</h3>
+           <div className="h-px flex-1 bg-white/5" />
+        </div>
+
+        {/* How it works banner */}
+        <div className="clay-card p-6 sm:p-8 border-blue-500/20 bg-blue-500/5 mb-6 rounded-[2rem]">
+          <div className="flex items-start gap-4">
+             <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0 mt-1">
+                <Sparkles className="w-5 h-5 text-blue-400" />
+             </div>
+             <div>
+               <h4 className="text-white font-black text-base mb-1">Promote TaskPlay & Earn More!</h4>
+               <p className="text-white/50 text-xs font-medium leading-relaxed">
+                 Download any image below and post it on your WhatsApp Status, Facebook, or Instagram. Copy the caption below it and include your personal referral link — every person who signs up using your link earns you a bonus!
+               </p>
+             </div>
+          </div>
+        </div>
+
+        {/* Referral Caption Box */}
+        <div className="clay-card p-6 sm:p-8 border-white/5 bg-[#0A0F1E]/40 rounded-[2rem] mb-6">
+          <p className="text-[10px] font-black text-white/30 uppercase tracking-[4px] mb-4">📋 Copy This Caption</p>
+          <p className="text-white/60 text-xs leading-relaxed mb-5 font-medium">
+            Post any image below on WhatsApp, Facebook, or Instagram and use this ready-made caption (with your referral link already inside) to invite people to TaskPlay.
+          </p>
+          <PromoCaption referralCode={userData?.referralCode || ''} />
+        </div>
+
+        {/* Promo Images */}
+        <div className="grid grid-cols-1 gap-6">
+          {[1, 2, 3].map((num) => (
+            <PromoImageCard key={num} num={num} />
+          ))}
+        </div>
       </div>
 
       {/* Logout Button */}
