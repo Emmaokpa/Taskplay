@@ -125,8 +125,8 @@ export default function WithdrawalPage() {
       return;
     }
 
-    if (!amount || amount < 500) {
-      setModal({ isOpen: true, type: 'error', title: 'Invalid Amount', message: 'Minimum withdrawal is ₦500.'});
+    if (!amount || amount < 1000) {
+      setModal({ isOpen: true, type: 'error', title: 'Invalid Amount', message: 'Minimum withdrawal is ₦1,000.'});
       return;
     }
 
@@ -208,7 +208,7 @@ export default function WithdrawalPage() {
         <div className="glass p-6 md:p-8 rounded-[2rem] bg-gradient-to-br from-primary/10 to-transparent border-white/5">
            <span className="text-[9px] font-black text-primary uppercase tracking-[3px]">My Balance</span>
            <div className="text-3xl md:text-5xl font-black text-white mt-1 mb-1">₦{(userData?.balance || 0).toLocaleString()}</div>
-           <p className="text-white/20 text-[8px] font-black uppercase tracking-widest leading-none">Min: ₦500</p>
+           <p className="text-white/20 text-[8px] font-black uppercase tracking-widest leading-none">Min: ₦1,000</p>
         </div>
         <div className="glass p-6 md:p-8 rounded-[2rem] bg-white/[0.01] flex flex-col justify-between">
            <div>
@@ -295,7 +295,7 @@ export default function WithdrawalPage() {
                <label className="text-[9px] font-black text-white/20 uppercase tracking-[3px] ml-1">Withdrawal Amount (₦)</label>
                <input 
                   required
-                  type="number" placeholder="500" 
+                  type="number" placeholder="1000" 
                   className="glass w-full px-5 py-4 rounded-xl text-white outline-none border-primary/40 border bg-primary/5 text-xl font-black text-center" 
                   value={amount}
                   onChange={(e) => setAmount(Number(e.target.value))}
@@ -313,7 +313,7 @@ export default function WithdrawalPage() {
 
          <div className="mt-8 p-5 rounded-xl glass border-orange-500/10 bg-orange-500/5">
             <p className="text-[8px] text-white/30 leading-relaxed font-black uppercase tracking-widest text-center">
-               Withdrawals are approved within 24 hours. Minimal limit is ₦500.
+               Withdrawals are approved within 24 hours. Minimal limit is ₦1,000.
             </p>
          </div>
       </div>
