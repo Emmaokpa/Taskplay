@@ -167,78 +167,79 @@ export default function DashboardPage() {
          </Link>
       </div>
 
-      {/* 2-Column Grid */}
-      <div className="flex items-center justify-between mb-8 px-2">
-         <h2 className="text-2xl font-black text-white tracking-tighter flex items-center gap-4">
-            <div className="w-8 h-[1px] bg-primary/40" />
-            Explore More
-         </h2>
+      {/* Explore More */}
+      <div className="flex items-center justify-between mb-6 px-1">
+         <h2 className="text-xl font-bold text-white">Explore More</h2>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+         {/* CPA Offers */}
          <Link href="/cpa-offers">
             <motion.div 
-               whileHover={{ y: -5, scale: 1.02 }}
-               whileTap={{ scale: 0.98 }}
-               className="glass p-5 sm:p-6 md:p-8 aspect-square flex flex-col justify-between group cursor-pointer border-white/5 hover:border-primary/20 transition-all duration-300 rounded-[2rem] md:rounded-[2.5rem]"
+               whileTap={{ scale: 0.97 }}
+               className="group relative overflow-hidden rounded-3xl p-5 h-40 flex flex-col justify-between cursor-pointer bg-gradient-to-br from-orange-500/15 to-orange-500/5 border border-orange-500/15 hover:border-orange-500/30 transition-all duration-300"
             >
-               <div className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-primary border-primary/10 shadow-lg">
-                  <Rocket className="w-6 h-6" />
+               <div className="w-11 h-11 rounded-2xl bg-orange-500/20 flex items-center justify-center border border-orange-500/20">
+                  <Rocket className="w-5 h-5 text-orange-400" />
                </div>
                <div>
-                  <h3 className="text-xl font-black text-white mb-1 tracking-tight">CPA Offers</h3>
-                  <p className="text-[8px] font-black text-white/20 uppercase tracking-[3px]">Marketing Offers</p>
+                  <p className="text-white font-bold text-base leading-tight">CPA Offers</p>
+                  <p className="text-orange-400/60 text-xs font-medium mt-0.5">Earn up to ₦5,000+</p>
                </div>
+               <div className="absolute -bottom-4 -right-4 w-20 h-20 rounded-full bg-orange-500/10 group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
             </motion.div>
          </Link>
 
+         {/* Social Tasks */}
          <Link href="/social-tasks">
             <motion.div 
-               whileHover={{ y: -5, scale: 1.02 }}
-               whileTap={{ scale: 0.98 }}
-               className="glass p-5 sm:p-6 md:p-8 aspect-square flex flex-col justify-between group cursor-pointer border-white/5 hover:border-blue-400/20 transition-all duration-300 rounded-[2rem] md:rounded-[2.5rem]"
+               whileTap={{ scale: 0.97 }}
+               className="group relative overflow-hidden rounded-3xl p-5 h-40 flex flex-col justify-between cursor-pointer bg-gradient-to-br from-blue-500/15 to-blue-500/5 border border-blue-500/15 hover:border-blue-500/30 transition-all duration-300"
             >
-               <div className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-blue-400 border-blue-400/10 shadow-lg">
-                  <Share2 className="w-6 h-6" />
+               <div className="w-11 h-11 rounded-2xl bg-blue-500/20 flex items-center justify-center border border-blue-500/20">
+                  <Share2 className="w-5 h-5 text-blue-400" />
                </div>
                <div>
-                  <h3 className="text-xl font-black text-white mb-1 tracking-tight">Social Tasks</h3>
-                  <p className="text-[8px] font-black text-white/20 uppercase tracking-[3px]">Community Task</p>
+                  <p className="text-white font-bold text-base leading-tight">Social Tasks</p>
+                  <p className="text-blue-400/60 text-xs font-medium mt-0.5">Follow, like & join</p>
                </div>
+               <div className="absolute -bottom-4 -right-4 w-20 h-20 rounded-full bg-blue-500/10 group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
             </motion.div>
          </Link>
 
+         {/* Earn Hub */}
          <Link href="/earn">
             <motion.div 
-               whileHover={{ y: -5, scale: 1.02 }}
-               whileTap={{ scale: 0.98 }}
-               className="glass p-5 sm:p-6 md:p-8 aspect-square flex flex-col justify-between group cursor-pointer border-white/5 hover:border-yellow-400/20 transition-all duration-300 rounded-[2rem] md:rounded-[2.5rem]"
+               whileTap={{ scale: 0.97 }}
+               className="group relative overflow-hidden rounded-3xl p-5 h-40 flex flex-col justify-between cursor-pointer bg-gradient-to-br from-yellow-500/15 to-yellow-500/5 border border-yellow-500/15 hover:border-yellow-500/30 transition-all duration-300"
             >
-               <div className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-yellow-400 border-yellow-400/10 shadow-lg">
-                  <Zap className="w-6 h-6" />
+               <div className="w-11 h-11 rounded-2xl bg-yellow-500/20 flex items-center justify-center border border-yellow-500/20">
+                  <Zap className="w-5 h-5 text-yellow-400" />
                </div>
                <div>
-                  <h3 className="text-xl font-black text-white mb-1 tracking-tight">Earn Hub</h3>
-                  <p className="text-[8px] font-black text-white/20 uppercase tracking-[3px]">Instant Direct Rewards</p>
+                  <p className="text-white font-bold text-base leading-tight">Earn Hub</p>
+                  <p className="text-yellow-400/60 text-xs font-medium mt-0.5">Daily instant cash</p>
                </div>
+               <div className="absolute -bottom-4 -right-4 w-20 h-20 rounded-full bg-yellow-500/10 group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
             </motion.div>
          </Link>
 
-         <div className="relative">
+         {/* Games */}
+         <Link href="/games">
             <motion.div 
-               whileHover={{ y: -5, scale: 1.02 }}
-               whileTap={{ scale: 0.98 }}
-               className="glass p-5 sm:p-6 md:p-8 aspect-square flex flex-col justify-between group border-white/5 opacity-60 rounded-[2rem] md:rounded-[2.5rem]"
+               whileTap={{ scale: 0.97 }}
+               className="group relative overflow-hidden rounded-3xl p-5 h-40 flex flex-col justify-between cursor-pointer bg-gradient-to-br from-indigo-500/15 to-purple-500/5 border border-indigo-500/15 hover:border-indigo-500/30 transition-all duration-300"
             >
-               <div className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-gray-500 border-gray-500/10 shadow-lg">
-                  <Gamepad2 className="w-6 h-6" />
+               <div className="w-11 h-11 rounded-2xl bg-indigo-500/20 flex items-center justify-center border border-indigo-500/20">
+                  <Gamepad2 className="w-5 h-5 text-indigo-400" />
                </div>
                <div>
-                  <h3 className="text-xl font-black text-white mb-1 tracking-tight">Games</h3>
-                  <p className="text-[8px] font-black text-primary uppercase tracking-[3px]">Coming Soon</p>
+                  <p className="text-white font-bold text-base leading-tight">Games</p>
+                  <p className="text-indigo-400/60 text-xs font-medium mt-0.5">Play for free</p>
                </div>
+               <div className="absolute -bottom-4 -right-4 w-20 h-20 rounded-full bg-indigo-500/10 group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
             </motion.div>
-         </div>
+         </Link>
       </div>
 
       {/* Membership Modal - REFINED */}

@@ -18,16 +18,18 @@ import {
   Share2,
   Megaphone,
   User,
-  ArrowRight
+  ArrowRight,
+  Gamepad2
 } from 'lucide-react';
 
 const navigation = [
-  { name: 'Command Center', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Income Hub', href: '/earn', icon: Banknote },
-  { name: 'CPA Pipeline', href: '/cpa-offers', icon: Rocket },
-  { name: 'Social Viral', href: '/social-tasks', icon: Share2 },
-  { name: 'Growth Rewards', href: '/referral', icon: Gift },
-  { name: 'Launch Ads', href: '/advertise', icon: Megaphone },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Earn Tasks', href: '/earn', icon: Banknote },
+  { name: 'CPA Offers', href: '/cpa-offers', icon: Rocket },
+  { name: 'Social Tasks', href: '/social-tasks', icon: Share2 },
+  { name: 'Games', href: '/games', icon: Gamepad2 },
+  { name: 'Referrals', href: '/referral', icon: Gift },
+  { name: 'Advertise', href: '/advertise', icon: Megaphone },
   { name: 'My Profile', href: '/profile', icon: User },
 ];
 

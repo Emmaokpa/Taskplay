@@ -31,14 +31,10 @@ const BottomNavBar = () => {
       <div className="glass mx-1 mb-2 rounded-[1.5rem] px-1 py-2 flex items-center justify-around border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.8)] bg-black/80 backdrop-blur-3xl">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
-          
+
           if (item.special) {
             return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="relative -top-2"
-              >
+              <Link key={item.name} href={item.href} className="relative -top-2">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-all active:scale-90 ${isActive ? 'bg-primary' : 'bg-white/10'}`}>
                   <Plus size={18} className="text-white" />
                 </div>

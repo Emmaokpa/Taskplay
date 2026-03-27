@@ -1,0 +1,462 @@
+{
+  "input": {
+    "ageGroups": [],
+    "interests": [],
+    "platforms": [],
+    "supportedLanguages": [],
+    "hasInAppPurchases": false,
+    "horizontal": false,
+    "vertical": false
+  },
+  "sort": {
+    "type": "ranking_default"
+  },
+  "segments": [
+    {
+      "title": "Specially for you",
+      "count": 8,
+      "hits": [
+        {
+          "id": "119203",
+          "slug": "rivals-fps-online-shooter",
+          "title": "RIVALS FPS: Online Shooter",
+          "description": "💥Welcome to the world of \"RIVALS FPS: Online Shooter\" — a new free multiplayer online shooter where fun battles, cool guns, and a real arena of clashes await you!\n\n🎮 The game is inspired by top shooters like Star Wars Battlefront and Battlefield. Here you can dive into dynamic online battles, team up with friends, and show your shooting skills in the arena.\n\n⚙️ Features:\n- Online multiplayer with friends\n- First-person shooter\n- Bright 3D graphics in a colorful style\n- Lots of interesting maps\n- Different game modes and leaderboards\n- Play for free right in the browser from your mobile phone or computer\n\nFight, upgrade, change weapons and take rewards in epic online battles!",
+          "howToPlayText": "To start a game, create a map or join other players.\n\nThe controls are the same as in many top shooters.\n\nOn PC:\n- Movement - WASD\n- Camera rotation - Using the mouse\n- Jump - Space\n- Crouch - C\n- Interact with objects - E\n\nOn mobile:\n- Movement - Virtual joystick on the left\n- Camera rotation - Swipes on the right side of the screen\n- Jump, reload using virtual buttons",
+          "gameURL": "https://playgama.com/export/game/rivals-fps-online-shooter?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c",
+          "playgamaGameUrl": "https://playgama.com/game/rivals-fps-online-shooter",
+          "genres": [
+            "action",
+            "arcade",
+            "boys",
+            "3d",
+            "multiplayer",
+            "shooting",
+            "co-op",
+            "first-person-shooter"
+          ],
+          "tags": [
+            "3rd-person-shooter-games",
+            "competitive-games",
+            "arena-games",
+            "combat-games",
+            "2-player-gun",
+            "arcade-shooter",
+            "multiplayer-horror"
+          ],
+          "images": [
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/aafa168c-5dd8-417e-2cde-f2e431aaeb00/enlarged",
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/fbed7eb3-b063-4cf2-8562-c0504cb5fb00/enlarged"
+          ],
+          "videos": [
+            {
+              "playgama_id": "519f0e08d9764b25aea0b93699671b44",
+              "external_url": "",
+              "type": "gameplay"
+            }
+          ],
+          "mobileReady": [
+            "For Android",
+            "For IOS",
+            "For Desktop"
+          ],
+          "gender": [
+            "Male"
+          ],
+          "inGamePurchases": "Yes",
+          "supportedLanguages": [
+            "en-US",
+            "ru-RU"
+          ],
+          "screenOrientation": {
+            "horizontal": true,
+            "vertical": false
+          },
+          "embed": "<iframe src='https://playgama.com/export/game/rivals-fps-online-shooter?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c' allow='fullscreen; accelerometer; camera; clipboard-read; clipboard-write; screen-wake-lock; speaker-selection; web-share; geolocation; gyroscope; microphone; xr-spatial-tracking; autoplay; encrypted-media; picture-in-picture; payment; publickey-credentials-get; publickey-credentials-create; storage-access; attribution-reporting; browsing-topics' frameborder='0' width='800' height='450'></iframe>"
+        },
+        {
+          "id": "106346",
+          "slug": "moto-x3m",
+          "title": "Moto X3M",
+          "description": "Moto X3M is an awesome bike game with challenging levels. Choose a bike, put your helmet on, pass obstacles, and get ready to beat the time on tons of off-road circuits. Have fun with Moto X3M! The controls are simple – use the keyboard arrow keys to control the acceleration and deceleration, and also your tilt. Ride through each course and try to land your jumps perfectly – if you angle your bike incorrectly you risk tipping your bike over! \nEach level features different obstacles and objects for you to traverse – you will find this game both fun and challenging! This is off-road biking to the max and for any motorbike fan, this game will provide a huge amount of enjoyment! ",
+          "howToPlayText": "WASD or ARROWS \nPress the up arrow key to accelerate\nBalance your bike with the left and right arrow keys\nBreak by pressing the down arrow key\nPerform flips and other stunts to gain time\nDon't crash",
+          "gameURL": "https://playgama.com/export/game/moto-x3m?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c",
+          "playgamaGameUrl": "https://playgama.com/game/moto-x3m",
+          "genres": [
+            "action",
+            "racing",
+            "sports",
+            "skill",
+            "popular",
+            "motorbike",
+            "dirt-bike",
+            "mobile"
+          ],
+          "tags": [
+            "stunt-games",
+            "offroad-games",
+            "challenging-games",
+            "bike-racing-games"
+          ],
+          "images": [
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/53361cce-791e-4e4a-23dc-528ce9ea1000/enlarged",
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/9ee7484b-8967-45fc-1ce3-4c52e5ebed00/enlarged"
+          ],
+          "videos": [
+            {
+              "playgama_id": "236ada3eea264401b7be98a0466cd6ce",
+              "external_url": "",
+              "type": "gameplay"
+            }
+          ],
+          "mobileReady": [
+            "For Android",
+            "For IOS",
+            "For Desktop"
+          ],
+          "gender": [
+            "Male",
+            "Female"
+          ],
+          "inGamePurchases": "No",
+          "supportedLanguages": [
+            "en-US"
+          ],
+          "screenOrientation": {
+            "horizontal": true,
+            "vertical": true
+          },
+          "embed": "<iframe src='https://playgama.com/export/game/moto-x3m?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c' allow='fullscreen; accelerometer; camera; clipboard-read; clipboard-write; screen-wake-lock; speaker-selection; web-share; geolocation; gyroscope; microphone; xr-spatial-tracking; autoplay; encrypted-media; picture-in-picture; payment; publickey-credentials-get; publickey-credentials-create; storage-access; attribution-reporting; browsing-topics' frameborder='0' width='800' height='450'></iframe>"
+        },
+        {
+          "id": "924",
+          "slug": "defender-tanks-merge",
+          "title": "Defender: Tanks Merge",
+          "description": "Defender: Tanks Merge is a thrilling online strategy game where you create a powerful army by merging unique tanks with abilities. Face increasing waves of enemies, using auto-merge, bombs, and mines to strengthen your tactics. Play for free on desktop or mobile and enjoy hours of strategic fun!",
+          "howToPlayText": "Controls:\n- Drag tanks together to merge\n- Drag unwanted tanks to the trash can\n- Tap ability buttons to use and select the target area\n- Cancel abilities by tapping any ability button or base area\n- Mines can't be placed near tanks—plan ahead",
+          "gameURL": "https://playgama.com/export/game/defender-tanks-merge?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c",
+          "playgamaGameUrl": "https://playgama.com/game/defender-tanks-merge",
+          "genres": [
+            "strategy",
+            "pve",
+            "survival",
+            "battleship",
+            "tanks"
+          ],
+          "tags": [
+            "2d-games",
+            "addictive-games",
+            "defense-games",
+            "desktop-games",
+            "1-player-games",
+            "resource-management-games",
+            "borwser-games",
+            "unity-games-online"
+          ],
+          "images": [
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/ca031858-c3d3-4d3d-2b0a-589748da6600/enlarged",
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/a23d36c1-39c9-40f4-54f8-f1ad5599ae00/enlarged"
+          ],
+          "videos": [
+            {
+              "playgama_id": "05fe5da514a8484aa68e0fb2a445b297",
+              "external_url": "",
+              "type": "gameplay"
+            }
+          ],
+          "mobileReady": [
+            "For Android",
+            "For Desktop"
+          ],
+          "gender": [
+            "Male",
+            "Female"
+          ],
+          "inGamePurchases": "No",
+          "supportedLanguages": [
+            "en-US"
+          ],
+          "screenOrientation": {
+            "horizontal": true,
+            "vertical": false
+          },
+          "embed": "<iframe src='https://playgama.com/export/game/defender-tanks-merge?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c' allow='fullscreen; accelerometer; camera; clipboard-read; clipboard-write; screen-wake-lock; speaker-selection; web-share; geolocation; gyroscope; microphone; xr-spatial-tracking; autoplay; encrypted-media; picture-in-picture; payment; publickey-credentials-get; publickey-credentials-create; storage-access; attribution-reporting; browsing-topics' frameborder='0' width='800' height='450'></iframe>"
+        },
+        {
+          "id": "120335",
+          "slug": "sworded-io--spin-and-rub",
+          "title": "Sworded io - Spin and Rub",
+          "description": "Sworded io - Spin and Rub is a fast-paced arcade sword-fighting game where you’ll test your reflexes, tactics, and timing against waves of fierce opponents. Upgrade your fighter, unleash spells, and conquer battle arenas through pure skill and clever strategy.\nFeatures\nMassive weapon variety: swords, axes, knives, and more\nImpactful power-ups to shift the tide of combat\nTwo thrilling modes, Domination and Battle Royal\nSpin-powered action with dynamic, fast-paced gameplay\nCompete and rise as the ultimate warrior",
+          "howToPlayText": "Controls\nPC Controls\nUse WASD / arrow keys / drag left-click to move around.\nMobile Controls\nUse the in-game joystick to move around.",
+          "gameURL": "https://playgama.com/export/game/sworded-io--spin-and-rub?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c",
+          "playgamaGameUrl": "https://playgama.com/game/sworded-io--spin-and-rub",
+          "genres": [
+            "io",
+            "action",
+            "arcade",
+            "skill",
+            "fighting",
+            "battle-royale"
+          ],
+          "tags": [
+            "fast-paced-games",
+            "agility-games",
+            "1-player-games",
+            "arcade-shooter",
+            "action-fighting",
+            "fast-paced-action"
+          ],
+          "images": [
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/50fa6daf-9d39-4573-bd9f-cfadab649c00/enlarged",
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/52345a89-aa46-484c-54a1-a324e4d4c600/enlarged"
+          ],
+          "videos": [
+            {
+              "playgama_id": "fc259bdc10a6444c877017aa17de548e",
+              "external_url": "",
+              "type": "gameplay"
+            }
+          ],
+          "mobileReady": [
+            "For Android",
+            "For IOS",
+            "For Desktop"
+          ],
+          "gender": [
+            "Male",
+            "Female"
+          ],
+          "inGamePurchases": "No",
+          "supportedLanguages": [
+            "en-US",
+            "ru-RU"
+          ],
+          "screenOrientation": {
+            "horizontal": false,
+            "vertical": true
+          },
+          "embed": "<iframe src='https://playgama.com/export/game/sworded-io--spin-and-rub?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c' allow='fullscreen; accelerometer; camera; clipboard-read; clipboard-write; screen-wake-lock; speaker-selection; web-share; geolocation; gyroscope; microphone; xr-spatial-tracking; autoplay; encrypted-media; picture-in-picture; payment; publickey-credentials-get; publickey-credentials-create; storage-access; attribution-reporting; browsing-topics' frameborder='0' width='800' height='450'></iframe>"
+        },
+        {
+          "id": "120327",
+          "slug": "sorcerers-refuge",
+          "title": "Sorcerers Refuge",
+          "description": "You wake up in a strange living room. There are no doors. Only whispers behind the wall and darkness in the eyes. Welcome to the Sorcerer’s Hideout, a dark adventure with elements of magic, riddles, and quests.\nIn this confusing and dangerous place, you will find:\nWhat Awaits You\nMysterious corridors, hidden rooms, and sudden traps\nThe magic of ice, fire, transformation, and true vision\nMysterious creatures, demons, and a strange Buffoon with his own motives\nIntense dialogues, unexpected outcomes, and choices that affect the story\nBattles, puzzles, and ancient Contracts made with powerful forces\nYou are trapped by a Sorcerer who has subjugated four demons. Will you be able to escape, or will you become another soul in his collection?\n\nCore Gameplay & Story\n\nQ: What is the game about? What do you need to do?\nA: It's a horror game where you need to solve a mystery and fight for your life.\n\nQ: Is there a storyline in the game?\nA: Yes, it's very intricate, interesting, and complex.\n\nQ: What is the unique feature of the game? What can hook players?\nA: The storyline, atmosphere, spells, and interesting mechanics.\n\nQ: Are there bosses in the game and how are they different?\nA: There are bosses with increased difficulty and behavior that depends on the player's actions.\n\nQ: Are there any mini-games within the main storyline? For example, match-three puzzles within a strategy game.\nA: Yes, there are. Collecting special seals.\n\nMechanics & Progression\n\nQ: How does leveling up work exactly? What needs to be done to level up faster?\nA: Collecting spells related to the storyline.\n\nEconomy & Customization\n\nQ: What engaging content elements are there (weapons, vehicles, locations, skills, references to famous franchises, etc.)?\nA: Complex mechanics and traps, a well-developed storyline.\n\nRetention & Engagement\n\nQ: Is it preferable to play with sound to better immerse yourself in the atmosphere, or will there be difficulties in passing without sound?\nA: It is necessary to play with sound.\n\nQ: Is there a system of achievements (achievements)? What are they and what can you get them for?\nA: Yes, they are obtained as quests and tasks are completed.",
+          "howToPlayText": "Desktop\nWASD = move\nQ = open diary\nH = hint\nC = shop\nTAB = inventory\nF = heal\n1/2/3/4 = skills\nE or Left Mouse Button = use combat magic\n\nMobile\nSwipe from the right side of the screen = character rotation\nVirtual joystick on the left = move\nTap the icon in the center of the screen = interact with objects\nTap on the menu buttons = menu navigation",
+          "gameURL": "https://playgama.com/export/game/sorcerers-refuge?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c",
+          "playgamaGameUrl": "https://playgama.com/game/sorcerers-refuge",
+          "genres": [
+            "action",
+            "puzzle",
+            "adventure",
+            "horror",
+            "3d",
+            "story",
+            "ghost",
+            "scary",
+            "logic"
+          ],
+          "tags": [
+            "fantasy-games",
+            "quests-games",
+            "mystery-games",
+            "brain-training-games",
+            "challenging-games",
+            "action-adventure"
+          ],
+          "images": [
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/8480abf7-290f-4807-ebf2-5f4e90820800/enlarged",
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/33677236-bc6b-47d9-7076-1f1624afe800/enlarged"
+          ],
+          "videos": [
+            {
+              "playgama_id": "6f0fa1935227461bb6875c0f3be95664",
+              "external_url": "",
+              "type": "gameplay"
+            }
+          ],
+          "mobileReady": [
+            "For Android",
+            "For IOS",
+            "For Desktop"
+          ],
+          "gender": [
+            "Male",
+            "Female"
+          ],
+          "inGamePurchases": "No",
+          "supportedLanguages": [
+            "en-US",
+            "ru-RU"
+          ],
+          "screenOrientation": {
+            "horizontal": true,
+            "vertical": false
+          },
+          "embed": "<iframe src='https://playgama.com/export/game/sorcerers-refuge?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c' allow='fullscreen; accelerometer; camera; clipboard-read; clipboard-write; screen-wake-lock; speaker-selection; web-share; geolocation; gyroscope; microphone; xr-spatial-tracking; autoplay; encrypted-media; picture-in-picture; payment; publickey-credentials-get; publickey-credentials-create; storage-access; attribution-reporting; browsing-topics' frameborder='0' width='800' height='450'></iframe>"
+        },
+        {
+          "id": "115751",
+          "slug": "stickman-kombat-2d",
+          "title": "Stickman Kombat 2D",
+          "description": "Get ready to dive into a thrilling world of adrenaline-fueled combat, precise combos, and intense stickman fights in Stickman Kombat 2D, the best 2D fighting game!",
+          "howToPlayText": "CONTROLS FOR 1 PLAYER:\n\nWASD — move\nJ — attack\nK — special move\nBACK + K — second special move\nS + J — uppercut\nHOLD S — block\n\nCONTROLS FOR 2 PLAYERS ON ONE PC:\n\nPlayer 1: WASD + F (attack), G (special moves)\nPlayer 2: IJKL + : (colon) (attack), \" (quote) (special moves)\n\nCOMBO:\nPress attack at the right moment to continue the combo. Jump behind the enemy and hit — this triggers aerial strikes.\n\nTACTICS:\nManage stamina, block timely, and use breakers to escape combos. Earn coins for victories and unlock new fighters!",
+          "gameURL": "https://playgama.com/export/game/stickman-kombat-2d?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c",
+          "playgamaGameUrl": "https://playgama.com/game/stickman-kombat-2d",
+          "genres": [
+            "action",
+            "arcade",
+            "skill",
+            "boys",
+            "fighting",
+            "cool-games",
+            "stickman"
+          ],
+          "tags": [
+            "fantasy-games",
+            "arena-games",
+            "1-player-games",
+            "action-fighting",
+            "fast-paced-action"
+          ],
+          "images": [
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/0c888413-a125-4ef5-56cd-89a6a329e900/enlarged",
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/63d1299f-df02-40ad-be29-bfa8d694ea00/enlarged"
+          ],
+          "videos": [
+            {
+              "playgama_id": "d2333405efe8e2a815076ba6b6cb42f0",
+              "external_url": "",
+              "type": "gameplay"
+            }
+          ],
+          "mobileReady": [
+            "For Android",
+            "For IOS",
+            "For Desktop"
+          ],
+          "gender": [
+            "Male"
+          ],
+          "inGamePurchases": "No",
+          "supportedLanguages": [
+            "en-US",
+            "es-ES",
+            "ru-RU",
+            "tr-TR"
+          ],
+          "screenOrientation": {
+            "horizontal": true,
+            "vertical": false
+          },
+          "embed": "<iframe src='https://playgama.com/export/game/stickman-kombat-2d?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c' allow='fullscreen; accelerometer; camera; clipboard-read; clipboard-write; screen-wake-lock; speaker-selection; web-share; geolocation; gyroscope; microphone; xr-spatial-tracking; autoplay; encrypted-media; picture-in-picture; payment; publickey-credentials-get; publickey-credentials-create; storage-access; attribution-reporting; browsing-topics' frameborder='0' width='800' height='450'></iframe>"
+        },
+        {
+          "id": "106324",
+          "slug": "age-of-tanks-warriors-td-war",
+          "title": "Age of Tanks Warriors: TD War",
+          "description": "Lead Your Tank Warriors to Glory Across Time!\nWelcome to Age of Tank Warriors: TD War, the ultimate tank warriors strategy game! Travel through the ages of war, leading your tank army from Stone Age warriors to the sci-fi space future. Upgrade your battle tanks, engage in intense Clash of Tank Warriors battles, and use tower defense (TD) strategy to conquer every era. 100vs100 survival battles await—will you rewrite history and become the greatest tank warlord?",
+          "howToPlayText": "Age of Tanks Warriors is a one-click battle game, so the actual combat portion of the game is fairly simple. The difficulty lies in the strategy of how you use your army and weapons to kill off your opponents before they kill you and destroy your fortress. Once you do this, you get to upgrade your army and weapons for an even more effective strategy.\n\nThe game begins with your stone cave, which is directly opposite your opponent's cave. You can deploy your soldiers by clicking the small icon on the bottom right of your screen. The only hitch is that you may not have enough soldiers to send out in time to match your opponent's troop!\n\nYour task on each level is to defeat the opposing army and destroy their shelter. As the levels advance, so do the fortresses, making it even more difficult throughout the ages. Fighting begins with sticks and stones but eventually turns into tanks and artillery.",
+          "gameURL": "https://playgama.com/export/game/age-of-tanks-warriors-td-war?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c",
+          "playgamaGameUrl": "https://playgama.com/game/age-of-tanks-warriors-td-war",
+          "genres": [
+            "strategy",
+            "tower-defense",
+            "tanks",
+            "mobile"
+          ],
+          "tags": [
+            "horde-survival-games",
+            "unity-games-online"
+          ],
+          "images": [
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/135c7e32-e800-4a05-9ea1-e40cae1ec400/enlarged",
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/63af6aa0-344f-46ca-1cfb-885f61230800/enlarged"
+          ],
+          "videos": [
+            {
+              "playgama_id": "d60b3bcee2174db1948f70ccbba67d7d",
+              "external_url": "",
+              "type": "gameplay"
+            }
+          ],
+          "mobileReady": [
+            "For Android",
+            "For Desktop"
+          ],
+          "gender": [
+            "Male",
+            "Female"
+          ],
+          "inGamePurchases": "No",
+          "supportedLanguages": [
+            "en-US"
+          ],
+          "screenOrientation": {
+            "horizontal": true,
+            "vertical": true
+          },
+          "embed": "<iframe src='https://playgama.com/export/game/age-of-tanks-warriors-td-war?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c' allow='fullscreen; accelerometer; camera; clipboard-read; clipboard-write; screen-wake-lock; speaker-selection; web-share; geolocation; gyroscope; microphone; xr-spatial-tracking; autoplay; encrypted-media; picture-in-picture; payment; publickey-credentials-get; publickey-credentials-create; storage-access; attribution-reporting; browsing-topics' frameborder='0' width='800' height='450'></iframe>"
+        },
+        {
+          "id": "112023",
+          "slug": "dungeon-master-cult-and-craft",
+          "title": "Dungeon Master - Cult & Craft",
+          "description": "Become a dungeon keeper, control stickmen, mine ore, develop a Cult and hold power in this exciting 3D simulator! Develop the Cult, manage resources and expand the boundaries of your underground Universe!\n\n⛏ Resource extraction - send followers for ore and minerals.\n🏛 Cult development - maintain loyalty at a high level.\n👀 Captivating 3D graphics - fully immerse yourself in the atmosphere of darkness.\n⚒ Dungeon upgrade - build, improve and strengthen your base.\n💰 Economic strategy – distribute the spoils and increase wealth.",
+          "howToPlayText": "Desktop:\nWASD / arrow keys / drag left mouse button = move\nLeft mouse button / E = select upgrade\n\nMobile:\nIn-game joystick = move\ntap = select upgrade",
+          "gameURL": "https://playgama.com/export/game/dungeon-master-cult-and-craft?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c",
+          "playgamaGameUrl": "https://playgama.com/game/dungeon-master-cult-and-craft",
+          "genres": [
+            "arcade",
+            "adventure",
+            "simulation",
+            "3d",
+            "management",
+            "crafting",
+            "idle",
+            "unity",
+            "mobile"
+          ],
+          "tags": [
+            "casual-games",
+            "relaxing-games",
+            "desktop-games",
+            "1-player-games",
+            "building-games",
+            "resource-management-games",
+            "dungeon-games",
+            "mining-games"
+          ],
+          "images": [
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/ac5fafca-c68d-495d-b89b-58d6daf11d00/enlarged",
+            "https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/f3a2b0ff-5b11-4dc4-c3e7-001ff8672b00/enlarged"
+          ],
+          "videos": [
+            {
+              "playgama_id": "b538d9bcf858445159f52f5a23a8f3a3",
+              "external_url": "",
+              "type": "gameplay"
+            }
+          ],
+          "mobileReady": [
+            "For Android",
+            "For IOS",
+            "For Desktop"
+          ],
+          "gender": [
+            "Male",
+            "Female"
+          ],
+          "inGamePurchases": "No",
+          "supportedLanguages": [
+            "en-US"
+          ],
+          "screenOrientation": {
+            "horizontal": true,
+            "vertical": true
+          },
+          "embed": "<iframe src='https://playgama.com/export/game/dungeon-master-cult-and-craft?clid=p_8dff5bc5-ea62-4191-84ce-5f9c816cd09c' allow='fullscreen; accelerometer; camera; clipboard-read; clipboard-write; screen-wake-lock; speaker-selection; web-share; geolocation; gyroscope; microphone; xr-spatial-tracking; autoplay; encrypted-media; picture-in-picture; payment; publickey-credentials-get; publickey-credentials-create; storage-access; attribution-reporting; browsing-topics' frameborder='0' width='800' height='450'></iframe>"
+        }
+      ]
+    }
+  ]
+}
