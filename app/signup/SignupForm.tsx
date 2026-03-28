@@ -16,6 +16,8 @@ import Logo from '@/app/components/Logo';
 export default function SignupForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState('');
   const [referralInput, setReferralInput] = useState('');
@@ -34,6 +36,12 @@ export default function SignupForm() {
     setLoading(true);
     setError('');
 
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      setLoading(false);
+      return;
+    }
+
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -44,6 +52,7 @@ export default function SignupForm() {
         uid: user.uid,
         email: user.email,
         fullName: fullName,
+        phoneNumber: phoneNumber,
         balance: 0,
         role: 'user',
         isMember: false,
@@ -86,6 +95,7 @@ export default function SignupForm() {
           uid: user.uid,
           email: user.email,
           fullName: user.displayName,
+          phoneNumber: '', // Google users don't provide phone initially
           photoUrl: user.photoURL,
           balance: 0,
           role: 'user',
@@ -130,11 +140,11 @@ export default function SignupForm() {
          animate={{ opacity: 1, scale: 1 }}
          className="w-full max-w-xl relative z-10"
       >
-        <div className="glass p-10 md:p-20 rounded-[4rem] border-white/5 bg-white/[0.01] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] backdrop-blur-3xl">
-          <div className="text-center mb-16">
+        <div className="glass p-8 md:p-14 rounded-[3rem] border-white/5 bg-white/[0.01] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] backdrop-blur-3xl">
+          <div className="text-center mb-12">
              <Logo size="md" className="justify-center mb-10" />
-             <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter italic">Create Account.</h1>
-             <p className="text-white/30 text-[10px] font-black uppercase tracking-[5px]">Join 15,000+ Active Earners</p>
+             <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter italic leading-none">Create Account.</h1>
+             <p className="text-white/30 text-[10px] font-black uppercase tracking-[4px]">Join 15,000+ Active Earners</p>
           </div>
 
           {error && (
@@ -146,57 +156,85 @@ export default function SignupForm() {
             </motion.div>
           )}
 
-          <form onSubmit={handleSignup} className="space-y-8">
-             <div className="space-y-4">
-                <label className="text-[10px] font-black text-white/20 uppercase tracking-[4px] ml-4 italic">Full Name</label>
-                <div className="group bg-white/[0.02] flex items-center px-8 py-5 rounded-[2.5rem] border border-white/5 focus-within:border-blue-500/30 focus-within:bg-white/[0.04] transition-all duration-500">
-                   <User className="w-5 h-5 text-white/10 mr-4 group-focus-within:text-blue-400 transition-colors" />
-                   <input 
-                      required type="text" placeholder="John Doe" 
-                      className="bg-transparent border-none outline-none text-white text-base w-full placeholder-white/10 font-medium"
-                      onChange={(e) => setFullName(e.target.value)}
-                   />
+          <form onSubmit={handleSignup} className="space-y-6">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                   <label className="text-[9px] font-black text-white/20 uppercase tracking-[4px] ml-4 italic">Full Name</label>
+                   <div className="group bg-white/[0.01] flex items-center px-6 py-4 rounded-[1.5rem] border border-white/5 focus-within:border-blue-500/30 transition-all duration-500">
+                      <User className="w-4 h-4 text-white/10 mr-3 group-focus-within:text-blue-400 transition-colors" />
+                      <input 
+                         required type="text" placeholder="John Doe" 
+                         className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/5 font-medium"
+                         onChange={(e) => setFullName(e.target.value)}
+                      />
+                   </div>
+                </div>
+
+                <div className="space-y-3">
+                   <label className="text-[9px] font-black text-white/20 uppercase tracking-[4px] ml-4 italic">Phone Number</label>
+                   <div className="group bg-white/[0.01] flex items-center px-6 py-4 rounded-[1.5rem] border border-white/5 focus-within:border-blue-500/30 transition-all duration-500">
+                      <User className="w-4 h-4 text-white/10 mr-3 group-focus-within:text-blue-400 transition-colors" />
+                      <input 
+                         required type="tel" placeholder="08012345678" 
+                         className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/5 font-medium"
+                         onChange={(e) => setPhoneNumber(e.target.value)}
+                      />
+                   </div>
                 </div>
              </div>
 
-             <div className="space-y-4">
-                <label className="text-[10px] font-black text-white/20 uppercase tracking-[4px] ml-4 italic">Email Address</label>
-                <div className="group bg-white/[0.02] flex items-center px-8 py-5 rounded-[2.5rem] border border-white/5 focus-within:border-blue-500/30 focus-within:bg-white/[0.04] transition-all duration-500">
-                   <Mail className="w-5 h-5 text-white/10 mr-4 group-focus-within:text-blue-400 transition-colors" />
+             <div className="space-y-3">
+                <label className="text-[9px] font-black text-white/20 uppercase tracking-[4px] ml-4 italic">Email Address</label>
+                <div className="group bg-white/[0.01] flex items-center px-6 py-4 rounded-[1.5rem] border border-white/5 focus-within:border-blue-500/30 transition-all duration-500">
+                   <Mail className="w-4 h-4 text-white/10 mr-3 group-focus-within:text-blue-400 transition-colors" />
                    <input 
                       required type="email" placeholder="email@example.com" 
-                      className="bg-transparent border-none outline-none text-white text-base w-full placeholder-white/10 font-medium"
+                      className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/5 font-medium"
                       onChange={(e) => setEmail(e.target.value)}
                    />
                 </div>
              </div>
 
-             <div className="space-y-4">
-                <label className="text-[10px] font-black text-white/20 uppercase tracking-[4px] ml-4 italic">Password</label>
-                <div className="group bg-white/[0.02] flex items-center px-8 py-5 rounded-[2.5rem] border border-white/5 focus-within:border-blue-500/30 focus-within:bg-white/[0.04] transition-all duration-500 relative">
-                   <Lock className="w-5 h-5 text-white/10 mr-4 group-focus-within:text-blue-400 transition-colors" />
-                   <input 
-                      required type={showPassword ? 'text' : 'password'} placeholder="••••••••" 
-                      className="bg-transparent border-none outline-none text-white text-base w-full placeholder-white/10 pr-12 font-medium"
-                      onChange={(e) => setPassword(e.target.value)}
-                   />
-                   <button 
-                     type="button" 
-                     onClick={() => setShowPassword(!showPassword)}
-                     className="absolute right-8 text-white/10 hover:text-white transition-colors"
-                   >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                   </button>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                   <label className="text-[9px] font-black text-white/20 uppercase tracking-[4px] ml-4 italic">Password</label>
+                   <div className="group bg-white/[0.01] flex items-center px-6 py-4 rounded-[1.5rem] border border-white/5 focus-within:border-blue-500/30 transition-all duration-500 relative">
+                      <Lock className="w-4 h-4 text-white/10 mr-3 group-focus-within:text-blue-400 transition-colors" />
+                      <input 
+                         required type={showPassword ? 'text' : 'password'} placeholder="••••••••" 
+                         className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/5 pr-10 font-medium"
+                         onChange={(e) => setPassword(e.target.value)}
+                      />
+                      <button 
+                        type="button" 
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-6 text-white/10 hover:text-white transition-colors"
+                      >
+                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                   </div>
+                </div>
+
+                <div className="space-y-3">
+                   <label className="text-[9px] font-black text-white/20 uppercase tracking-[4px] ml-4 italic">Confirm Password</label>
+                   <div className="group bg-white/[0.01] flex items-center px-6 py-4 rounded-[1.5rem] border border-white/5 focus-within:border-blue-500/30 transition-all duration-500">
+                      <Lock className="w-4 h-4 text-white/10 mr-3 group-focus-within:text-blue-400 transition-colors" />
+                      <input 
+                         required type="password" placeholder="••••••••" 
+                         className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/5 font-medium"
+                         onChange={(e) => setConfirmPassword(e.target.value)}
+                      />
+                   </div>
                 </div>
              </div>
 
-             <div className="space-y-4">
-                <label className="text-[10px] font-black text-white/20 uppercase tracking-[4px] ml-4 italic">Gift Code (Optional)</label>
-                <div className="group bg-white/[0.02] flex items-center px-8 py-5 rounded-[2.5rem] border border-white/5 focus-within:border-amber-500/30 focus-within:bg-white/[0.04] transition-all duration-500">
-                   <Gift className="w-5 h-5 text-white/10 mr-4 group-focus-within:text-amber-400 transition-colors" />
+             <div className="space-y-3">
+                <label className="text-[9px] font-black text-white/20 uppercase tracking-[4px] ml-4 italic">Gift Code (Optional)</label>
+                <div className="group bg-white/[0.01] flex items-center px-6 py-4 rounded-[1.5rem] border border-white/5 focus-within:border-amber-500/30 transition-all duration-500">
+                   <Gift className="w-4 h-4 text-white/10 mr-3 group-focus-within:text-amber-400 transition-colors" />
                    <input 
                       type="text" placeholder="REFERRAL CODE" 
-                      className="bg-transparent border-none outline-none text-white text-base w-full placeholder-white/10 uppercase font-black"
+                      className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/5 uppercase font-black"
                       value={referralInput}
                       onChange={(e) => setReferralInput(e.target.value.toUpperCase())}
                    />
@@ -206,7 +244,7 @@ export default function SignupForm() {
              <button 
                 disabled={loading}
                 type="submit" 
-                className="w-full py-6 rounded-[2.5rem] bg-white text-black font-black text-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] shadow-2xl hover:shadow-[0_20px_40px_rgba(255,255,255,0.1)] mt-4"
+                className="w-full py-5 rounded-[1.5rem] bg-white text-black font-black text-lg flex items-center justify-center gap-3 transition-all active:scale-[0.98] shadow-2xl hover:shadow-[0_20px_40px_rgba(255,255,255,0.1)] mt-4"
              >
                 {loading ? <Loader className="w-6 h-6 animate-spin" /> : <>Start Earning <ArrowRight className="w-6 h-6" /></>}
              </button>

@@ -18,6 +18,21 @@ export async function POST(req: Request) {
 
     const db = getFirestore(adminApp);
 
+    // 0. Daily Earning Limit Check (500 NGN)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const earningsSnap = await db.collection('submissions')
+      .where('userId', '==', userId)
+      .where('status', '==', 'approved')
+      .where('createdAt', '>=', today)
+      .get();
+
+    let totalEarnedToday = 0;
+    earningsSnap.forEach(doc => {
+      totalEarnedToday += (doc.data().amount || 0);
+    });
+
     const taskRef = db.collection('tasks').doc(taskId);
     const taskSnap = await taskRef.get();
 
@@ -26,6 +41,14 @@ export async function POST(req: Request) {
     }
 
     const taskData = taskSnap.data();
+    const reward = taskData?.userReward || 0;
+
+    if (totalEarnedToday + reward > 500) {
+      return NextResponse.json({ 
+        error: `Daily limit reached. You can only earn ₦500 per day. You've earned ₦${totalEarnedToday} today.`,
+        limitReached: true 
+      }, { status: 403 });
+    }
 
     // 1. Security Check: Is it a direct link and platform task?
     if (taskData?.type !== 'direct' || taskData?.category !== 'earn') {

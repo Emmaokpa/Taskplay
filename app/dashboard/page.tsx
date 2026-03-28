@@ -90,29 +90,29 @@ export default function DashboardPage() {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         whileHover={{ scale: 1.005 }}
-        className="glass p-10 sm:p-14 md:p-20 rounded-[3rem] border-white/5 bg-gradient-to-br from-blue-600/10 via-transparent to-purple-600/10 relative overflow-hidden mb-16 shadow-2xl group transition-all duration-700"
+        className="glass p-8 sm:p-14 md:p-20 rounded-[3rem] border-white/5 bg-gradient-to-br from-blue-600/10 via-transparent to-purple-600/10 relative overflow-hidden mb-12 shadow-2xl group transition-all duration-700"
       >
          <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-8 opacity-40">
+            <div className="flex items-center gap-3 mb-6 opacity-40">
                <div className="p-2.5 rounded-xl glass border-white/10">
                   <Wallet className="w-5 h-5 text-blue-400" />
                </div>
                <span className="text-[10px] font-black uppercase tracking-[5px] text-white">Available Balance</span>
             </div>
             
-            <div className="flex items-baseline gap-3 mb-16">
-               <span className="text-6xl sm:text-7xl md:text-8xl font-black text-white tracking-tighter drop-shadow-[0_10px_30px_rgba(59,130,246,0.3)]">
+            <div className="flex items-baseline gap-3 mb-12">
+               <span className="text-5xl sm:text-7xl md:text-8xl font-black text-white tracking-tighter drop-shadow-[0_10px_30px_rgba(59,130,246,0.3)]">
                   ₦{(userData?.balance || 0).toLocaleString()}
                </span>
-               <span className="text-white/20 text-sm font-black uppercase tracking-[4px]">NGN</span>
+               <span className="text-white/20 text-xs font-black uppercase tracking-[4px]">NGN</span>
             </div>
             
-            <div className="flex flex-col sm:flex-row items-center gap-5">
-               <Link href="/add-funds" className="w-full sm:flex-1 bg-white hover:bg-white/90 py-5 md:py-6 rounded-[2rem] font-black text-sm md:text-base flex items-center justify-center gap-3 text-black shadow-2xl active:scale-95 transition-all">
-                  <Plus className="w-5 h-5" /> Add Funds
+            <div className="flex items-center gap-4">
+               <Link href="/add-funds" className="flex-1 bg-white hover:bg-white/90 py-4 md:py-6 rounded-[1.5rem] md:rounded-[2rem] font-black text-xs md:text-base flex items-center justify-center gap-2 md:gap-3 text-black shadow-2xl active:scale-95 transition-all">
+                  <Plus className="w-4 h-4 md:w-5 md:h-5" /> Add Funds
                </Link>
-               <Link href="/withdraw" className="w-full sm:w-20 h-16 sm:h-20 rounded-[2rem] glass flex items-center justify-center border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white active:scale-95 shadow-2xl">
-                  <ArrowUpRight className="w-8 h-8" />
+               <Link href="/withdraw" className="w-14 h-14 md:w-20 md:h-20 rounded-[1.5rem] md:rounded-[2rem] glass flex items-center justify-center border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white active:scale-95 shadow-2xl shrink-0">
+                  <ArrowUpRight className="w-6 h-6 md:w-8 md:h-8" />
                </Link>
             </div>
          </div>
@@ -121,39 +121,75 @@ export default function DashboardPage() {
          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-purple-500/10 blur-[100px] -ml-20 -mb-20 pointer-events-none" />
       </motion.div>
 
-      {/* HIGH YIELD HOT TASK SECTION - REFINED BLUE */}
-      <div className="mb-20">
-         <div className="flex items-center justify-between mb-8 px-2">
-            <h2 className="text-2xl font-black text-white tracking-tighter flex items-center gap-4 uppercase italic">
-               <div className="w-1.5 h-8 bg-blue-500 rounded-full" />
-               Premium Opportunities
+      {/* WHATSAPP RECRUITMENT SECTION - FOMO & CONVERSION */}
+      <motion.div 
+         initial={{ y: 20, opacity: 0 }}
+         animate={{ y: 0, opacity: 1 }}
+         transition={{ delay: 0.1 }}
+         className="mb-12 relative group"
+      >
+         <a 
+            href="https://chat.whatsapp.com/Cebw2wj4AW7AW9jRJ1nZYq?mode=gi_t" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center justify-between p-6 md:p-10 rounded-[2.5rem] bg-gradient-to-r from-[#25D366]/10 to-transparent border border-[#25D366]/20 hover:border-[#25D366]/40 transition-all shadow-2xl relative overflow-hidden"
+         >
+            <div className="flex items-center gap-6 md:gap-8 relative z-10">
+               <div className="w-14 h-14 md:w-20 md:h-20 rounded-[1.2rem] md:rounded-[2rem] bg-[#25D366] flex items-center justify-center shadow-[0_0_30px_rgba(37,211,102,0.3)] group-hover:scale-110 transition-transform duration-700">
+                  <svg className="w-8 h-8 md:w-12 md:h-12 text-white" viewBox="0 0 24 24" fill="currentColor">
+                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.067 2.877 1.215 3.076.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+               </div>
+               <div>
+                  <h3 className="text-xl md:text-2xl font-black text-white uppercase italic tracking-tighter mb-1">Elite VIP Group</h3>
+                  <p className="text-white/40 text-[10px] md:text-sm font-medium tracking-[2px] uppercase">Direct Access to Daily Tasks</p>
+               </div>
+            </div>
+            <div className="hidden md:flex flex-col items-end relative z-10">
+               <span className="text-[10px] font-black text-[#25D366] uppercase tracking-[5px] mb-2 animate-pulse">Join Group</span>
+               <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-all">
+                  <ArrowUpRight className="w-6 h-6 text-white" />
+               </div>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#25D366]/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+         </a>
+      </motion.div>
+
+      {/* HIGH YIELD HOT TASK SECTION - OPTIMIZED FOR MOBILE */}
+      <div className="mb-16 md:mb-20">
+         <div className="flex items-center justify-between mb-6 md:mb-8 px-2">
+            <h2 className="text-xl md:text-2xl font-black text-white tracking-tighter flex items-center gap-3 md:gap-4 uppercase italic">
+               <div className="w-1 h-6 md:w-1.5 md:h-8 bg-blue-500 rounded-full" />
+               Premium Deals
             </h2>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[9px] font-black uppercase tracking-widest animate-pulse backdrop-blur-3xl">
-               <Zap className="w-3.5 h-3.5" /> High Reward
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[8px] md:text-[9px] font-black uppercase tracking-widest animate-pulse backdrop-blur-3xl">
+               <Zap className="w-3 h-3 md:w-3.5 md:h-3.5" /> High Reward
             </div>
          </div>
          <Link href="/cpa-offers">
             <motion.div 
                whileHover={{ scale: 1.005 }}
-               className="glass rounded-[2.5rem] md:rounded-[3rem] p-10 md:p-14 border-white/5 bg-gradient-to-br from-blue-500/10 via-[#0A0F1E] to-transparent shadow-2xl group flex flex-col md:flex-row items-center justify-between gap-10 cursor-pointer relative overflow-hidden"
+               className="glass rounded-[2rem] md:rounded-[3rem] p-6 md:p-14 border-white/5 bg-gradient-to-br from-blue-500/10 via-[#0A0F1E] to-transparent shadow-2xl group flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10 cursor-pointer relative overflow-hidden"
             >
                <div className="absolute inset-0 bg-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                
-               <div className="relative z-10 flex items-center gap-8">
-                  <div className="w-20 h-20 shrink-0 rounded-[2rem] bg-blue-500/10 flex items-center justify-center border border-white/5 text-blue-400 group-hover:scale-110 group-hover:rotate-6 transition-all duration-700">
-                     <Rocket className="w-10 h-10" />
+               <div className="relative z-10 flex items-center gap-5 md:gap-8 w-full md:w-auto">
+                  <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 rounded-[1.2rem] md:rounded-[2rem] bg-blue-500/10 flex items-center justify-center border border-white/5 text-blue-400 group-hover:scale-110 group-hover:rotate-6 transition-all duration-700">
+                     <Rocket className="w-7 h-7 md:w-10 md:h-10" />
                   </div>
                   <div>
-                     <h3 className="text-3xl font-black text-white tracking-tighter mb-3 uppercase italic">Advanced CPA Offers</h3>
-                     <p className="text-white/40 text-base font-medium max-w-sm">Unlock special missions that pay up to ₦5,000 per successful completion.</p>
+                     <h3 className="text-xl md:text-3xl font-black text-white tracking-tighter mb-1 md:mb-3 uppercase italic">Advanced CPA Offers</h3>
+                     <p className="text-white/40 text-[10px] md:text-base font-medium max-w-[200px] md:max-w-sm">Missions paying up to ₦5,000 per completion.</p>
                   </div>
                </div>
 
-               <div className="relative z-10 flex flex-col items-start md:items-end w-full md:w-auto">
-                  <div className="text-[10px] font-black text-white/30 mb-1 uppercase tracking-[3px]">Earn Up To</div>
-                  <div className="text-5xl font-black text-blue-400 tracking-tighter mb-6 underline decoration-blue-500/20 underline-offset-8">₦5,000+</div>
-                  <div className="w-full md:w-auto bg-blue-600 hover:bg-blue-500 text-white px-10 py-5 rounded-[1.5rem] font-black text-sm text-center transition-all shadow-xl active:scale-95 uppercase tracking-widest">
-                     View Offers
+               <div className="relative z-10 flex flex-row md:flex-col items-center md:items-end justify-between w-full md:w-auto mt-2 md:mt-0">
+                  <div className="text-left md:text-right">
+                     <div className="text-[8px] md:text-[10px] font-black text-white/30 mb-0.5 md:mb-1 uppercase tracking-[2px] md:tracking-[3px]">Earn Up To</div>
+                     <div className="text-2xl md:text-5xl font-black text-blue-400 tracking-tighter underline md:no-underline decoration-blue-500/20 underline-offset-4">₦5,000+</div>
+                  </div>
+                  <div className="bg-blue-600 hover:bg-blue-500 text-white px-5 md:px-10 py-3 md:py-5 rounded-[1rem] md:rounded-[1.5rem] font-black text-[10px] md:text-sm text-center transition-all shadow-xl active:scale-95 uppercase tracking-widest ml-4 md:ml-0 md:mt-6">
+                     View
                   </div>
                </div>
             </motion.div>
@@ -161,25 +197,25 @@ export default function DashboardPage() {
       </div>
 
       {/* Explore More - GRID REFINED */}
-      <div className="flex items-center justify-between mb-8 px-2">
-         <h2 className="text-xl font-black text-white/40 uppercase tracking-[4px]">Explore Core Hubs</h2>
+      <div className="flex items-center justify-between mb-6 md:mb-8 px-2">
+         <h2 className="text-lg md:text-xl font-black text-white/40 uppercase tracking-[3px] md:tracking-[4px]">Explore Core Hubs</h2>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 md:gap-8">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-8">
          {/* CPA Offers */}
          <Link href="/cpa-offers">
             <motion.div 
                whileTap={{ scale: 0.97 }}
-               className="group relative overflow-hidden rounded-[2.5rem] p-8 h-48 flex flex-col justify-between cursor-pointer glass border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-all"
+               className="group relative overflow-hidden rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 h-40 md:h-48 flex flex-col justify-between cursor-pointer glass border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-all"
             >
-               <div className="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-white/5">
-                  <Rocket className="w-6 h-6 text-blue-400" />
+               <div className="w-11 h-11 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-blue-500/10 flex items-center justify-center border border-white/5">
+                  <Rocket className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
                </div>
                <div>
-                  <p className="text-white font-black text-lg uppercase italic leading-none">CPA Loop</p>
-                  <p className="text-blue-400/60 text-[10px] font-black uppercase tracking-[2px] mt-2">₦5k Potential</p>
+                  <p className="text-white font-black text-sm md:text-lg uppercase italic leading-none">CPA Offers</p>
+                  <p className="text-white/20 text-[8px] md:text-[10px] font-black uppercase tracking-[2px] mt-1.5 md:mt-2">High Reward</p>
                </div>
-               <div className="absolute -bottom-4 -right-4 w-20 h-20 rounded-full bg-blue-500/5 group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
+               <div className="absolute -bottom-4 -right-4 w-16 h-16 md:w-20 md:h-20 rounded-full bg-blue-500/5 group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
             </motion.div>
          </Link>
 
@@ -187,16 +223,16 @@ export default function DashboardPage() {
          <Link href="/social-tasks">
             <motion.div 
                whileTap={{ scale: 0.97 }}
-               className="group relative overflow-hidden rounded-[2.5rem] p-8 h-48 flex flex-col justify-between cursor-pointer glass border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-all"
+               className="group relative overflow-hidden rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 h-40 md:h-48 flex flex-col justify-between cursor-pointer glass border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-all"
             >
-               <div className="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center border border-white/5">
-                  <Share2 className="w-6 h-6 text-purple-400" />
+               <div className="w-11 h-11 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-purple-500/10 flex items-center justify-center border border-white/5">
+                  <Share2 className="w-5 h-5 md:w-6 md:h-6 text-purple-400" />
                </div>
                <div>
-                  <p className="text-white font-black text-lg uppercase italic leading-none">Social Mining</p>
-                  <p className="text-purple-400/60 text-[10px] font-black uppercase tracking-[2px] mt-2">Unlimited Tasks</p>
+                  <p className="text-white font-black text-sm md:text-lg uppercase italic leading-none truncate">Social Tasks</p>
+                  <p className="text-white/20 text-[8px] md:text-[10px] font-black uppercase tracking-[2px] mt-1.5 md:mt-2">Daily Tasks</p>
                </div>
-               <div className="absolute -bottom-4 -right-4 w-20 h-20 rounded-full bg-purple-500/5 group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
+               <div className="absolute -bottom-4 -right-4 w-16 h-16 md:w-20 md:h-20 rounded-full bg-purple-500/5 group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
             </motion.div>
          </Link>
 
@@ -204,16 +240,16 @@ export default function DashboardPage() {
          <Link href="/earn">
             <motion.div 
                whileTap={{ scale: 0.97 }}
-               className="group relative overflow-hidden rounded-[2.5rem] p-8 h-48 flex flex-col justify-between cursor-pointer glass border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-all"
+               className="group relative overflow-hidden rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 h-40 md:h-48 flex flex-col justify-between cursor-pointer glass border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-all"
             >
-               <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center border border-white/5">
-                  <div className="w-6 h-6 rounded-full border-2 border-white/40 border-t-white animate-spin-slow" />
+               <div className="w-11 h-11 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-white/10 flex items-center justify-center border border-white/5">
+                  <Zap className="w-5 h-5 md:w-6 md:h-6 text-white/40" />
                </div>
                <div>
-                  <p className="text-white font-black text-lg uppercase italic leading-none">Instant Hub</p>
-                  <p className="text-white/40 text-[10px] font-black uppercase tracking-[2px] mt-2">Zero Wait Time</p>
+                  <p className="text-white font-black text-sm md:text-lg uppercase italic leading-none">Earn</p>
+                  <p className="text-white/20 text-[8px] md:text-[10px] font-black uppercase tracking-[2px] mt-1.5 md:mt-2">Instant Cash</p>
                </div>
-               <div className="absolute -bottom-4 -right-4 w-20 h-20 rounded-full bg-white/5 group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
+               <div className="absolute -bottom-4 -right-4 w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/5 group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
             </motion.div>
          </Link>
 
@@ -221,16 +257,16 @@ export default function DashboardPage() {
          <Link href="/games">
             <motion.div 
                whileTap={{ scale: 0.97 }}
-               className="group relative overflow-hidden rounded-[2.5rem] p-8 h-48 flex flex-col justify-between cursor-pointer glass border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-all"
+               className="group relative overflow-hidden rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 h-40 md:h-48 flex flex-col justify-between cursor-pointer glass border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-all"
             >
-               <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center border border-white/5">
-                  <Gamepad2 className="w-6 h-6 text-indigo-400" />
+               <div className="w-11 h-11 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-indigo-500/10 flex items-center justify-center border border-white/5">
+                  <Gamepad2 className="w-5 h-5 md:w-6 md:h-6 text-indigo-400" />
                </div>
                <div>
-                  <p className="text-white font-black text-lg uppercase italic leading-none">Arcade XP</p>
-                  <p className="text-indigo-400/60 text-[10px] font-black uppercase tracking-[2px] mt-2">Free To Play</p>
+                  <p className="text-white font-black text-sm md:text-lg uppercase italic leading-none">Games</p>
+                  <p className="text-white/20 text-[8px] md:text-[10px] font-black uppercase tracking-[2px] mt-1.5 md:mt-2">Free Play</p>
                </div>
-               <div className="absolute -bottom-4 -right-4 w-20 h-20 rounded-full bg-indigo-500/5 group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
+               <div className="absolute -bottom-4 -right-4 w-16 h-16 md:w-20 md:h-20 rounded-full bg-indigo-500/5 group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
             </motion.div>
          </Link>
       </div>

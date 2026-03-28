@@ -171,7 +171,27 @@ export default function TaskSubmissionPage({ params }: { params: Promise<{ id: s
       const user = auth.currentUser;
       if (!user) throw new Error('Please log in first');
 
-      // 0. Double check participation limit
+      // 0. Daily Limit Check (500 NGN)
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const earningsQ = query(
+        collection(db, 'submissions'),
+        where('userId', '==', user.uid),
+        where('status', '==', 'approved'),
+        where('createdAt', '>=', startOfDay)
+      );
+      const earningsSnap = await getDocs(earningsQ);
+      let totalEarnedToday = 0;
+      earningsSnap.forEach(d => {
+        totalEarnedToday += (d.data().amount || d.data().rewardAmount || 0);
+      });
+
+      if (totalEarnedToday + task.userReward > 500) {
+        throw new Error(`Daily limit reached. You have already earned ₦${totalEarnedToday} today.`);
+      }
+
+      // 1. Double check participation limit
       const taskRef = doc(db, 'tasks', id);
       const taskSnap = await getDoc(taskRef);
       if (taskSnap.exists()) {
