@@ -76,14 +76,14 @@ export default function DashboardPage() {
             <h1 className="text-3xl font-black text-white mb-1 tracking-tighter uppercase italic">Your Wallet</h1>
             <p className="text-white/40 text-xs font-black uppercase tracking-[3px]">Financial Overview</p>
          </motion.div>
-         {!userData?.isMember && (
-           <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}>
-              <Link href="/upgrade" className="glass px-6 py-3 rounded-2xl border-blue-500/20 hover:border-blue-500/40 active:scale-95 transition-all text-blue-400 text-[10px] font-black uppercase tracking-[3px] shadow-2xl bg-blue-500/5 backdrop-blur-3xl">
-                 Verify Account 🔒
-              </Link>
-           </motion.div>
-         )}
-      </div>
+          {userData && !userData.isMember && (
+            <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}>
+               <Link href="/upgrade" className="glass px-3 py-1.5 rounded-xl border-blue-500/20 hover:border-blue-500/40 active:scale-95 transition-all text-blue-400 text-[8px] sm:text-[9px] font-black uppercase tracking-[2px] shadow-2xl bg-blue-500/5 backdrop-blur-3xl inline-flex items-center gap-1.5">
+                  Verify <div className="w-1 h-1 rounded-full bg-blue-400 animate-pulse" />
+               </Link>
+            </motion.div>
+          )}
+       </div>
 
       {/* Main Balance Card - REFINED BLUE/PURPLE */}
       <motion.div 
@@ -141,8 +141,8 @@ export default function DashboardPage() {
                   </svg>
                </div>
                <div>
-                  <h3 className="text-xl md:text-2xl font-black text-white uppercase italic tracking-tighter mb-1">Elite VIP Group</h3>
-                  <p className="text-white/40 text-[10px] md:text-sm font-medium tracking-[2px] uppercase">Direct Access to Daily Tasks</p>
+                  <h3 className="text-xl md:text-2xl font-black text-white uppercase italic tracking-tighter mb-1">Our Community.</h3>
+                  <p className="text-white/40 text-[10px] md:text-sm font-medium tracking-[2px] uppercase">Everyone is welcome to join</p>
                </div>
             </div>
             <div className="hidden md:flex flex-col items-end relative z-10">
