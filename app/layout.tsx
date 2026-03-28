@@ -82,6 +82,10 @@ export default function RootLayout({
             </noscript>
           </>
         )}
+        <Script
+          src="https://js.paystack.co/v2/inline.js"
+          strategy="beforeInteractive"
+        />
       </head>
       <body
         className={`${GeistSans.variable} ${GeistMono.variable} antialiased overflow-x-hidden bg-[#05070A]`}

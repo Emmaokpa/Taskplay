@@ -26,8 +26,21 @@ export default function UpgradePage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Pre-load Paystack for instant reaction
-    import('@paystack/inline-js').then(mod => setPaystackPop(() => mod.default));
+    // Check for global script pre-loaded in layout.tsx
+    const checkScript = () => {
+      if ((window as any).PaystackPop) {
+        setPaystackPop(() => (window as any).PaystackPop);
+        return true;
+      }
+      return false;
+    };
+
+    if (!checkScript()) {
+      const interval = setInterval(() => {
+        if (checkScript()) clearInterval(interval);
+      }, 500);
+      return () => clearInterval(interval);
+    }
   }, []);
 
   // Modal State

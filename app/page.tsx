@@ -245,21 +245,38 @@ export default function LandingPage() {
                   <p className="text-white/20 text-[10px] font-black uppercase tracking-[3px] leading-relaxed italic">The Premium Rewards Engine for the Future of West Africa.</p>
                </div>
                
-               {['Platform', 'Experience', 'Support'].map((menu, mi) => (
-                 <div key={mi}>
-                    <h4 className="text-white/20 text-[10px] font-black uppercase tracking-[4px] mb-6">{menu}</h4>
-                    <ul className="space-y-4 md:space-y-6">
-                       {mi === 0 && ['Dashboard', 'CPA Offers', 'Earn Hub', 'Social Tasks'].map(li => (
-                         <li key={li}><Link href="/signup" className="text-white/40 hover:text-white text-sm font-bold transition-all hover:translate-x-1 inline-block italic">{li}</Link></li>
-                       ))}
-                       {mi === 1 && ['Member Success', 'Leaderboard', 'Transparency', 'FAQ'].map(li => (
-                         <li key={li}><Link href="/about" className="text-white/40 hover:text-white text-sm font-bold transition-all hover:translate-x-1 inline-block italic">{li}</Link></li>
-                       ))}
-                       {mi === 2 && ['Contact Team', 'Telegram Hub', 'Account Security', 'Terms'].map(li => (
-                         <li key={li}><Link href="/support" className="text-white/40 hover:text-white text-sm font-bold transition-all hover:translate-x-1 inline-block italic">{li}</Link></li>
-                       ))}
-                    </ul>
-                 </div>
+               {Object.entries({
+                 Platform: [
+                   { label: 'Dashboard', href: '/dashboard' },
+                   { label: 'CPA Offers', href: '/cpa-offers' },
+                   { label: 'Earn Hub', href: '/earn' },
+                   { label: 'Social Tasks', href: '/social-tasks' }
+                 ],
+                 Experience: [
+                   { label: 'Member Success', href: '/about' },
+                   { label: 'Leaderboard', href: '/dashboard' },
+                   { label: 'Transparency', href: '/about' },
+                   { label: 'FAQ', href: '/support' }
+                 ],
+                 Support: [
+                   { label: 'Contact Team', href: '/support' },
+                   { label: 'Telegram Hub', href: 'https://t.me/taskplay_rewards' },
+                   { label: 'Account Security', href: '/support' },
+                   { label: 'Terms', href: '/terms' }
+                 ]
+               }).map(([category, links], ki) => (
+                  <div key={ki}>
+                     <h4 className="text-white/20 text-[10px] font-black uppercase tracking-[4px] mb-6">{category}</h4>
+                     <ul className="space-y-4 md:space-y-6">
+                        {links.map((link, li) => (
+                          <li key={li}>
+                            <Link href={link.href} className="text-white/40 hover:text-white text-sm font-bold transition-all hover:translate-x-1 inline-block italic">
+                              {link.label}
+                            </Link>
+                          </li>
+                        ))}
+                     </ul>
+                  </div>
                ))}
             </div>
 
