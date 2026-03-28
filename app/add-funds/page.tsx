@@ -19,7 +19,13 @@ export default function AddFundsPage() {
   const [amount, setAmount] = useState<number | ''>('');
   const [user, setUser] = useState<User | null>(null);
   const [processing, setProcessing] = useState(false);
+  const [PaystackPop, setPaystackPop] = useState<any>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    // Pre-load Paystack for instant reaction
+    import('@paystack/inline-js').then(mod => setPaystackPop(() => mod.default));
+  }, []);
 
   // Modal State
   const [modal, setModal] = useState<{
@@ -60,7 +66,10 @@ export default function AddFundsPage() {
 
     try {
 
-      const PaystackPop = (await import('@paystack/inline-js')).default;
+      if (!PaystackPop) {
+        setModal({ isOpen: true, type: 'error', title: 'Loading...', message: 'Connecting to payment gateway. Please try again in a second.' });
+        return;
+      }
       const paystack = new PaystackPop();
 
       paystack.newTransaction({

@@ -22,7 +22,13 @@ export default function UpgradePage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
+  const [PaystackPop, setPaystackPop] = useState<any>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    // Pre-load Paystack for instant reaction
+    import('@paystack/inline-js').then(mod => setPaystackPop(() => mod.default));
+  }, []);
 
   // Modal State
   const [modal, setModal] = useState<{
@@ -81,9 +87,12 @@ export default function UpgradePage() {
     }
 
     try {
-      // Use the npm package — no CDN script needed, no "form" requirement
-      const PaystackPop = (await import('@paystack/inline-js')).default;
-      const paystack = new PaystackPop();
+       if (!PaystackPop) {
+         setModal({ isOpen: true, type: 'error', title: 'Connecting...', message: 'Connecting to payment gateway. Please try again in 1 second.' });
+         setProcessing(false);
+         return;
+       }
+       const paystack = new PaystackPop();
 
       paystack.newTransaction({
         key: publicKey,
@@ -123,6 +132,33 @@ export default function UpgradePage() {
     }
   };
 
+  const [activityIndex, setActivityIndex] = useState(0);
+  const [showToast, setShowToast] = useState(false);
+  
+  const activities = [
+      { msg: "Chinedu just withdrew ₦4,500", time: "2m ago" },
+      { msg: "Amina verified her license", time: "Now" },
+      { msg: "Tunde earned ₦1,200 from Social Task", time: "5m ago" },
+      { msg: "Funke just withdrew ₦10,000", time: "1m ago" },
+      { msg: "Blessing verified her license", time: "Just now" },
+      { msg: "Musa earned ₦3,000 from CPA Loop", time: "3m ago" },
+      { msg: "Obinna just withdrew ₦2,500", time: "Just now" },
+      { msg: "Zainab activated Earning Portal", time: "1m ago" }
+  ];
+
+  useEffect(() => {
+      const cycleInterval = setInterval(() => {
+          setShowToast(false);
+          setTimeout(() => {
+              setActivityIndex((prev) => (prev + 1) % activities.length);
+              setShowToast(true);
+          }, 500);
+      }, 6000); 
+      
+      setTimeout(() => setShowToast(true), 2000);
+      return () => clearInterval(cycleInterval);
+  }, []);
+
   if (loading) return (
     <div className="p-6 md:p-10 max-w-4xl mx-auto space-y-12">
       <Skeleton className="h-12 w-64 mx-auto" />
@@ -140,35 +176,6 @@ export default function UpgradePage() {
       </div>
     </div>
   );
-
-    const [activityIndex, setActivityIndex] = useState(0);
-    const [showToast, setShowToast] = useState(false);
-    
-    const activities = [
-        { msg: "Chinedu just withdrew ₦4,500", time: "2m ago" },
-        { msg: "Amina verified her license", time: "Now" },
-        { msg: "Tunde earned ₦1,200 from Social Task", time: "5m ago" },
-        { msg: "Funke just withdrew ₦10,000", time: "1m ago" },
-        { msg: "Blessing verified her license", time: "Just now" },
-        { msg: "Musa earned ₦3,000 from CPA Loop", time: "3m ago" },
-        { msg: "Obinna just withdrew ₦2,500", time: "Just now" },
-        { msg: "Zainab activated Earning Portal", time: "1m ago" }
-    ];
-
-    useEffect(() => {
-        const cycleInterval = setInterval(() => {
-            setShowToast(false);
-            setTimeout(() => {
-                setActivityIndex((prev) => (prev + 1) % activities.length);
-                setShowToast(true);
-            }, 500);
-        }, 6000); // More frequent cycles for maximum FOMO
-        
-        // Initial toast
-        setTimeout(() => setShowToast(true), 2000);
-
-        return () => clearInterval(cycleInterval);
-    }, []);
 
    return (
     <div className="px-6 md:px-12 py-10 max-w-5xl mx-auto pb-44 relative z-10 overflow-hidden">

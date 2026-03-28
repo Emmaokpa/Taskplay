@@ -50,7 +50,7 @@ export default function RootLayout({
   const pixelId = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {pixelId && (
           <>
@@ -86,6 +86,7 @@ export default function RootLayout({
       <body
         className={`${GeistSans.variable} ${GeistMono.variable} antialiased overflow-x-hidden bg-[#05070A]`}
       >
+        <div className="absolute inset-0 bg-transparent opacity-[0.03] mix-blend-overlay pointer-events-none" />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
