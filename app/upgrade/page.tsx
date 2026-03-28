@@ -141,75 +141,79 @@ export default function UpgradePage() {
     </div>
   );
 
-  return (
-    <div className="px-6 md:px-12 py-10 max-w-5xl mx-auto pb-44 relative overflow-hidden">
-      {/* Dynamic Background Glows */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 blur-[150px] -mr-48 -mt-48 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/5 blur-[150px] -ml-48 -mb-48 pointer-events-none" />
+   return (
+    <div className="px-6 md:px-12 py-10 max-w-5xl mx-auto pb-44 relative z-10 overflow-hidden">
       
-      <Link href="/dashboard" className="inline-flex items-center gap-3 text-white/40 hover:text-white mb-16 transition-all font-bold text-xs uppercase tracking-widest group">
-         <div className="p-2 rounded-xl glass group-hover:bg-white/10 transition-colors">
+      <Link href="/dashboard" className="inline-flex items-center gap-3 text-white/40 hover:text-white mb-20 transition-all font-black text-xs uppercase tracking-[4px] group">
+         <div className="p-2.5 rounded-xl glass border-white/5 group-hover:bg-white/10 transition-colors">
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
          </div>
          Back to Dashboard
       </Link>
 
-      <div className="text-center mb-16 px-4">
-        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
-           Verify Your Account
+      <div className="text-center mb-20 px-4">
+        <h1 className="text-4xl md:text-7xl font-black text-white mb-6 tracking-tighter uppercase italic">
+           Account Verification
         </h1>
-        <p className="text-white/60 text-sm md:text-base font-medium max-w-lg mx-auto">One-time verification fee to unlock premium tasks and bank withdrawals.</p>
+        <p className="text-white/20 text-xs md:text-sm font-black uppercase tracking-[6px] max-w-lg mx-auto">One-time entry fee to the earning elite</p>
       </div>
 
-      {/* Main Pricing Card - Simplistic & Trustworthy */}
+      {/* Main Pricing Card - LUXURY STYLE */}
       <motion.div 
          initial={{ y: 20, opacity: 0 }}
          animate={{ y: 0, opacity: 1 }}
-         className="max-w-xl mx-auto bg-gradient-to-b from-[#1c2333] to-[#0A0F1E] border border-blue-500/20 p-8 md:p-12 rounded-[2.5rem] text-center relative overflow-hidden mb-16 shadow-[0_30px_60px_rgba(0,0,0,0.5)]"
+         className="max-w-2xl mx-auto glass border-white/5 p-10 md:p-16 rounded-[3.5rem] text-center relative overflow-hidden mb-24 shadow-2xl bg-gradient-to-b from-blue-600/5 to-transparent backdrop-blur-3xl group"
       >
+         <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+         
          <div className="relative z-10 flex flex-col items-center">
-            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-blue-500/10 flex items-center justify-center mb-8 border border-blue-500/30">
-               {processing ? <Loader className="w-10 h-10 animate-spin text-blue-400" /> : <ShieldCheck className="w-10 h-10 text-blue-400" />}
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-[2.5rem] bg-blue-500/10 flex items-center justify-center mb-10 border border-blue-500/20 shadow-inner group-hover:scale-110 transition-transform duration-700">
+               {processing ? <Loader className="w-12 h-12 animate-spin text-blue-400" /> : <ShieldCheck className="w-12 h-12 text-blue-400" />}
             </div>
             
-            <div className="flex flex-col items-center mb-8">
-               <span className="bg-blue-500/20 text-blue-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[3px] mb-6 border border-blue-500/20">One-Time Payment</span>
-               <div className="text-6xl md:text-8xl font-black text-white tracking-tighter flex items-start gap-1">
-                  <span className="text-3xl md:text-4xl text-white/40 mt-2 md:mt-3">₦</span>1,500
+            <div className="flex flex-col items-center mb-10">
+               <span className="glass px-6 py-2 rounded-full text-blue-400 text-[10px] font-black uppercase tracking-[5px] mb-8 border border-blue-500/20 shadow-2xl">Verified Membership</span>
+               <div className="text-7xl md:text-9xl font-black text-white tracking-tighter flex items-start gap-2">
+                  <span className="text-3xl md:text-4xl text-white/20 mt-3 md:mt-5 italic">₦</span>1,500
                </div>
             </div>
 
-            <div className="w-full space-y-6">
-               <p className="text-white/70 font-medium text-sm md:text-base mb-8">No monthly fees. Pay once and enjoy permanent access to high-paying tasks and fast withdrawals.</p>
+            <div className="w-full space-y-10">
+               <p className="text-white/40 font-medium text-base md:text-lg mb-12 italic leading-relaxed">
+                  No subscriptions. No hidden fees. Pay once to activate <span className="text-white font-black">Lifetime Verification</span> and unlock unlimited withdrawals.
+               </p>
                
                <button 
                   type="button"
                   onClick={handleUpgrade}
                   disabled={processing}
-                  className="w-full py-5 rounded-2xl bg-blue-600 hover:bg-blue-500 font-black text-lg md:text-xl text-white shadow-xl shadow-blue-500/20 active:scale-[0.98] transition-all disabled:opacity-50"
+                  className="w-full py-6 md:py-8 rounded-[2rem] bg-white hover:bg-white/90 font-black text-xl md:text-2xl text-black shadow-2xl shadow-blue-500/10 active:scale-95 transition-all disabled:opacity-50 uppercase tracking-[4px]"
                >
-                  {processing ? 'Processing Payment...' : 'Pay ₦1,500 Now'}
+                  {processing ? 'Processing...' : 'Verify Now'}
                </button>
             </div>
          </div>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
          {[
-           { icon: Zap, label: 'Instant Withdrawals', desc: 'Get your money sent to your bank account with zero delays.' },
-           { icon: TrendingUp, label: 'Higher Payouts', desc: 'Unlock premium tasks that pay up to ₦1,000+ each.' },
-           { icon: ShieldCheck, label: 'Verified Account', desc: 'Get a verified badge and priority 24/7 customer support.' }
+           { icon: Zap, label: 'Instant Pay', desc: 'Direct bank transfers with zero processing delays.' },
+           { icon: TrendingUp, label: 'High Yield', desc: 'Access CPA offers paying up to ₦5,000+ each.' },
+           { icon: ShieldCheck, label: 'Trust Badge', desc: 'Get the verified checkmark and premium support.' }
          ].map((item, i) => (
-           <div 
-             key={i} 
-             className="bg-[#1c2333]/40 border border-white/5 p-8 rounded-[2rem] text-center"
-           >
-              <div className="w-14 h-14 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-6">
-                 <item.icon className="w-6 h-6 text-blue-400" />
-              </div>
-              <h4 className="text-white font-black text-sm uppercase tracking-[1px] mb-3">{item.label}</h4>
-              <p className="text-white/50 text-xs font-medium leading-relaxed">{item.desc}</p>
-           </div>
+            <motion.div 
+               key={i} 
+               initial={{ opacity: 0, y: 10 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.2 + (i * 0.1) }}
+               className="glass border-white/5 p-10 rounded-[3rem] text-center hover:bg-white/[0.02] transition-colors group"
+            >
+               <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center mx-auto mb-8 border border-white/5 group-hover:rotate-12 transition-transform duration-500">
+                  <item.icon className="w-7 h-7 text-blue-400" />
+               </div>
+               <h4 className="text-white font-black text-sm uppercase tracking-[3px] mb-4 italic leading-none">{item.label}</h4>
+               <p className="text-white/30 text-[11px] font-medium leading-relaxed italic">{item.desc}</p>
+            </motion.div>
          ))}
       </div>
 

@@ -174,34 +174,44 @@ export default function EarnPage() {
     }
   };
 
-  return (
-    <div className="p-6 md:p-10 max-w-5xl mx-auto pb-40 relative">
-      <Link href="/dashboard" className="inline-flex items-center gap-2 text-white/40 hover:text-white mb-10 transition-colors font-bold text-sm uppercase tracking-widest">
-        <ArrowLeft className="w-4 h-4" /> Home
+   return (
+    <div className="p-6 md:p-10 max-w-5xl mx-auto pb-44 relative z-10">
+      <Link href="/dashboard" className="inline-flex items-center gap-3 text-white/40 hover:text-white mb-16 transition-all font-black text-xs uppercase tracking-[4px] group">
+        <div className="p-2.5 rounded-xl glass border-white/5 group-hover:bg-white/10 group-hover:border-white/20 transition-all">
+           <ArrowLeft className="w-4 h-4" />
+        </div>
+        Back to Hub
       </Link>
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-20">
         <div>
-           <h1 className="text-3xl font-bold text-white mb-1 tracking-tight">Earn Rewards</h1>
-           <p className="text-white/40 text-sm font-medium">Complete simple tasks to earn cash</p>
+           <h1 className="text-4xl md:text-5xl font-black text-white mb-3 tracking-tighter uppercase italic">Earn Rewards</h1>
+           <p className="text-white/30 text-xs font-black uppercase tracking-[4px]">Verified Social Missions</p>
         </div>
-        <div className="clay-card px-6 py-4 flex items-center gap-4 border-white/5 bg-white/[0.01]">
-           <Zap className="w-5 h-5 text-primary animate-pulse" />
-           <span className="text-xs font-black text-white/60 uppercase tracking-widest">{tasks.length} Direct Tasks</span>
+        <div className="glass px-8 py-5 flex items-center gap-4 border-white/5 rounded-[2rem] bg-blue-500/5 shadow-2xl">
+           <Zap className="w-6 h-6 text-blue-400 animate-pulse" />
+           <span className="text-[11px] font-black text-white/60 uppercase tracking-widest leading-none">{tasks.length} Active Tasks</span>
         </div>
       </div>
 
       {loading ? (
         <ListSkeleton />
       ) : tasks.length === 0 ? (
-        <div className="glass p-16 text-center border-white/5 mx-auto max-w-sm rounded-[2.5rem]">
-           <Zap className="w-12 h-12 text-white/5 mx-auto mb-6" />
-           <h3 className="text-lg font-bold text-white mb-2 tracking-tight">All Tasks Completed</h3>
-           <p className="text-white/40 text-sm mb-8 font-medium">You've finished all available tasks for today. Check back later for more!</p>
-           <Link href="/dashboard" className="text-primary font-bold text-xs hover:underline">Back to Dashboard</Link>
+        <div className="glass p-20 text-center border-white/5 mx-auto max-w-md rounded-[3rem] shadow-2xl relative overflow-hidden group">
+           <div className="absolute inset-0 bg-blue-500/5 opacity-50 blur-3xl rounded-full" />
+           <div className="relative z-10">
+              <div className="w-20 h-20 rounded-[2rem] bg-white/5 flex items-center justify-center mx-auto mb-8 border border-white/10 group-hover:scale-110 transition-transform duration-700">
+                 <CheckCircle2 className="w-10 h-10 text-white/20" />
+              </div>
+              <h3 className="text-2xl font-black text-white mb-3 tracking-tight uppercase italic">Complete Clearing</h3>
+              <p className="text-white/40 text-base mb-12 font-medium leading-relaxed italic">You've finished all available missions for your tier. New tasks refresh every 24 hours.</p>
+              <Link href="/dashboard" className="inline-flex items-center gap-2 text-blue-400 font-black text-[10px] uppercase tracking-[4px] hover:tracking-[6px] transition-all">
+                 Return Home <ArrowRight className="w-4 h-4" />
+              </Link>
+           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-6">
           <AnimatePresence>
             {tasks.map((task, i) => {
               const platformInfo = getPlatformIcon(task.platform);
@@ -211,27 +221,41 @@ export default function EarnPage() {
               return (
                 <motion.div 
                    key={task.id}
-                   initial={{ y: 10, opacity: 0 }}
+                   initial={{ y: 20, opacity: 0 }}
                    animate={{ y: 0, opacity: 1 }}
                    transition={{ delay: i * 0.05 }}
-                   className={`glass p-4 rounded-2xl flex items-center justify-between border-white/5 hover:bg-white/5 transition-all group cursor-pointer ${isClaiming ? 'opacity-50 pointer-events-none' : ''}`}
+                   className={`glass p-6 md:p-8 rounded-[2rem] flex flex-col sm:flex-row sm:items-center justify-between border-white/5 hover:bg-white/[0.03] transition-all group cursor-pointer relative overflow-hidden ${isClaiming ? 'opacity-50 pointer-events-none' : ''}`}
                    onClick={() => handleTaskClick(task)}
                 >
-                   <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-xl glass flex items-center justify-center ${platformInfo.color}`}>
-                         {platformInfo.icon}
+                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                   
+                   <div className="flex items-center gap-6 relative z-10 w-full mb-6 sm:mb-0">
+                      <div className="w-16 h-16 rounded-[1.5rem] glass flex items-center justify-center border border-white/5 shadow-inner">
+                         <div className={`${platformInfo.color} group-hover:scale-110 transition-transform duration-500`}>
+                            {platformInfo.icon}
+                         </div>
                       </div>
-                      <div>
-                         <h4 className="text-sm font-bold text-white mb-0.5 tracking-tight">{cleanTitle}</h4>
-                         <p className="text-[10px] text-white/40 font-medium uppercase tracking-widest">{platformInfo.label} • ₦{task.userReward}</p>
+                      <div className="flex-1 min-w-0">
+                         <h4 className="text-lg font-black text-white mb-1.5 tracking-tight group-hover:text-blue-400 transition-colors truncate uppercase italic">{cleanTitle}</h4>
+                         <div className="flex items-center gap-3">
+                            <span className="text-[9px] font-black text-white/20 uppercase tracking-[2px] px-2 py-0.5 rounded-md border border-white/5">{platformInfo.label}</span>
+                            <span className="text-[10px] text-blue-400/60 font-black uppercase tracking-[3px] italic">Reward: ₦{task.userReward}</span>
+                         </div>
                       </div>
                    </div>
-                   <div className="w-8 h-8 rounded-full flex items-center justify-center text-white/20 group-hover:text-white transition-colors">
-                      {isClaiming ? (
-                        <Loader className="w-4 h-4 text-primary animate-spin" />
-                      ) : (
-                        <ArrowRight className="w-4 h-4" />
-                      )}
+
+                   <div className="flex items-center justify-between sm:justify-end gap-6 relative z-10">
+                      <div className="text-right hidden md:block">
+                         <div className="text-[8px] font-black text-white/20 uppercase tracking-[4px] mb-1">Instant Payout</div>
+                         <div className="text-sm font-black text-white tracking-widest italic leading-none">VERIFIED</div>
+                      </div>
+                      <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-white/20 group-hover:text-white group-hover:bg-blue-600 transition-all shadow-xl">
+                         {isClaiming ? (
+                           <Loader className="w-6 h-6 animate-spin" />
+                         ) : (
+                           <ArrowRight className="w-6 h-6" />
+                         )}
+                      </div>
                    </div>
                 </motion.div>
               );

@@ -10,13 +10,16 @@ export interface EmailParams {
 }
 
 export async function sendEmail({ email, type, otpCode, reason, subject, content }: EmailParams) {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    throw new Error('RESEND_API_KEY is not set');
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const brevoApiKey = process.env.BREVO_API_KEY;
+
+  if (!resendApiKey && !brevoApiKey) {
+    throw new Error('No email provider API key found (RESEND_API_KEY or BREVO_API_KEY)');
   }
 
-  const resend = new Resend(apiKey);
-  const fromAddress = 'TaskPlay Team <noreply@taskplay.com.ng>';
+  const fromName = 'TaskPlay Team';
+  const fromEmail = 'noreply@taskplay.com.ng';
+  const fromAddress = `${fromName} <${fromEmail}>`;
 
   let emailSubject = '';
   let emailHeader = '';
@@ -146,10 +149,49 @@ export async function sendEmail({ email, type, otpCode, reason, subject, content
     </html>
   `;
 
-  return await resend.emails.send({
-    from: fromAddress,
-    to: email,
-    subject: emailSubject,
-    html: templateHTML,
-  });
+  // ─── Direct Send Strategy ───────────────────────────────────────────
+  try {
+    if (brevoApiKey) {
+      console.log(`[Email Utils] Attempting via BREVO to: ${email}`);
+      const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': brevoApiKey,
+          'content-type': 'application/json',
+          'accept': 'application/json'
+        },
+        body: JSON.stringify({
+          sender: { name: fromName, email: fromEmail },
+          to: [{ email: email }],
+          subject: emailSubject,
+          htmlContent: templateHTML
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return { data: { id: data.messageId }, error: null };
+      } else {
+        const errData = await response.json();
+        throw new Error(`Brevo API error: ${errData.message || response.statusText}`);
+      }
+    }
+  } catch (err) {
+    console.warn(`[Email Utils] Brevo failed, falling back...`, err);
+  }
+
+  // Fallback to Resend if Brevo fails or isn't configured
+  if (resendApiKey) {
+     console.log(`[Email Utils] Sending via RESEND as primary or fallback to: ${email}`);
+     const resend = new Resend(resendApiKey);
+     return await resend.emails.send({
+        from: fromAddress,
+        to: email,
+        subject: emailSubject,
+        html: templateHTML,
+     });
+  }
+
+  return { data: null, error: new Error('No working email provider.') };
 }
+
