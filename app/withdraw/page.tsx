@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Skeleton, StatSkeleton } from '@/app/components/Skeleton';
 import Modal from '@/app/components/Modal';
+import StatusProofGenerator from '@/app/components/StatusProofGenerator';
 
 interface UserData {
   balance?: number;
@@ -54,6 +55,9 @@ export default function WithdrawalPage() {
     title: '',
     message: ''
   });
+
+  // Proof Generator State
+  const [proofData, setProofData] = useState<{amount: number, userName: string, date: string, refId: string} | null>(null);
 
   // Form State
   const [amount, setAmount] = useState<number | ''>('');
@@ -173,6 +177,15 @@ export default function WithdrawalPage() {
       setAccountNumber('');
       setSelectedBank(null);
       setAccountName('');
+
+      // Prepare Proof Data for Viral Sharing
+      const refId = `TP${Math.floor(100000 + Math.random() * 900000)}`;
+      setProofData({
+        amount: Number(amount),
+        userName: userData.fullName || accountName,
+        date: new Date().toLocaleString('en-NG', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        refId
+      });
 
     } catch {
       setModal({ isOpen: true, type: 'error', title: 'Error', message: 'Failed to process withdrawal.'});
@@ -371,6 +384,16 @@ export default function WithdrawalPage() {
         message={modal.message}
         actionText={modal.type !== 'loading' ? 'Acknowledge' : undefined}
       />
+
+      {/* 🧾 Viral Proof Generator */}
+      <AnimatePresence>
+        {proofData && (
+          <StatusProofGenerator 
+            data={proofData} 
+            onClose={() => setProofData(null)} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
