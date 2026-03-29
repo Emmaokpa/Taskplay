@@ -232,12 +232,35 @@ export default function UpgradePage() {
            <span className="text-blue-400 text-[10px] md:text-xs font-black uppercase tracking-[4px] animate-pulse">₦4,250+ Current Tasks Pending</span>
         </div>
 
-        {/* Static Content indicator */}
+        {/* LIVE NETWORK OVERVIEW ACTIVE */}
         <div className="glass px-6 py-3 rounded-2xl border-white/5 inline-flex items-center gap-3 mb-10 bg-white/[0.01]">
-            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             <span className="text-[10px] font-black text-white/40 uppercase tracking-[2px]">
                 LIVE NETWORK OVERVIEW ACTIVE
             </span>
+        </div>
+
+        {/* License Batch Urgency Monitor */}
+        <div className="max-w-xl mx-auto bg-blue-500/5 border border-blue-500/10 rounded-3xl p-6 md:p-8 flex items-center justify-between overflow-hidden relative group shadow-2xl backdrop-blur-3xl">
+            <div className="relative z-10 text-left">
+                <div className="text-[9px] font-black text-blue-400 uppercase tracking-[4px] mb-2 flex items-center gap-2">
+                   <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                   License Batch Status
+                </div>
+                <div className="text-xl md:text-2xl font-black text-white italic tracking-tighter">INTAKE BATCH 14</div>
+            </div>
+            <div className="text-right relative z-10">
+                <div className="text-[9px] font-black text-white/40 uppercase tracking-[4px] mb-3">92% Capacity Reached</div>
+                <div className="w-28 md:w-40 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                    <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: "92%" }}
+                        transition={{ duration: 1.5, ease: "easeOut" }}
+                        className="h-full bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)]"
+                    />
+                </div>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
         </div>
       </div>
 

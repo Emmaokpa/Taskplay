@@ -20,6 +20,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 import { CardSkeleton, StatSkeleton } from '@/app/components/Skeleton';
+import LiveFOMO from '@/app/components/LiveFOMO';
 
 interface UserData {
   balance?: number;
@@ -70,12 +71,22 @@ export default function DashboardPage() {
   );
 
    return (
-    <div className="p-4 sm:p-6 md:p-10 max-w-7xl mx-auto pb-40 relative z-10">
-      <div className="mb-12 flex items-center justify-between">
-         <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}>
-            <h1 className="text-3xl font-black text-white mb-1 tracking-tighter uppercase italic">Your Wallet</h1>
-            <p className="text-white/40 text-xs font-black uppercase tracking-[3px]">Financial Overview</p>
-         </motion.div>
+    <div className="relative min-h-screen">
+      <LiveFOMO />
+      
+      <div className="p-4 sm:p-6 md:p-10 max-w-7xl mx-auto pb-40 relative z-10">
+        <div className="mb-12 flex items-center justify-between">
+           <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}>
+              <h1 className="text-3xl font-black text-white mb-1 tracking-tighter uppercase italic">Your Wallet</h1>
+              <div className="flex items-center gap-2">
+                 <p className="text-white/40 text-[9px] font-black uppercase tracking-[3px]">Financial Overview</p>
+                 <div className="h-px w-8 bg-white/10" />
+                 <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/20 shadow-[0_0_10px_rgba(34,197,94,0.1)]">
+                    <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-[8px] font-black text-green-500/80 uppercase tracking-widest">Live Signals</span>
+                 </div>
+              </div>
+           </motion.div>
           {userData && !userData.isMember && (
             <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}>
                <Link href="/upgrade" className="glass px-3 py-1.5 rounded-xl border-blue-500/20 hover:border-blue-500/40 active:scale-95 transition-all text-blue-400 text-[8px] sm:text-[9px] font-black uppercase tracking-[2px] shadow-2xl bg-blue-500/5 backdrop-blur-3xl inline-flex items-center gap-1.5">
@@ -162,8 +173,16 @@ export default function DashboardPage() {
                <div className="w-1 h-6 md:w-1.5 md:h-8 bg-blue-500 rounded-full" />
                Premium Deals
             </h2>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[8px] md:text-[9px] font-black uppercase tracking-widest animate-pulse backdrop-blur-3xl">
-               <Zap className="w-3 h-3 md:w-3.5 md:h-3.5" /> High Reward
+            <div className="flex items-center gap-4">
+               <div className="hidden sm:flex items-center gap-2">
+                  <div className="text-[8px] font-black text-white/20 uppercase tracking-[3px]">98% Claimed</div>
+                  <div className="w-16 h-1 bg-white/5 rounded-full overflow-hidden">
+                     <div className="h-full bg-blue-500 w-[98%]" />
+                  </div>
+               </div>
+               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[8px] md:text-[9px] font-black uppercase tracking-widest animate-pulse backdrop-blur-3xl">
+                  <Zap className="w-3 h-3 md:w-3.5 md:h-3.5" /> Limited Availability
+               </div>
             </div>
          </div>
          <Link href="/cpa-offers">
@@ -306,6 +325,7 @@ export default function DashboardPage() {
         </div>
       )}
     </div>
+  </div>
 
   );
 }
