@@ -13,6 +13,7 @@ import {
 import { db, auth } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged, User } from 'firebase/auth';
+import { generateRandomActivity } from '@/lib/activity-generator';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { StatSkeleton, Skeleton } from '@/app/components/Skeleton';
@@ -148,28 +149,20 @@ export default function UpgradePage() {
   const [activityIndex, setActivityIndex] = useState(0);
   const [showToast, setShowToast] = useState(false);
   
-  const activities = [
-      { msg: "Chinedu just withdrew ₦4,500", time: "2m ago" },
-      { msg: "Amina verified her license", time: "Now" },
-      { msg: "Tunde earned ₦1,200 from Social Task", time: "5m ago" },
-      { msg: "Funke just withdrew ₦10,000", time: "1m ago" },
-      { msg: "Blessing verified her license", time: "Just now" },
-      { msg: "Musa earned ₦3,000 from CPA Loop", time: "3m ago" },
-      { msg: "Obinna just withdrew ₦2,500", time: "Just now" },
-      { msg: "Zainab activated Earning Portal", time: "1m ago" }
-  ];
+  const [activity, setActivity] = useState<any>(null);
 
   useEffect(() => {
-      const cycleInterval = setInterval(() => {
-          setShowToast(false);
-          setTimeout(() => {
-              setActivityIndex((prev) => (prev + 1) % activities.length);
-              setShowToast(true);
-          }, 500);
-      }, 6000); 
-      
-      setTimeout(() => setShowToast(true), 2000);
-      return () => clearInterval(cycleInterval);
+    setActivity(generateRandomActivity());
+    const cycleInterval = setInterval(() => {
+        setShowToast(false);
+        setTimeout(() => {
+            setActivity(generateRandomActivity());
+            setShowToast(true);
+        }, 500);
+    }, 6000); 
+    
+    setTimeout(() => setShowToast(true), 2000);
+    return () => clearInterval(cycleInterval);
   }, []);
 
   if (loading) return (
@@ -207,8 +200,10 @@ export default function UpgradePage() {
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-ping" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] font-black text-white italic truncate pr-4">{activities[activityIndex].msg}</p>
-                <span className="text-[8px] font-black text-white/20 uppercase tracking-widest">{activities[activityIndex].time}</span>
+                <p className="text-[11px] font-black text-white italic truncate pr-4">
+                    @{activity?.user} {activity?.action} {activity?.amount} {activity?.suffix}
+                </p>
+                <span className="text-[8px] font-black text-white/20 uppercase tracking-widest">{activity?.time}</span>
               </div>
             </div>
           </motion.div>

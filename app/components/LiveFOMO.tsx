@@ -2,27 +2,23 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { TrendingUp, Wallet, CheckCircle2, Zap, ArrowUpRight } from 'lucide-react';
-
-const activities = [
-  { id: 1, user: "ch***s", action: "withdrew", amount: "₦25,400", time: "2m ago", type: "withdrawal" },
-  { id: 2, user: "am***a", action: "earned", amount: "₦1,500", time: "5m ago", type: "task" },
-  { id: 3, user: "tu***e", action: "verified", amount: "VIP", time: "8m ago", type: "upgrade" },
-  { id: 4, user: "em***l", action: "withdrew", amount: "₦12,000", time: "12m ago", type: "withdrawal" },
-  { id: 5, user: "bl***g", action: "earned", amount: "₦3,200", time: "15m ago", type: "task" },
-];
+import { TrendingUp, Wallet, CheckCircle2, Zap } from 'lucide-react';
+import { generateRandomActivity } from '@/lib/activity-generator';
 
 export default function LiveFOMO() {
-  const [index, setIndex] = useState(0);
+  const [current, setCurrent] = useState<any>(null);
 
   useEffect(() => {
+    // Initial activity
+    setCurrent(generateRandomActivity(1));
+
     const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % activities.length);
-    }, 4000);
+      setCurrent(generateRandomActivity());
+    }, 4500);
     return () => clearInterval(timer);
   }, []);
 
-  const current = activities[index];
+  if (!current) return null;
 
   return (
     <div className="w-full bg-blue-500/5 backdrop-blur-3xl border-y border-white/[0.03] py-2.5 overflow-hidden relative group">
@@ -56,6 +52,7 @@ export default function LiveFOMO() {
                 <span className={current.type === 'withdrawal' ? 'text-blue-400' : current.type === 'task' ? 'text-yellow-400' : 'text-purple-400'}>
                     {current.amount}
                 </span>
+                {` ${current.suffix} `}
                 <span className="ml-2 text-white/20 italic">{current.time}</span>
               </span>
             </motion.div>
