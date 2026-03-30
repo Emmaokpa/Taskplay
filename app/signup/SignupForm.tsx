@@ -19,6 +19,7 @@ export default function SignupForm() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [fullName, setFullName] = useState('');
   const [referralInput, setReferralInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -169,101 +170,108 @@ export default function SignupForm() {
             {/* Inner Glow/Highlight */}
             <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
             
-            <div className="bg-[#05070A]/40 backdrop-blur-2xl p-8 md:p-14 rounded-[4rem] border border-white/5 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8),inset_0_2px_10px_rgba(255,255,255,0.05)] relative overflow-hidden">
-                <div className="text-center mb-10">
-                    <Logo size="md" className="justify-center mb-10" />
-                    <h1 className="text-4xl md:text-5xl font-black text-white mb-3 tracking-tighter italic leading-none">Create Account.</h1>
-                    <p className="text-white/20 text-[9px] font-black uppercase tracking-[5px]">Join 15,000+ Active Members</p>
+            <div className="bg-[#0A0D14] p-8 md:p-10 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden">
+                <div className="text-center mb-8">
+                    <Logo size="md" className="justify-center mb-6" />
+                    <h1 className="text-3xl font-black text-white mb-2 tracking-tight">Create Account</h1>
+                    <p className="text-white text-sm font-medium">Join 15,000+ Active Members</p>
                 </div>
 
                 {error && (
                     <motion.div 
                     initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-                    className="p-5 rounded-3xl bg-red-500/5 border border-red-500/10 text-red-400 text-[10px] mb-8 text-center font-black uppercase tracking-widest"
+                    className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs mb-6 text-center font-bold"
                     >
                     {error}
                     </motion.div>
                 )}
 
-                <form onSubmit={handleSignup} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div className="space-y-2">
-                            <label className="text-[8px] font-black text-white/10 uppercase tracking-[4px] ml-4 italic">Full Name</label>
-                            <div className="group bg-white/[0.01] flex items-center px-6 py-4 rounded-2xl border border-white/5 focus-within:border-blue-500/40 focus-within:bg-blue-500/[0.02] transition-all duration-500 shadow-inner">
-                                <User className="w-4 h-4 text-white/10 mr-3 group-focus-within:text-blue-400" />
+                <form onSubmit={handleSignup} className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-white ml-1">Full Name</label>
+                            <div className="group bg-[#141820] flex items-center px-4 py-3 rounded-xl border border-white/5 focus-within:border-blue-500/50 transition-all shadow-sm">
+                                <User className="w-5 h-5 text-white/40 mr-3 group-focus-within:text-blue-400" />
                                 <input 
                                     required type="text" placeholder="John Doe" 
-                                    className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/5 font-medium"
+                                    className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/20 font-medium"
                                     onChange={(e) => setFullName(e.target.value)}
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-[8px] font-black text-white/10 uppercase tracking-[4px] ml-4 italic">Phone Number</label>
-                            <div className="group bg-white/[0.01] flex items-center px-6 py-4 rounded-2xl border border-white/5 focus-within:border-blue-500/40 focus-within:bg-blue-500/[0.02] transition-all duration-500 shadow-inner">
-                                <User className="w-4 h-4 text-white/10 mr-3 group-focus-within:text-blue-400" />
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-white ml-1">Phone Number</label>
+                            <div className="group bg-[#141820] flex items-center px-4 py-3 rounded-xl border border-white/5 focus-within:border-blue-500/50 transition-all shadow-sm">
+                                <User className="w-5 h-5 text-white/40 mr-3 group-focus-within:text-blue-400" />
                                 <input 
                                     required type="tel" placeholder="08012345678" 
-                                    className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/5 font-medium"
+                                    className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/20 font-medium"
                                     onChange={(e) => setPhoneNumber(e.target.value)}
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-[8px] font-black text-white/10 uppercase tracking-[4px] ml-4 italic">Email Address</label>
-                        <div className="group bg-white/[0.01] flex items-center px-6 py-4 rounded-2xl border border-white/5 focus-within:border-blue-500/40 focus-within:bg-blue-500/[0.02] transition-all duration-500 shadow-inner">
-                            <Mail className="w-4 h-4 text-white/10 mr-3 group-focus-within:text-blue-400" />
+                    <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-white ml-1">Email Address</label>
+                        <div className="group bg-[#141820] flex items-center px-4 py-3 rounded-xl border border-white/5 focus-within:border-blue-500/50 transition-all shadow-sm">
+                            <Mail className="w-5 h-5 text-white/40 mr-3 group-focus-within:text-blue-400" />
                             <input 
                                 required type="email" placeholder="email@example.com" 
-                                className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/5 font-medium"
+                                className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/20 font-medium"
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div className="space-y-2">
-                            <label className="text-[8px] font-black text-white/10 uppercase tracking-[4px] ml-4 italic">Password</label>
-                            <div className="group bg-white/[0.01] flex items-center px-6 py-4 rounded-2xl border border-white/5 focus-within:border-blue-500/40 focus-within:bg-blue-500/[0.02] transition-all duration-500 relative shadow-inner">
-                                <Lock className="w-4 h-4 text-white/10 mr-3 group-focus-within:text-blue-400" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-white ml-1">Password</label>
+                            <div className="group bg-[#141820] flex items-center px-4 py-3 rounded-xl border border-white/5 focus-within:border-blue-500/50 transition-all relative shadow-sm">
+                                <Lock className="w-5 h-5 text-white/40 mr-3 group-focus-within:text-blue-400" />
                                 <input 
                                     required type={showPassword ? 'text' : 'password'} placeholder="••••••••" 
-                                    className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/5 pr-10 font-medium"
+                                    className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/20 pr-10 font-medium"
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
                                 <button 
                                     type="button" 
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-6 text-white/10 hover:text-white transition-colors"
+                                    className="absolute right-4 text-white/40 hover:text-white transition-colors"
                                 >
                                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-[8px] font-black text-white/10 uppercase tracking-[4px] ml-4 italic">Confirm Password</label>
-                            <div className="group bg-white/[0.01] flex items-center px-6 py-4 rounded-2xl border border-white/5 focus-within:border-blue-500/40 focus-within:bg-blue-500/[0.02] transition-all duration-500 shadow-inner">
-                                <Lock className="w-4 h-4 text-white/10 mr-3 group-focus-within:text-blue-400" />
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-white ml-1">Confirm Password</label>
+                            <div className="group bg-[#141820] flex items-center px-4 py-3 rounded-xl border border-white/5 focus-within:border-blue-500/50 transition-all relative shadow-sm">
+                                <Lock className="w-5 h-5 text-white/40 mr-3 group-focus-within:text-blue-400" />
                                 <input 
-                                    required type="password" placeholder="••••••••" 
-                                    className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/5 font-medium"
+                                    required type={showConfirmPassword ? 'text' : 'password'} placeholder="••••••••" 
+                                    className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/20 pr-10 font-medium"
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                 />
+                                <button 
+                                    type="button" 
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute right-4 text-white/40 hover:text-white transition-colors"
+                                >
+                                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
                             </div>
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-[8px] font-black text-white/10 uppercase tracking-[4px] ml-4 italic">Gift Code (Optional)</label>
-                        <div className="group bg-white/[0.01] flex items-center px-6 py-4 rounded-2xl border border-white/5 focus-within:border-amber-500/40 focus-within:bg-amber-500/[0.02] transition-all duration-500 shadow-inner">
-                            <Gift className="w-4 h-4 text-white/10 mr-3 group-focus-within:text-amber-400" />
+                    <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-white ml-1">Gift Code (Optional)</label>
+                        <div className="group bg-[#141820] flex items-center px-4 py-3 rounded-xl border border-white/5 focus-within:border-amber-500/50 transition-all shadow-sm">
+                            <Gift className="w-5 h-5 text-white/40 mr-3 group-focus-within:text-amber-400" />
                             <input 
                                 type="text" placeholder="REFERRAL CODE" 
-                                className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/5 uppercase font-black"
+                                className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/20 uppercase font-black"
                                 value={referralInput}
                                 onChange={(e) => setReferralInput(e.target.value.toUpperCase())}
                             />
@@ -273,36 +281,36 @@ export default function SignupForm() {
                     <button 
                         disabled={loading}
                         type="submit" 
-                        className="w-full py-5 rounded-2xl bg-white text-black font-black text-lg flex items-center justify-center gap-3 transition-all active:scale-[0.98] shadow-[0_20px_40px_-10px_rgba(255,255,255,0.1)] hover:shadow-[0_20px_60px_-10px_rgba(255,255,255,0.2)] mt-4"
+                        className="w-full py-3.5 mt-6 rounded-xl bg-white text-black hover:bg-white/90 font-black text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg"
                     >
-                        {loading ? <Loader className="w-6 h-6 animate-spin" /> : <>Start Earning <ArrowRight className="w-6 h-6" /></>}
+                        {loading ? <Loader className="w-5 h-5 animate-spin" /> : <>Start Earning <ArrowRight className="w-4 h-4" /></>}
                     </button>
                 </form>
 
-                <div className="mt-12">
-                    <div className="flex items-center gap-6 mb-8 opacity-20">
-                        <div className="h-px flex-1 bg-white" />
-                        <span className="text-[7px] font-black text-white uppercase tracking-[5px]">OR CONTINIUE WITH</span>
-                        <div className="h-px flex-1 bg-white" />
+                <div className="mt-8">
+                    <div className="flex items-center gap-4 mb-6 opacity-40">
+                        <div className="h-px flex-1 bg-white/50" />
+                        <span className="text-[10px] font-bold text-white uppercase tracking-widest">Or continue with</span>
+                        <div className="h-px flex-1 bg-white/50" />
                     </div>
 
                     <button
                         onClick={handleGoogleSignup}
                         disabled={loading}
-                        className="w-full py-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-white/10 hover:bg-white/[0.04] flex items-center justify-center gap-4 transition-all active:scale-[0.98] group"
+                        className="w-full py-3.5 rounded-xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.08] flex items-center justify-center gap-3 transition-all active:scale-[0.98]"
                     >
-                        <svg className="w-5 h-5 opacity-40 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5" viewBox="0 0 24 24">
                             <path fill="#EA4335" d="M12 5.04c1.9 0 3.51.64 4.86 1.91l3.6-3.6C18.17 1.19 15.34.62 12.33.62 7.64.62 3.65 3.3 1.63 7.21l4.23 3.28C6.88 7.33 9.22 5.04 12 5.04z" />
                             <path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.3h6.44c-.28 1.48-1.11 2.74-2.37 3.58l3.7 2.88c2.16-1.99 3.42-4.92 3.42-8.49z" />
                             <path fill="#34A853" d="M12 23.38c3.24 0 5.95-1.07 7.94-2.91l-3.7-2.88c-1.03.69-2.34 1.1-3.7 1.1-3.18 0-5.87-2.15-6.83-5.04L1.48 16.93c1.99 3.91 5.96 6.45 10.52 6.45z" />
                             <path fill="#FBBC05" d="M5.17 13.65c-.24-.73-.38-1.51-.38-2.32s.14-1.59.38-2.32L1.48 7.21C.54 9.06 0 11.13 0 12.33s.54 3.27 1.48 5.12l4.23-3.28c-.24-.73-.38-1.51-.38-2.32z" />
                         </svg>
-                        <span className="text-xs font-black text-white/30 group-hover:text-white/80 tracking-widest uppercase">Google Sign On</span>
+                        <span className="text-sm font-bold text-white/80">Google</span>
                     </button>
                 </div>
 
-                <p className="mt-12 text-center text-white/20 text-[10px] font-black uppercase tracking-[3px] italic">
-                    Already earning? <Link href="/login" className="text-blue-500 hover:text-white transition-colors underline decoration-blue-500/20 underline-offset-8">Sign In</Link>
+                <p className="mt-8 text-center text-white text-xs font-medium">
+                    Already earning? <Link href="/login" className="text-blue-400 hover:text-blue-300 transition-colors font-bold">Sign In</Link>
                 </p>
             </div>
             

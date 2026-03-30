@@ -6,6 +6,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import AppShell from "@/app/components/AppShell";
 import AmbientBackground from "@/app/components/AmbientBackground";
+import ProgressBar from "@/app/components/ProgressBar";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "TaskPlay Nigeria | Easiest Way To Earn Daily Cash Rewards",
@@ -52,6 +54,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://paystack.com" />
+        <link rel="preconnect" href="https://js.paystack.co" />
+        <link rel="preconnect" href="https://api.paystack.co" />
+        <link rel="preconnect" href="https://checkout.paystack.com" />
+        <link rel="dns-prefetch" href="https://paystack.com" />
+        <link rel="dns-prefetch" href="https://js.paystack.co" />
+        <link rel="dns-prefetch" href="https://api.paystack.co" />
+        <link rel="dns-prefetch" href="https://checkout.paystack.com" />
+        <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
+        <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com" />
         {pixelId && (
           <>
             <Script
@@ -98,6 +110,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AmbientBackground />
+          <Suspense fallback={null}>
+            <ProgressBar />
+          </Suspense>
           <AppShell>
             {children}
           </AppShell>

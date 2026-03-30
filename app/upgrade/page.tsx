@@ -100,6 +100,13 @@ export default function UpgradePage() {
       return;
     }
 
+    setModal({ 
+      isOpen: true, 
+      type: 'loading', 
+      title: 'Connecting to Bank...', 
+      message: 'Network detected: SLOW. Establishing a secure handshake with Paystack servers. Please do not refresh.' 
+    });
+
     try {
        if (!PaystackPop) {
          setModal({ isOpen: true, type: 'error', title: 'Connecting...', message: 'Connecting to payment gateway. Please try again in 1 second.' });

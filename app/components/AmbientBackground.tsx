@@ -25,10 +25,16 @@ export default function AmbientBackground() {
   return (
     <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden bg-[#05070A]">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.05)_0%,transparent_50%)]" />
-      <AmbientOrb color="bg-blue-600" size="w-[800px] h-[800px]" delay={0} x="-10%" y="-10%" />
-      <AmbientOrb color="bg-purple-600" size="w-[700px] h-[700px]" delay={5} x="60%" y="10%" />
-      <AmbientOrb color="bg-blue-400" size="w-[600px] h-[600px]" delay={10} x="20%" y="50%" />
-      <AmbientOrb color="bg-purple-500" size="w-[500px] h-[500px]" delay={15} x="70%" y="70%" />
+      
+      {/* Heavy Orbs - Desktop and High Perf Only */}
+      <div className="hidden md:block">
+          <AmbientOrb color="bg-blue-600" size="w-[800px] h-[800px]" delay={0} x="-10%" y="-10%" />
+          <AmbientOrb color="bg-purple-600" size="w-[700px] h-[700px]" delay={5} x="60%" y="10%" />
+      </div>
+
+      <AmbientOrb color="bg-blue-400" size="w-[300px] h-[300px] md:w-[600px] md:h-[600px]" delay={10} x="20%" y="50%" opacity={0.08} />
+      <AmbientOrb color="bg-purple-500" size="w-[200px] h-[200px] md:w-[500px] md:h-[500px]" delay={15} x="70%" y="70%" opacity={0.08} />
+      
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
     </div>
   );
