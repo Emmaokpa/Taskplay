@@ -19,7 +19,8 @@ import {
   Megaphone,
   User,
   ArrowRight,
-  Gamepad2
+  Gamepad2,
+  Trophy
 } from 'lucide-react';
 
 const navigation = [
@@ -28,6 +29,7 @@ const navigation = [
   { name: 'CPA Offers', href: '/cpa-offers', icon: Rocket },
   { name: 'Social Tasks', href: '/social-tasks', icon: Share2 },
   { name: 'Games', href: '/games', icon: Gamepad2 },
+  { name: 'Leaderboard', href: '/leaderboard', icon: Trophy },
   { name: 'Referrals', href: '/referral', icon: Gift },
   { name: 'Advertise', href: '/advertise', icon: Megaphone },
   { name: 'My Profile', href: '/profile', icon: User },

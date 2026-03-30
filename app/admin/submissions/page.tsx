@@ -25,6 +25,8 @@ interface Submission {
   rewardAmount: number;
   status: string;
   createdAt: { seconds: number; nanoseconds: number };
+  taskTitle?: string;
+  taskCategory?: string;
   [key: string]: unknown;
 }
 
@@ -169,12 +171,18 @@ export default function AdminSubmissions() {
                      </div>
                   </div>
                   <div className="overflow-hidden">
-                     <div className="flex items-center gap-3 mb-2">
+                     <div className="flex items-center gap-3 mb-2 flex-wrap">
                         <span className="text-xs font-black text-green-400">₦{sub.rewardAmount}</span>
+                        {sub.taskCategory && (
+                           <>
+                              <span className="text-[10px] uppercase font-black tracking-widest text-white/20">•</span>
+                              <span className="text-[10px] font-black uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full">{sub.taskCategory}</span>
+                           </>
+                        )}
                         <span className="text-[10px] uppercase font-black tracking-widest text-white/20">•</span>
                         <span className="text-xs font-bold text-white/40 truncate">UID: {sub.userId}</span>
                      </div>
-                     <h3 className="text-xl font-black text-white tracking-tight truncate">Task ID: {sub.taskId}</h3>
+                     <h3 className="text-xl font-black text-white tracking-tight truncate" title={sub.taskTitle || sub.taskId}>{sub.taskTitle || `Task ID: ${sub.taskId}`}</h3>
                      <p className="text-[10px] uppercase font-black text-white/20 tracking-widest mt-2">{new Date(sub.createdAt.seconds * 1000).toLocaleString()}</p>
                   </div>
                </div>

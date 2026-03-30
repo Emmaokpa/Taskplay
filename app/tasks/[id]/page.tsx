@@ -209,6 +209,8 @@ export default function TaskSubmissionPage({ params }: { params: Promise<{ id: s
       // 2. Save submission to Firestore
       await addDoc(collection(db, 'submissions'), {
         taskId: id,
+        taskTitle: task.title,
+        taskCategory: task.category,
         userId: user.uid,
         advertiserId: task.advertiserId,
         proofUrl,
