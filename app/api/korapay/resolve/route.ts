@@ -11,22 +11,27 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Missing account number or bank code' }, { status: 400 });
   }
 
-  const secretKey = process.env.PAYSTACK_SECRET_KEY;
+  const secretKey = process.env.KORAPAY_SECRET_KEY;
   if (!secretKey) {
-    return NextResponse.json({ error: 'Paystack Secret Key not configured' }, { status: 500 });
+    return NextResponse.json({ error: 'Korapay Secret Key not configured' }, { status: 500 });
   }
 
   try {
-    const response = await fetch(`https://api.paystack.co/bank/resolve?account_number=${accountNumber}&bank_code=${bankCode}`, {
+    const response = await fetch(`https://api.korapay.com/merchant/api/v1/misc/banks/resolve`, {
+      method: "POST",
       headers: {
         Authorization: `Bearer ${secretKey}`,
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+         bank: bankCode,
+         account: accountNumber
+      })
     });
 
     const data = await response.json();
-    if (!response.ok) {
-      return NextResponse.json({ error: data.message || 'Verification failed' }, { status: response.status });
+    if (!data.status) {
+      return NextResponse.json({ error: data.message || 'Verification failed' }, { status: 400 });
     }
 
     return NextResponse.json(data.data);

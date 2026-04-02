@@ -66,7 +66,7 @@ export default function WithdrawalPage() {
 
   // ─── 1. Fetch Banks on mount ──────────────────────────────────────
   useEffect(() => {
-    fetch('/api/paystack/banks')
+    fetch('/api/korapay/banks')
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setBanks(data);
@@ -108,7 +108,7 @@ export default function WithdrawalPage() {
     setIsResolving(true);
     setResolveError('');
     try {
-      const res = await fetch(`/api/paystack/resolve?account_number=${num}&bank_code=${code}`);
+      const res = await fetch(`/api/korapay/resolve?account_number=${num}&bank_code=${code}`);
       const data = await res.json();
       if (data.account_name) {
         setAccountName(data.account_name);

@@ -54,14 +54,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://paystack.com" />
-        <link rel="preconnect" href="https://js.paystack.co" />
-        <link rel="preconnect" href="https://api.paystack.co" />
-        <link rel="preconnect" href="https://checkout.paystack.com" />
-        <link rel="dns-prefetch" href="https://paystack.com" />
-        <link rel="dns-prefetch" href="https://js.paystack.co" />
-        <link rel="dns-prefetch" href="https://api.paystack.co" />
-        <link rel="dns-prefetch" href="https://checkout.paystack.com" />
+        <link rel="preconnect" href="https://korablobstorage.blob.core.windows.net" />
+        <link rel="preconnect" href="https://api.korapay.com" />
+        <link rel="dns-prefetch" href="https://korablobstorage.blob.core.windows.net" />
+        <link rel="dns-prefetch" href="https://api.korapay.com" />
         <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
         <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com" />
         {pixelId && (
@@ -95,7 +91,7 @@ export default function RootLayout({
           </>
         )}
         <Script
-          src="https://js.paystack.co/v2/inline.js"
+          src="https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js"
           strategy="beforeInteractive"
         />
       </head>

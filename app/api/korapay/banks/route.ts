@@ -24,13 +24,13 @@ const FALLBACK_BANKS = [
 ];
 
 export async function GET() {
-  const secretKey = process.env.PAYSTACK_SECRET_KEY;
+  const secretKey = process.env.KORAPAY_SECRET_KEY;
   if (!secretKey) {
     return NextResponse.json(FALLBACK_BANKS);
   }
 
   try {
-    const response = await fetch('https://api.paystack.co/bank?currency=NGN', {
+    const response = await fetch('https://api.korapay.com/merchant/api/v1/misc/banks?countryCode=NG', {
       headers: {
         Authorization: `Bearer ${secretKey}`,
         'Content-Type': 'application/json',
@@ -45,8 +45,8 @@ export async function GET() {
 
     return NextResponse.json(data.data);
   } catch (error) {
-    console.error('Fetch Banks Fallback Active:', error);
-    // Return fallback banks if Paystack is unreachable (ECONNRESET fix)
+    console.error('Fetch Banks Fallback Active (Korapay):', error);
+    // Return fallback banks if Korapay is unreachable 
     return NextResponse.json(FALLBACK_BANKS);
   }
 }

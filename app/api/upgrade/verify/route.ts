@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
+const KORAPAY_SECRET_KEY = process.env.KORAPAY_SECRET_KEY;
 
 export async function POST(req: Request) {
   try {
@@ -20,16 +20,17 @@ export async function POST(req: Request) {
 
     const db = getFirestore(adminApp);
 
-    // 1. Verify Payment with Paystack
-    const response = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
+    // 1. Verify Payment with Korapay
+    const response = await fetch(`https://api.korapay.com/merchant/api/v1/charges/${reference}`, {
       headers: {
-        Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+        Authorization: `Bearer ${KORAPAY_SECRET_KEY}`,
       },
     });
 
     const data = await response.json();
 
-    if (!data.status || data.data.status !== 'success' || data.data.amount !== 1500 * 100) {
+    // Korapay returns status: true, and data.status === 'success'
+    if (!data.status || data.data?.status !== 'success' || data.data?.amount < 1500) {
       return NextResponse.json({ error: 'Payment verification failed or invalid amount' }, { status: 400 });
     }
 

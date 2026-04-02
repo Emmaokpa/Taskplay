@@ -23,18 +23,19 @@ export default function UpgradePage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
-  const [PaystackPop, setPaystackPop] = useState<any>(null);
+  const processedRef = React.useRef(false);
+  const [Korapay, setKorapay] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
     // Check for global script pre-loaded in layout.tsx
     const checkScript = () => {
-      if ((window as any).PaystackPop) {
-        setPaystackPop(() => (window as any).PaystackPop);
+      if ((window as any).Korapay) {
+        setKorapay(() => (window as any).Korapay);
         return true;
       }
       return false;
-    };
+    }
 
     if (!checkScript()) {
       const interval = setInterval(() => {
@@ -92,10 +93,11 @@ export default function UpgradePage() {
   const handleUpgrade = async () => {
     if (processing || !user) return;
     setProcessing(true);
+    processedRef.current = false;
 
-    const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
+    const publicKey = process.env.NEXT_PUBLIC_KORAPAY_PUBLIC_KEY;
     if (!publicKey) {
-      setModal({ isOpen: true, type: 'error', title: 'Config Error', message: "Paystack Public Key is missing! Please check your .env file."});
+      setModal({ isOpen: true, type: 'error', title: 'Config Error', message: "Korapay Public Key is missing! Please check your .env file."});
       setProcessing(false);
       return;
     }
@@ -104,24 +106,30 @@ export default function UpgradePage() {
       isOpen: true, 
       type: 'loading', 
       title: 'Connecting to Bank...', 
-      message: 'Network detected: SLOW. Establishing a secure handshake with Paystack servers. Please do not refresh.' 
+      message: 'Network detected: SLOW. Establishing a secure handshake with Korapay servers. Please do not refresh.' 
     });
 
     try {
-       if (!PaystackPop) {
+       if (!Korapay) {
          setModal({ isOpen: true, type: 'error', title: 'Connecting...', message: 'Connecting to payment gateway. Please try again in 1 second.' });
          setProcessing(false);
          return;
        }
-       const paystack = new PaystackPop();
 
-      paystack.newTransaction({
+      Korapay.initialize({
         key: publicKey,
-        email: user.email,
-        amount: 1500 * 100, // ₦1,500 in kobo
+        reference: `upg_${Date.now()}_${user.uid.substring(0, 5)}`,
+        customer: {
+          name: user.displayName || user.email?.split('@')[0] || "User",
+          email: user.email!
+        },
+        amount: 1500, // ₦1,500
         currency: "NGN",
         onSuccess: async (response: { reference: string }) => {
-          setModal({ isOpen: true, type: 'loading', title: 'Verifying Payment', message: 'Checking with Paystack. Please wait...' });
+          if (processedRef.current) return;
+          processedRef.current = true;
+          
+          setModal({ isOpen: true, type: 'loading', title: 'Verifying Payment', message: 'Checking with Korapay. Please wait...' });
           try {
             const apiRes = await fetch('/api/upgrade/verify', {
                method: 'POST',
@@ -141,13 +149,13 @@ export default function UpgradePage() {
             setProcessing(false);
           }
         },
-        onCancel: () => {
+        onClose: () => {
           setProcessing(false);
           setModal({ isOpen: true, type: 'info', title: 'Upgrade Cancelled', message: 'The payment process was stopped. No charges were made.'});
         },
       });
     } catch (err) {
-      console.error("Paystack error:", err);
+      console.error("Korapay error:", err);
       setProcessing(false);
       setModal({ isOpen: true, type: 'error', title: 'Payment Error', message: "Failed to launch payment. Please refresh and try again."});
     }
@@ -312,7 +320,7 @@ export default function UpgradePage() {
                </button>
 
                <div className="flex items-center justify-center gap-6 pt-4 opacity-20">
-                    <span className="text-[10px] font-black uppercase tracking-widest">Paystack Secured</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest">Korapay Secured</span>
                     <div className="h-1 w-1 rounded-full bg-white" />
                     <span className="text-[10px] font-black uppercase tracking-widest">Instant Activation</span>
                </div>

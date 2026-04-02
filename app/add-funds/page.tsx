@@ -19,14 +19,15 @@ export default function AddFundsPage() {
   const [amount, setAmount] = useState<number | ''>('');
   const [user, setUser] = useState<User | null>(null);
   const [processing, setProcessing] = useState(false);
-  const [PaystackPop, setPaystackPop] = useState<any>(null);
+  const processedRef = React.useRef(false);
+  const [Korapay, setKorapay] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
     // Check for global script pre-loaded in layout.tsx
     const checkScript = () => {
-      if ((window as any).PaystackPop) {
-        setPaystackPop(() => (window as any).PaystackPop);
+      if ((window as any).Korapay) {
+        setKorapay(() => (window as any).Korapay);
         return true;
       }
       return false;
@@ -70,27 +71,35 @@ export default function AddFundsPage() {
   const handlePayment = async () => {
     if (!amount || amount < 100) return setModal({ isOpen: true, type: 'error', title: 'Invalid Amount', message: "Minimum deposit is ₦100" });
 
-    const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
-    if (!publicKey) return setModal({ isOpen: true, type: 'error', title: 'Config Error', message: "Paystack Public Key is missing! Check your .env setup." });
+    const publicKey = process.env.NEXT_PUBLIC_KORAPAY_PUBLIC_KEY;
+    if (!publicKey) return setModal({ isOpen: true, type: 'error', title: 'Config Error', message: "Korapay Public Key is missing! Check your .env setup." });
 
     if (!user) return;
 
     setProcessing(true);
+    processedRef.current = false; // Reset lock
 
     try {
 
-      if (!PaystackPop) {
+      if (!Korapay) {
         setModal({ isOpen: true, type: 'error', title: 'Loading...', message: 'Connecting to payment gateway. Please try again in a second.' });
+        setProcessing(false);
         return;
       }
-      const paystack = new PaystackPop();
 
-      paystack.newTransaction({
+      Korapay.initialize({
         key: publicKey,
-        email: user.email,
-        amount: Number(amount) * 100, // In kobo
+        reference: `fund_${Date.now()}_${user.uid.substring(0, 5)}`,
+        customer: {
+          name: user.displayName || user.email?.split('@')[0] || "User",
+          email: user.email!
+        },
+        amount: Number(amount),
         currency: "NGN",
         onSuccess: async (response: { reference: string }) => {
+          if (processedRef.current) return;
+          processedRef.current = true;
+          
           try {
             setModal({ isOpen: true, type: 'loading', title: 'Verifying', message: 'Securing your credit...' });
             const userRef = doc(db, 'users', user.uid);
@@ -105,13 +114,13 @@ export default function AddFundsPage() {
             setProcessing(false);
           }
         },
-        onCancel: () => {
+        onClose: () => {
           setProcessing(false);
           setModal({ isOpen: true, type: 'info', title: 'Cancelled', message: 'The payment process was closed.' });
         }
       });
     } catch (err) {
-      console.error("Paystack error:", (err as Error).message || err);
+      console.error("Korapay error:", (err as Error).message || err);
       setModal({ isOpen: true, type: 'error', title: 'Payment Error', message: "Payment window failed to launch. Please try again." });
       setProcessing(false);
     }
@@ -143,7 +152,7 @@ export default function AddFundsPage() {
           </div>
           <div className="max-w-xs w-full">
             <h3 className="text-xl font-black text-white tracking-tight mb-2">Secure Deposit</h3>
-            <p className="text-white/20 text-[9px] font-black tracking-widest uppercase mb-8 leading-none">Powered by Paystack Network</p>
+            <p className="text-white/20 text-[9px] font-black tracking-widest uppercase mb-8 leading-none">Powered by Korapay Network</p>
             
             <form id="paymentForm" className="space-y-4">
               <input
