@@ -149,6 +149,7 @@ export default function CreateCampaignForm() {
   const [modal, setModal] = useState<{
     isOpen: boolean, type: 'success' | 'error' | 'info' | 'loading', title: string, message: string
   }>({ isOpen: false, type: 'info', title: '', message: '' });
+  const processedRef = React.useRef(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -232,6 +233,7 @@ export default function CreateCampaignForm() {
     const totalCost = formData.count * pricing.advertiserPrice;
 
     setLoading(true);
+    processedRef.current = false;
     setModal({ isOpen: true, type: 'loading', title: 'Processing', message: 'Launching your campaign...' });
 
     try {
@@ -243,24 +245,33 @@ export default function CreateCampaignForm() {
         setStep(4);
         setModal({ isOpen: true, type: 'success', title: 'Launched!', message: 'Campaign is now pending admin approval.' });
       } else {
-        const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
-        const PaystackPop = (await import('@paystack/inline-js')).default;
-        const paystack = new PaystackPop();
+        const publicKey = process.env.NEXT_PUBLIC_KORAPAY_PUBLIC_KEY;
+        if (!(window as any).Korapay) {
+            setModal({ isOpen: true, type: 'error', title: 'Gateway Error', message: 'Payment gateway still loading. Please try again in 2 seconds.' });
+            setLoading(false);
+            return;
+        }
 
-        paystack.newTransaction({
+        (window as any).Korapay.initialize({
           key: publicKey,
-          email: user.email!,
-          amount: Math.round(totalCost) * 100,
+          reference: `camp_${Date.now()}_${user.uid.substring(0, 5)}`,
+          customer: {
+            name: user.displayName || user.email?.split('@')[0] || "Advertiser",
+            email: user.email!
+          },
+          amount: Math.round(totalCost), // Korapay amount (mapped straight in NGN)
           currency: "NGN",
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onSuccess: async (response: any) => {
+            if (processedRef.current) return;
+            processedRef.current = true;
             let thumbnailUrl = "";
             if (imageFile) thumbnailUrl = await uploadToImageKit(imageFile);
             await saveCampaignToFirestore(response.reference, thumbnailUrl);
             setStep(4);
             setModal({ isOpen: true, type: 'success', title: 'Payment Confirmed', message: 'Campaign submitted for review.' });
           },
-          onCancel: () => setLoading(false),
+          onClose: () => setLoading(false),
         });
       }
     } catch (err) {
